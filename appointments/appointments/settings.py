@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'accounts',
     'appointments',
     'patient',
-    'phonenumber_field'
+    'therapist'
 ]
 
 MIDDLEWARE = [
