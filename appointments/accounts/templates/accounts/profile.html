@@ -11,35 +11,33 @@
 </ul>
 {% endif %}
 <h1>Profile for {{user.username}}</h1>
-<h3>Topic: {{user.profile.topic}}</h3>
-<h3>Coins: {{user.profile.coins}}</h3>
-<h3>Score: {{user.profile.score}}</h3>
+
 <div class="container" style="min-width: 90vw;">
     
-    <div class="row">
-    {% for card in deck %}
-        <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <ul>
-                    {% if card.c_type == 'P' %}
-                        <h5 class="card-title">Category: People</h5>
-                    {% else %}
-                        <h5 class="card-title">Category: Vehicles</h5>
+    <div class="container">
+        <div class="row">
+            {% for a in transaction.transactionresponse_set.all %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                <h5 class="card-title">Sender: {{transaction.trade_sender}}</h5>
+                <h5 class="card-title">Original Card: {{transaction.card}}</h5>
+                <h5 class="card-title">offer Card: {{a.card}}</h5>
+                    {% if a.trade_choice == None %}
+                            {% if transaction.trade_reciever == user.profile %}
+                            <a aria-disabled="true" class='btn btn-warning' type="submit">Pending</a>
+                            {% else %}
+                            <a href="{% url 'trade_response_status' a.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
+                            <a href="{% url 'trade_response_status' a.id 'reject' %}" class='btn btn-danger' name='a' type="submit">Reject</a>
+                            {% endif %}
+                    {% elif a.trade_choice == 1 %}
+                    <a href="#" aria-disabled="true" class='btn btn-success' type="submit">Accepted</a>
+                    {% elif a.trade_choice == 0 %}
+                    <a href="#" aria-disabled="true" class='btn btn-danger' type="submit">Rejected</a>
                     {% endif %}
-                    <p class="card-text">Name: {{card.name}}</p>
-                    <p class="card-text">Rarity: {{card.rarity}}</p>
-                    <p class="card-text">Id: {{card.id}}</p>
-                </ul>
-    
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Sell this Card to Store</a>
-              <a href="#">asd</a>
             </div>
-          </div>
-      {% endfor %}
+        {% endfor %}
+    
+        </div>
     
     </div>
-</div>
-
-{% endblock %}
+    {% endblock %}

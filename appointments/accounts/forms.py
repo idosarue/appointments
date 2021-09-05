@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .models import Profile
 from django import forms
 from appointments.settings import DATE_INPUT_FORMATS
+
 class SignupForm(UserCreationForm):
     class Meta:
         model = User

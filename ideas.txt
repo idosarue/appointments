@@ -26,3 +26,6 @@ Contact
 send email to patient on create booking
 send email to therapist on create booking
 send email to therapist on create contact
+
+send email command:
+python -m smtpd -n -c DebuggingServer localhost:1025
