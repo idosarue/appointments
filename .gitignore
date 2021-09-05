@@ -1,0 +1,5 @@
+env/
+__pychace__/
+appointments/appointments/__pycache__
+appointments/appointments/local_settings.py
+db.sqlite3

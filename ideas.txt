@@ -1,0 +1,28 @@
+# signup - display first
+# login
+# logout
+
+# patient journey
+homepage:
+navigate to contact - homepage 
+navigate to book appointment - homepage
+see your appointments
+
+# therapist journey
+homepage:
+see appointments
+cancel appointments
+create appointments
+
+#models:
+#accounts:
+profile
+
+# patient:
+Appointment
+Contact
+
+#emails
+send email to patient on create booking
+send email to therapist on create booking
+send email to therapist on create contact
