@@ -8,7 +8,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib import messages
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 
 # Create your views here.
 def home(request):
@@ -31,19 +31,21 @@ class CreateBookingView(CreateView):
         email_message_therapist = f'''
         {self.request.user.first_name} {self.request.user.last_name}, requested an appointment at: {form.cleaned_data['start_time']} , {form.cleaned_data['appointment_date']}
         '''
-        send_mail(
+        message_to_user = EmailMessage(
             'Appointment Request',
             email_message_user,
             'testdjangosar@gmail.com',
-            ['djangoreciever@gmail.com'],
-            fail_silently=False,
+            [self.request.user.email],
         )
 
-        send_mail(
+        message_to_therapist = EmailMessage(
             'Your appointment',
             email_message_therapist,
             'testdjangosar@gmail.com',
             ['testdjangosar@gmail.com'],
-            fail_silently=False,
+            reply_to=[self.request.user.email],
         )
+        message_to_user.send()
+        message_to_therapist.send()
         return super().form_valid(form)
+

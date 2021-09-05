@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from .forms import ProfileForm, SignupForm
 from django.views.generic import CreateView, DetailView
+from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 # Create your views here.
@@ -42,3 +43,18 @@ class ProfileDetailView(LoginRequiredMixin,DetailView):
 
     def get_object(self, queryset=None):
         return self.request.user.profile
+
+class MyLoginView(LoginView):
+    template_name = 'accounts/login.html'
+
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user = authenticate(self.request, username=username, password=password)
+        if user:
+            login(self.request, user)
+            if user.is_superuser:
+                return redirect('home')
+            else:
+                return redirect('profile')
+        return super().form_valid(form)
