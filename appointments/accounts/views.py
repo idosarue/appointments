@@ -2,8 +2,8 @@ from .models import Profile
 from django.db import models
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from .forms import ProfileForm, SignupForm
-from django.views.generic import CreateView, DetailView
+from .forms import ProfileForm, SignupForm, ValidationForm
+from django.views.generic import CreateView, DetailView, FormView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
@@ -58,3 +58,7 @@ class MyLoginView(LoginView):
             else:
                 return redirect('profile')
         return super().form_valid(form)
+
+class ValidationView(FormView):
+    form_class = ValidationForm
+    template_name = 'accounts/verification.html'

@@ -32,6 +32,12 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'apt_requests' %}">Appointment requests</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accepted_apts' %}">Accepted Appointments</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'pending_apts' %}">Pending Appointments</a>
+        </li>
         {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'query_appointment' %}">Ask For Appointment</a>

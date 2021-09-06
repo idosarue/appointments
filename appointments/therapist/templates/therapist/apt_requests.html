@@ -5,23 +5,16 @@
 <div class="container">
     <div class="row">
         {% for appointment in appointments %}
+        {% if appointment.choice == None and not appointment.is_approved %}
         <div class="card" style="width: 18rem;">
             <div class="card-body">
             <h5 class="card-title">Sender: {{appointment.user.user.first_name}} {{appointment.user.user.last_name}}</h5>
             <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
             <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
             <h5 class="card-title">Requested on: {{appointment.timestamp}}</h5>
-                {% if appointment.choice == None %}
-                        {% if appointment.choice == 'P' %}
-                        <a aria-disabled="true" class='btn btn-warning' type="submit">Pending</a>
-                        {% else %}
-                        <a href="{% url 'apt_status' appointment.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
-                        <a href="{% url 'apt_status' appointment.id 'reject' %}" class='btn btn-danger' name='a' type="submit">Reject</a>
-                        {% endif %}
-                {% elif appointment.is_approved %}
-                <a href="#" aria-disabled="true" class='btn btn-success' type="submit">Accepted</a>
-                {% elif a.trade_choice == 0 %}
-                <a href="#" aria-disabled="true" class='btn btn-danger' type="submit">Rejected</a>
+
+                <a href="{% url 'apt_status' appointment.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
+                <a href="{% url 'apt_status' appointment.id 'update' %}" class='btn btn-primary' name='a' type="submit">Update</a>
                 {% endif %}
         </div>
     {% endfor %}
@@ -30,3 +23,4 @@
 
 </div>
 {% endblock %}
+

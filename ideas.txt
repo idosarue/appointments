@@ -13,7 +13,9 @@ homepage:
 see appointments
 cancel appointments
 create appointments
-
+pending request
+accepted requests
+pending requests
 #models:
 #accounts:
 profile

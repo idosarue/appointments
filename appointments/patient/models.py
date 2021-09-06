@@ -17,6 +17,7 @@ class AppointmentResponse(models.Model):
     start_time = models.TimeField()
     appointment_date = models.DateField(auto_now_add=False)
     original_request = models.ForeignKey(Appointment, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, null=True)
     is_approved = models.BooleanField(default=False)
 
     def approve_meeting(self):

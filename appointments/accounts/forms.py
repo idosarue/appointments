@@ -17,3 +17,8 @@ class ProfileForm(forms.ModelForm):
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'class':'datepicker', 'placeholder':'Select a date', 'type':'date'}),
         }
+
+class ValidationForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
