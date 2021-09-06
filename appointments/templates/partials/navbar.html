@@ -38,12 +38,21 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'pending_apts' %}">Pending Appointments</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'all_users' %}">Patients</a>
+        </li>
         {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'query_appointment' %}">Ask For Appointment</a>
           </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'future_appointments' %}">Future appointments</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'past_appointments' %}">Past appointments</a>
         </li>
         {% endif %}
       {% else %}
@@ -55,9 +64,5 @@
       </li>
       {% endif %}
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
   </div>
 </nav>

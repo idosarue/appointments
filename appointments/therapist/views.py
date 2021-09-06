@@ -12,10 +12,17 @@ from django.core.mail import EmailMessage, send_mail
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from accounts.forms import ValidationForm
+from accounts.models import Profile
+
 
 class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_superuser
+
+class AllUsersList(SuperUserRequiredMixin, ListView):
+    model = Profile
+    template_name = 'therapist/all_users.html'
+    context_object_name = 'user_list'
 
 class AppointmentListView(SuperUserRequiredMixin, ListView):
     model = Appointment
@@ -138,3 +145,15 @@ class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('post_detail', kwargs={'pk':self.object.id})
 
+class UserAppointments(SuperUserRequiredMixin, ListView):
+    model = Profile
+    template_name = 'therapist/user_appointments.html'
+
+    def get_profile(self):
+        profile_id = self.kwargs['pk']
+        return get_object_or_404(Profile, id=profile_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_appointments'] = self.get_profile().appointment_set.all()
+        return context

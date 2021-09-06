@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content%}
+
+<div class="container">
+    <div class="row">
+        {% for user in user_list %}
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Name: {{user.user.first_name}} {{user.user.last_name}}</h5>
+                <a href="{% url 'user_appointments' user.id %}" class='btn btn-success' name='a' type="submit">Appoint</a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+{% endblock %}
+

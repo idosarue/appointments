@@ -1,19 +1,17 @@
 from django.http.response import HttpResponse
-from patient.models import Appointment
+from patient.models import Appointment, AppointmentResponse
 from accounts.models import Profile
 from django.db import models
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse_lazy
 from .forms import AppointmentForm, AppointmentResponseForm
 from django.views.generic import CreateView, ListView
-from django.contrib.auth import login, authenticate
 from django.contrib import messages
-# Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage, send_mail
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
-
+from datetime import datetime
 # Create your views here.
 def home(request):
     return render(request, 'patient/home.html')
@@ -56,3 +54,20 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
 class FutureAppointmentsListView(ListView):
     model = Appointment
     template_name = 'patient/future_appointments_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = Appointment.objects.filter(is_approved=True, user=self.request.user.profile, appointment_date__gte = datetime.today())
+        context['appointments_response'] = AppointmentResponse.objects.filter(is_approved=True, user=self.request.user.profile, appointment_date__gte = datetime.today())
+        return context
+
+class PastAppointmentsListView(ListView):
+    model = Appointment
+    template_name = 'patient/past_appointments_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = Appointment.objects.filter(is_approved=True, user=self.request.user.profile, appointment_date__lt = datetime.today())
+        context['appointments_response'] = AppointmentResponse.objects.filter(is_approved=True, user=self.request.user.profile, appointment_date__lt = datetime.today())
+        return context
+
