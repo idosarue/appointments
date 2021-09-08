@@ -63,7 +63,7 @@ class FutureAppointmentsListView(ListView):
 
 class PastAppointmentsListView(ListView):
     model = Appointment
-    template_name = 'patient/past_appointments_list.html'
+    template_name = 'patient/past_appointments.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

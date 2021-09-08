@@ -13,7 +13,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from accounts.forms import ValidationForm
 from accounts.models import Profile
-
+from datetime import datetime
 
 class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
@@ -155,5 +155,8 @@ class UserAppointments(SuperUserRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user_appointments'] = self.get_profile().appointment_set.all()
+        context['past_appointments'] = self.get_profile().appointment_set.filter(appointment_date__lt=datetime.today(), is_approved=True)
+        context['future_appointments'] = self.get_profile().appointment_set.filter(appointment_date__gte=datetime.today(),is_approved=True)
+        context['future_appointments_response'] = self.get_profile().appointmentresponse_set.filter(appointment_date__gte=datetime.today(),is_approved=True)
+        context['past_appointments_response'] = self.get_profile().appointmentresponse_set.filter(appointment_date__lt=datetime.today(), is_approved=True)
         return context

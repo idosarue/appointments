@@ -22,3 +22,4 @@ class AppointmentResponse(models.Model):
 
     def approve_meeting(self):
         pass
+
