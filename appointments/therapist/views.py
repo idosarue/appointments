@@ -55,7 +55,7 @@ class PendingAppointmentListView(SuperUserRequiredMixin, ListView):
         context['appointments'] = AppointmentResponse.objects.exclude(is_approved=True)
         return context
 
-class AppointmentResponseView(LoginRequiredMixin, CreateView):
+class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
     form_class = AppointmentResponseForm
     template_name = 'patient/appointment_response.html'
     success_url = reverse_lazy('home')
