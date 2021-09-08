@@ -1,5 +1,5 @@
 
-$(function () {
+$(function date () {
     $("#datepicker").datepicker({
         changeMonth: true,
         dateFormat: "dd-mm-yy",
@@ -8,4 +8,12 @@ $(function () {
         return [(day != 5 && day != 6)];
     }
     });
+});
+
+$(function birth_picker() {
+    $("#datepicker_birth").datepicker({
+        changeYear: true,
+        yearRange: "1930:2003",
+        dateFormat: "dd-mm-yy",
+    })
 });

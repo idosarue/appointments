@@ -2,8 +2,8 @@ from .models import Profile
 from django.db import models
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from .forms import ProfileForm, SignupForm, ValidationForm
-from django.views.generic import CreateView, DetailView, FormView
+from .forms import ProfileForm, SignupForm, ValidationForm, EditUserForm, EditProfileForm
+from django.views.generic import CreateView, DetailView, FormView, UpdateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
@@ -16,20 +16,20 @@ class SignupView(CreateView):
     template_name = 'accounts/signup.html'
 
     def form_valid(self, form):
-        form.save()
-        user = authenticate(self.request, username=form.cleaned_data['username'], first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'], email=form.cleaned_data['email'], password=form.cleaned_data['password1'] )   
-        if user:
-            profile_form = ProfileForm(self.request.POST)
-            if profile_form.is_valid():
+        profile_form = ProfileForm(self.request.POST)
+        if profile_form.is_valid():
+            form.save()
+            user = authenticate(self.request, username=form.cleaned_data['username'], first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'], email=form.cleaned_data['email'], password=form.cleaned_data['password1'] )   
+            if user:
                 profile = profile_form.save(commit=False)
                 profile.user = user
                 profile.save()
                 login(self.request, user)
             else:
-                print('not')
                 messages.error(self.request, 'Something went wrong')
         else:
-            messages.error(self.request, 'Something went wrong')
+            return self.form_invalid(form)
+
         return redirect('home')
     
     def get_context_data(self, **kwargs):
@@ -62,3 +62,26 @@ class MyLoginView(LoginView):
 class ValidationView(FormView):
     form_class = ValidationForm
     template_name = 'accounts/verification.html'
+
+
+class EditProfileView(LoginRequiredMixin, UpdateView):
+    form_class = EditUserForm
+    template_name = 'accounts/edit_profile.html'
+    success_url = reverse_lazy('profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_form'] = EditUserForm(instance=self.request.user)
+        context['profile_form'] = EditProfileForm(instance=self.request.user.profile)
+        return context
+            
+    def form_valid(self, form):
+        user_form = EditUserForm(self.request.POST, instance=self.request.user)
+        profile_form = EditProfileForm(self.request.POST, instance=self.request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+        return super().form_valid(form)

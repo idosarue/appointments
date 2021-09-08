@@ -58,3 +58,4 @@ class AppointmentResponseForm(forms.ModelForm):
         if appointment_date <= datetime.date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
         return appointment_date
+

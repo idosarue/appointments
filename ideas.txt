@@ -31,3 +31,18 @@ send email to therapist on create contact
 
 send email command:
 python -m smtpd -n -c DebuggingServer localhost:1025
+
+
+
+
+        email_message_user = f'''
+        Hello {appoint.original_request.user.user.username}, your request for an appointment at: {appoint.original_request.start_time} , {appoint.original_request.appointment_date}
+        is not available, are you free at {appoint.start_time}, {appoint.appointment_date} ?
+        '''
+        # message_to_user = EmailMessage(
+        #     'Appointment Request',
+        #     email_message_user,
+        #     therapist_email,
+        #     [appoint.original_request.user.user.email],
+        #     reply_to=[therapist_email],
+        # )

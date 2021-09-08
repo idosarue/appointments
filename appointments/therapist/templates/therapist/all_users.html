@@ -8,6 +8,8 @@
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title">Name: {{user.user.first_name}} {{user.user.last_name}}</h5>
+                <h5 class="card-title">Email: {{user.user.email}}</h5>
+                <h5 class="card-title">Phone Number: {{user.phone_number}}</h5>
                 <a href="{% url 'user_appointments' user.id %}" class='btn btn-success' name='a' type="submit">Appoint</a>
             </div>
         </div>

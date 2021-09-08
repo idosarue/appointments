@@ -11,9 +11,9 @@ from patient.forms import  AppointmentResponseForm
 from django.core.mail import EmailMessage, send_mail
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
-from accounts.forms import ValidationForm
 from accounts.models import Profile
 from datetime import datetime
+from django.contrib.auth.models import User
 
 class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
@@ -22,7 +22,12 @@ class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 class AllUsersList(SuperUserRequiredMixin, ListView):
     model = Profile
     template_name = 'therapist/all_users.html'
-    context_object_name = 'user_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = User.objects.get(is_superuser = True)
+        context['user_list'] = Profile.objects.exclude(user= user)
+        return context
 
 class AppointmentListView(SuperUserRequiredMixin, ListView):
     model = Appointment
@@ -44,9 +49,11 @@ class AcceptedAppointmentListView(SuperUserRequiredMixin, ListView):
 class PendingAppointmentListView(SuperUserRequiredMixin, ListView):
     model = AppointmentResponse
     template_name = 'therapist/pending_apts.html'
-    context_object_name = 'appointments'
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = AppointmentResponse.objects.exclude(is_approved=True)
+        return context
 
 class AppointmentResponseView(LoginRequiredMixin, CreateView):
     form_class = AppointmentResponseForm
@@ -62,19 +69,8 @@ class AppointmentResponseView(LoginRequiredMixin, CreateView):
         appoint.original_request = self.get_appointment()
         appoint.user = appoint.original_request.user
         appoint.save()
-        therapist_email = 'testdjangosar@gmail.com'
+        therapist_email = self.request.user.email
 
-        email_message_user = f'''
-        Hello {appoint.original_request.user.user.username}, your request for an appointment at: {appoint.original_request.start_time} , {appoint.original_request.appointment_date}
-        is not available, are you free at {appoint.start_time}, {appoint.appointment_date} ?
-        '''
-        # message_to_user = EmailMessage(
-        #     'Appointment Request',
-        #     email_message_user,
-        #     therapist_email,
-        #     [appoint.original_request.user.user.email],
-        #     reply_to=[therapist_email],
-        # )
         send_mail(
             'Appointment Request',
             'tests',
@@ -83,25 +79,23 @@ class AppointmentResponseView(LoginRequiredMixin, CreateView):
             fail_silently=False,
             html_message= render_to_string('therapist/email.html', {'appointment': appoint, 'user': appoint.original_request.user.user})
             )
-        
-        # message_to_user.send()
         return super().form_valid(form)
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def update_appointment_status(request, pk, status):
     appointment = get_object_or_404(Appointment, id=pk)
-    therapist_email = 'testdjangosar@gmail.com'
+    therapist_email = request.user.email
     if status == 'accept':
         appointment.choice = 'A'
         appointment.is_approved = True
         appointment.save()
         email_message_user = f'''
-        Hello {appointment.user}, your request for an appointment at: {appointment.start_time} ,{appointment.appointment_date}
-        is was approved.
+        Hello {appointment.user.user.first_name} {appointment.user.user.last_name}, your request for an appointment at: {appointment.start_time} ,{appointment.appointment_date}
+        was approved.
         '''
         email_message_therapist = f'''
-        you approved an appointment for: {appointment.user} {request.user.last_name}, at: {appointment.start_time} ,{appointment.appointment_date}
+        you approved an appointment for: {appointment.user.user.first_name} {appointment.user.user.last_name}, at: {appointment.start_time} ,{appointment.appointment_date}
         '''
         message_to_user = EmailMessage(
             'Appointment Request',
@@ -160,3 +154,4 @@ class UserAppointments(SuperUserRequiredMixin, ListView):
         context['future_appointments_response'] = self.get_profile().appointmentresponse_set.filter(appointment_date__gte=datetime.today(),is_approved=True)
         context['past_appointments_response'] = self.get_profile().appointmentresponse_set.filter(appointment_date__lt=datetime.today(), is_approved=True)
         return context
+

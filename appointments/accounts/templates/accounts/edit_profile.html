@@ -12,7 +12,15 @@
 {% endif %}
 <h1>Profile for {{user.username}}</h1>
 <h1>Email {{user.email}}</h1>
-<a href="{% url 'edit_profile' %}">Edit Profile</a>
+<form method="POST">
+    {% csrf_token %} 
+    {{user_form.as_p}} 
+    {{profile_form.as_p}}
+    <button class='btn btn-success' type="submit">Save</button> 
+</form>    
+<div class="container" style="min-width: 90vw;">
+    
+        
     
 </div>
     {% endblock %}
