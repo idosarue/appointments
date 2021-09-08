@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from .forms import ProfileForm, SignupForm, ValidationForm, EditUserForm, EditProfileForm
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 # Create your views here.
@@ -84,4 +84,12 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+        return super().form_valid(form)
+
+class ChangePasswordView(PasswordChangeView):
+    template_name = 'accounts/change_password.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Your password was changed successfully')
         return super().form_valid(form)
