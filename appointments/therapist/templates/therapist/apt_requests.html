@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content%}
+
+<div class="container">
+    <div class="row">
+        {% for appointment in appointments %}
+        {% if appointment.choice == None and not appointment.is_approved %}
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Patient: {{appointment.user.user.first_name}} {{appointment.user.user.last_name}}</h5>
+                <h5 class="card-title">Phone Number: {{appointment.user.phone_number}}</h5>
+                <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
+                <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
+                <h5 class="card-title">Requested on: {{appointment.timestamp}}</h5>
+                <a href="{% url 'apt_status' appointment.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
+                <a href="{% url 'apt_status' appointment.id 'update' %}" class='btn btn-primary' name='a' type="submit">Update</a>
+            </div>
+        </div>
+        {% endif %}
+
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
