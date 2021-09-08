@@ -9,9 +9,7 @@
       <li class="nav-item active">
         <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Cards For Sale</a>
-      </li>
+
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown
@@ -30,15 +28,33 @@
       <li class="nav-item">
           <a class="nav-link" href="{% url 'logout' %}">Logout {{user.username}}</a>
       </li>
-      <li>
-        <a href="#" class="nav-link">Offer Card For Sale</a>
-      </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'query_appointment' %}">Ask For Appointment</a>
+        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
       </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-    </li>
+        {% if user.is_superuser %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'apt_requests' %}">Appointment requests</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accepted_apts' %}">Accepted Appointments</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'pending_apts' %}">Pending Appointments</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'all_users' %}">Patients</a>
+        </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'query_appointment' %}">Ask For Appointment</a>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'future_appointments' %}">Future appointments</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'past_appointments' %}">Past appointments</a>
+        </li>
+        {% endif %}
       {% else %}
       <li class="nav-item">
           <a class="nav-link" href="{% url 'login' %}">Login</a>
@@ -47,15 +63,6 @@
         <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
       </li>
       {% endif %}
-      {% if user.is_superuser %}
-      <li class="nav-item">
-        <a class="nav-link" href="#">Create New Card</a>
-      </li>
-      {% endif %}
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
   </div>
 </nav>

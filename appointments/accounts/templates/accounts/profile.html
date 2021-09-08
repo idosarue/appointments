@@ -11,33 +11,9 @@
 </ul>
 {% endif %}
 <h1>Profile for {{user.username}}</h1>
-
-<div class="container" style="min-width: 90vw;">
+<h1>Email {{user.email}}</h1>
+<a href="{% url 'edit_profile' %}">Edit Profile</a>
+<a href="{% url 'password' %}">Change password</a>
     
-    <div class="container">
-        <div class="row">
-            {% for a in transaction.transactionresponse_set.all %}
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                <h5 class="card-title">Sender: {{transaction.trade_sender}}</h5>
-                <h5 class="card-title">Original Card: {{transaction.card}}</h5>
-                <h5 class="card-title">offer Card: {{a.card}}</h5>
-                    {% if a.trade_choice == None %}
-                            {% if transaction.trade_reciever == user.profile %}
-                            <a aria-disabled="true" class='btn btn-warning' type="submit">Pending</a>
-                            {% else %}
-                            <a href="{% url 'trade_response_status' a.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
-                            <a href="{% url 'trade_response_status' a.id 'reject' %}" class='btn btn-danger' name='a' type="submit">Reject</a>
-                            {% endif %}
-                    {% elif a.trade_choice == 1 %}
-                    <a href="#" aria-disabled="true" class='btn btn-success' type="submit">Accepted</a>
-                    {% elif a.trade_choice == 0 %}
-                    <a href="#" aria-disabled="true" class='btn btn-danger' type="submit">Rejected</a>
-                    {% endif %}
-            </div>
-        {% endfor %}
-    
-        </div>
-    
-    </div>
+</div>
     {% endblock %}
