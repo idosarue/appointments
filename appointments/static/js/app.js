@@ -1,4 +1,3 @@
-
 $(function date () {
     $("#datepicker").datepicker({
         changeMonth: true,
@@ -15,5 +14,13 @@ $(function birth_picker() {
         changeYear: true,
         yearRange: "1930:2003",
         dateFormat: "dd-mm-yy",
+    })
+});
+
+$(function calendar_picker() {
+    $("#calendar_picker").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd-mm-yy',
     })
 });

@@ -12,4 +12,5 @@ urlpatterns = [
     path('all_users/', views.AllUsersList.as_view(), name='all_users'),
     path('user_appointments/<int:pk>', views.UserAppointments.as_view(), name='user_appointments'),
     path('calendar/', views.CalendarView.as_view(), name='calendar'),
+    path('get_month/<int:month>/', views.get_month_num, name='get_month'),
 ]

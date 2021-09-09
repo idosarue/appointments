@@ -12,4 +12,5 @@ def edit_site():
     site.name= 'my_site.com'
     site.save()
 
-edit_site()
+# edit_site()
+

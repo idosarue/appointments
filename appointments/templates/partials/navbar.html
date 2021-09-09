@@ -44,6 +44,9 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'all_users' %}">Patients</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'calendar' %}">Calendar</a>
+        </li>
         {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'query_appointment' %}">Ask For Appointment</a>

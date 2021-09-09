@@ -18,7 +18,7 @@ from django.contrib.auth.models import User
 from .utils import Calendar
 from django.utils.safestring import mark_safe
 from django.contrib.sites.models import Site
-
+from .forms import CalendarForm
 
 class SuperUserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -171,16 +171,35 @@ class CalendarView(ListView):
     model = Appointment
     template_name = 'therapist/calendar.html'
 
+    def get_date(self):
+        form = CalendarForm(self.request.GET)
+        if form.is_valid():
+            year = form.cleaned_data['year']
+            month = form.cleaned_data['month']
+            print(year)
+            return {'year' : year, 'month' : month}
+        
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        d = get_date(self.request.GET.get('day', None))
-        cal = Calendar(d.year, d.month)
+        if not self.get_date():
+            cal = Calendar(year=datetime.now().year, month=datetime.now().month)
+        else:
+            year = self.get_date()['year']
+            month = self.get_date()['month']
+            cal = Calendar(year=int(year), month=int(month))
         html_cal = cal.formatmonth(withyear=True)
+        context['form'] = CalendarForm
         context['calendar'] = mark_safe(html_cal)
         return context
+    
 
 def get_date(req_day):
     if req_day:
-        year, month = (int(x) for x in req_day.split('-'))
+        year, month = (int(x) for x in req_day)
         return datetime.date(year, month, day=1)
     return datetime.today()
+
+def get_month_num(request, month):
+    # month = get_object_or_404(Calendar, month=month)
+    return redirect('home')
