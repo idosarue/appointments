@@ -8,14 +8,12 @@ from .forms import AppointmentForm, AppointmentResponseForm
 from django.views.generic import CreateView, ListView, UpdateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import EmailMessage, send_mail
-from django.template.loader import render_to_string
 from datetime import datetime
+from send_emails import message_to_therapist, message_to_user
 
 # Create your views here.
 def home(request):
     return render(request, 'patient/home.html')
-
 
 class CreateAppointmentView(LoginRequiredMixin, CreateView):
     form_class = AppointmentForm
@@ -26,29 +24,8 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
         appoint = form.save(commit=False)
         appoint.user = self.request.user.profile
         appoint.save()
-        email_message_user = f'''
-        Hello {self.request.user.username}, your request for an appointment at: {form.cleaned_data['start_time']} , {form.cleaned_data['appointment_date']}
-        is being reviewed, we will get back to you soon.
-        '''
-        email_message_therapist = f'''
-        {self.request.user.first_name} {self.request.user.last_name}, requested an appointment at: {form.cleaned_data['start_time']} , {form.cleaned_data['appointment_date']}
-        '''
-        message_to_user = EmailMessage(
-            'Appointment Request',
-            email_message_user,
-            'testdjangosaru@gmail.com',
-            [self.request.user.email],
-        )
-
-        message_to_therapist = EmailMessage(
-            'Your appointment',
-            email_message_therapist,
-            'testdjangosaru@gmail.com',
-            ['testdjangosaru@gmail.com'],
-            reply_to=[self.request.user.email],
-        )
-        message_to_user.send()
-        message_to_therapist.send()
+        message_to_user(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])
+        message_to_therapist(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'], 'testdjangosaru@gmail.com')
         return super().form_valid(form)
 
 class FutureAppointmentsListView(ListView):

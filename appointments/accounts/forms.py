@@ -45,11 +45,6 @@ class ProfileForm(forms.ModelForm):
         return phone_number
 
 
-class ValidationForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ('username', 'password')
-
 class EditUserForm(forms.ModelForm):
     class Meta:
         model = User

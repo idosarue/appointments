@@ -2,7 +2,7 @@ from .models import Profile
 from django.db import models
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from .forms import ProfileForm, SignupForm, ValidationForm, EditUserForm, EditProfileForm
+from .forms import ProfileForm, SignupForm, EditUserForm, EditProfileForm
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth import login, authenticate
@@ -60,8 +60,7 @@ class MyLoginView(LoginView):
         return super().form_valid(form)
 
 class ValidationView(FormView):
-    form_class = ValidationForm
-    template_name = 'accounts/verification.html'
+    pass
 
 
 class EditProfileView(LoginRequiredMixin, UpdateView):

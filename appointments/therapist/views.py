@@ -19,6 +19,7 @@ from .utils import Calendar
 from django.utils.safestring import mark_safe
 from django.contrib.sites.models import Site
 from .forms import CalendarForm
+from send_emails import send_response_email_to_user, send_success_message_email_to_user, send_success_message_email_to_therapist
 
 class SuperUserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -74,56 +75,29 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
         appoint = form.save(commit=False)
         appoint.original_request = self.get_appointment()
         appoint.user = appoint.original_request.user
+        appoint.choice = 'P'
         appoint.save()
         therapist_email = self.request.user.email
-
-        send_mail(
-            'Appointment Request',
-            'tests',
-            therapist_email,
-            [appoint.original_request.user.user.email],
-            fail_silently=False,
-            html_message= render_to_string(
-                'therapist/email.html', 
-                {'appointment': appoint,
-                 'user': appoint.original_request.user.user, 'domain' : Site.objects.get_current().domain,
-                 'protocol' : 'http',
-                 })
-            )
+        send_response_email_to_user(appoint.original_request.user.user, appoint ,therapist_email)
         return super().form_valid(form)
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def update_appointment_status(request, pk, status):
     appointment = get_object_or_404(Appointment, id=pk)
+    appointment_date = appointment.appointment_date
+    start_time = appointment.start_time
     therapist_email = 'testdjangosaru@gmail.com'
     if status == 'accept':
-        appointment.choice = 'A'
-        appointment.is_approved = True
-        appointment.save()
-        email_message_user = f'''
-        Hello {appointment.user.user.first_name} {appointment.user.user.last_name}, your request for an appointment at: {appointment.start_time} ,{appointment.appointment_date}
-        was approved.
-        '''
-        email_message_therapist = f'''
-        you approved an appointment for: {appointment.user.user.first_name} {appointment.user.user.last_name}, at: {appointment.start_time} ,{appointment.appointment_date}
-        '''
-        message_to_user = EmailMessage(
-            'Appointment Request',
-            email_message_user,
-            therapist_email,
-            [appointment.user.user.email],
-        )
-
-        message_to_therapist = EmailMessage(
-            'Your appointment',
-            email_message_therapist,
-            therapist_email,
-            [therapist_email],
-            reply_to=[appointment.user.user.email],
-        )
-        message_to_user.send()
-        message_to_therapist.send()
+        if not Appointment.objects.filter(start_time=start_time,appointment_date=appointment_date, is_approved=True).exists():
+            appointment.choice = 'A'
+            appointment.is_approved = True
+            appointment.save()
+            send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
+            send_success_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
+        else:
+            messages.error(request, 'you cannot have meetings on the same time, send the user an update request')
+            return redirect('appointment_response', pk)
     else:
         appointment.choice = 'P'
         appointment.save()
@@ -133,12 +107,15 @@ def update_appointment_status(request, pk, status):
 @login_required
 def update_appointment_response_status(request, pk, status):
     appointment = get_object_or_404(AppointmentResponse, id=pk)
+    therapist_email = 'testdjangosaru@gmail.com'
     if request.user.profile == appointment.original_request.user:
         if status == 'accept':
             print(request.user.profile)
             print(appointment.id)
             appointment.is_approved = True
             appointment.save()
+            send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
+            send_success_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
         else:
             return redirect('query_appointment')
     return redirect('home')
@@ -161,7 +138,7 @@ class UserAppointments(SuperUserRequiredMixin, ListView):
         context['past_appointments_response'] = self.get_profile().appointmentresponse_set.filter(appointment_date__lt=datetime.today(), is_approved=True)
         return context
 
-class CalendarView(ListView):
+class CalendarView(SuperUserRequiredMixin,ListView):
     model = Appointment
     template_name = 'therapist/calendar.html'
 
