@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import datetime
+
+from django.db.models.deletion import CASCADE
 # Create your models here.
 CHOICES = [
     ('A', 'ACCEPT'),
@@ -22,4 +24,3 @@ class AppointmentResponse(models.Model):
 
     def approve_meeting(self):
         pass
-

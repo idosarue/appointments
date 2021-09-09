@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'appointments',
     'patient',
     'therapist',
+    'phonenumber_field',
     'crispy_forms',
 ]
 

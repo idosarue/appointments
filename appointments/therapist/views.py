@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from patient.models import Appointment, AppointmentResponse
 from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import EmailMessage
-from patient.forms import  AppointmentResponseForm
+from patient.forms import  AppointmentResponseForm, AppointmentForm
 from django.core.mail import EmailMessage, send_mail
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
@@ -23,8 +23,7 @@ from .forms import CalendarForm
 class SuperUserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         if self.request.user.is_authenticated:
-            return self.request.user.is_superuser
-        return False        
+            return self.request.user.is_superuser 
 
 class AllUsersList(SuperUserRequiredMixin, ListView):
     model = Profile
@@ -144,12 +143,7 @@ def update_appointment_response_status(request, pk, status):
             return redirect('query_appointment')
     return redirect('home')
 
-class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
-    model = AppointmentResponse
-    fields = ['start_time', 'appointment_date']
 
-    def get_success_url(self):
-        return reverse_lazy('post_detail', kwargs={'pk':self.object.id})
 
 class UserAppointments(SuperUserRequiredMixin, ListView):
     model = Profile
@@ -192,14 +186,41 @@ class CalendarView(ListView):
         context['form'] = CalendarForm
         context['calendar'] = mark_safe(html_cal)
         return context
-    
 
-def get_date(req_day):
-    if req_day:
-        year, month = (int(x) for x in req_day)
-        return datetime.date(year, month, day=1)
-    return datetime.today()
+class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
+    model = Appointment
+    fields = ['start_time', 'appointment_date']
+    success_url = reverse_lazy('calendar')
+    template_name = 'therapist/edit_appoint'
 
-def get_month_num(request, month):
-    # month = get_object_or_404(Calendar, month=month)
-    return redirect('home')
+    def get_appoint(self):
+        appoint = self.kwargs['pk']
+        return appoint
+
+class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
+    success_url = reverse_lazy('calendar')
+    form_class = AppointmentForm
+    template_name = 'therapist/edit_appoint.html'
+
+    def get_appoint(self):
+        appoint_id = self.kwargs['pk']
+        appoint = Appointment.objects.filter(id=appoint_id, is_approved=True).first()
+        return appoint
+
+    def get_object(self, queryset=None):
+        return self.get_appoint()
+
+class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
+    success_url = reverse_lazy('calendar')
+    template_name = 'therapist/edit_appoint.html'
+    form_class = AppointmentResponseForm
+
+    def get_appoint(self):
+        appoint_id = self.kwargs['pk']
+        appoint = AppointmentResponse.objects.filter(id=appoint_id, is_approved=True).first()
+        return appoint
+
+    def get_object(self, queryset=None):
+        return self.get_appoint()
+
+

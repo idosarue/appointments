@@ -13,10 +13,10 @@ class Calendar(HTMLCalendar):
         events_per_day2 = events2.filter(appointment_date__day=day)
         d = ''
         for event in events_per_day:
-            d += f'<li> {event.user.user.first_name} {event.user.user.last_name} {event.start_time}</li>'
+            d += f'<li> {event.user.user.first_name} {event.user.user.last_name} {event.start_time} <a href="/therapist/update_apt/{event.id}">edit</a></li>'
 
         for event in events_per_day2:
-            d += f'<li> {event.user.user.first_name} {event.user.user.last_name} {event.start_time}</li>'
+            d += f'<li> {event.user.user.first_name} {event.user.user.last_name} {event.start_time}<a href="/therapist/update_apt_res/{event.id}">edit</a></li>'
 
         if day:
             return f"<td><span class='date'>{day}</span><ul> {d} </ul></td>"
