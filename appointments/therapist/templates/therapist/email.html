@@ -12,7 +12,7 @@
         are you free at {{appointment.start_time}}, {{appointment.appointment_date}} ?
     </p>
     
-    <a href="http://localhost:8000/therapist/apt_status_res/{{appointment.id}}/{{'accept'}}">Accept</a>
-    <a href="http://localhost:8000/therapist/apt_status_res/{{appointment.id}}/{{'reject'}}">Reject </a>
+    <a href="{{protocol}}://{{domain}}{% url 'apt_status_res' appointment.id 'accept' %}">Accept</a>
+    <a href="{{protocol}}://{{domain}}{% url 'apt_status_res' appointment.id 'reject' %}">Reject </a>
 </body>
 </html>

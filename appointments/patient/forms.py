@@ -25,8 +25,9 @@ class AppointmentForm(forms.ModelForm):
     def clean_appointment_date(self):
         start_time = self.clean_start_time()
         appointment_date = self.cleaned_data['appointment_date']
+        original_appointment = AppointmentResponse.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
         appointment = Appointment.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
-        if appointment:
+        if appointment or original_appointment:
             raise forms.ValidationError('No Available Appointments for date and time specified. please choose another another time or date')
         elif appointment_date <= datetime.date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')

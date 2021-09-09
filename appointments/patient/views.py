@@ -36,15 +36,15 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
         message_to_user = EmailMessage(
             'Appointment Request',
             email_message_user,
-            'testdjangosar@gmail.com',
+            'testdjangosaru@gmail.com',
             [self.request.user.email],
         )
 
         message_to_therapist = EmailMessage(
             'Your appointment',
             email_message_therapist,
-            'testdjangosar@gmail.com',
-            ['testdjangosar@gmail.com'],
+            'testdjangosaru@gmail.com',
+            ['testdjangosaru@gmail.com'],
             reply_to=[self.request.user.email],
         )
         message_to_user.send()

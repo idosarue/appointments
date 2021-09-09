@@ -38,12 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'accounts',
     'appointments',
     'patient',
     'therapist',
     'crispy_forms',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -141,11 +144,11 @@ USE_L10N = False
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
-EMAIL_HOST_USER = 'testdjangosar@gmail.com'
+EMAIL_HOST_USER = 'testdjangosaru@gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 try:
     from .local_settings import *
 except ImportError:
-    raise Exception('you need a local_settings.py to run this project')
+    pass

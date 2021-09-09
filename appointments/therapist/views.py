@@ -1,4 +1,5 @@
 from django.db import models
+from django.http import request
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
@@ -14,10 +15,16 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from datetime import datetime
 from django.contrib.auth.models import User
+from .utils import Calendar
+from django.utils.safestring import mark_safe
+from django.contrib.sites.models import Site
 
-class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+
+class SuperUserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
-        return self.request.user.is_superuser
+        if self.request.user.is_authenticated:
+            return self.request.user.is_superuser
+        return False        
 
 class AllUsersList(SuperUserRequiredMixin, ListView):
     model = Profile
@@ -77,7 +84,12 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
             therapist_email,
             [appoint.original_request.user.user.email],
             fail_silently=False,
-            html_message= render_to_string('therapist/email.html', {'appointment': appoint, 'user': appoint.original_request.user.user})
+            html_message= render_to_string(
+                'therapist/email.html', 
+                {'appointment': appoint,
+                 'user': appoint.original_request.user.user, 'domain' : Site.objects.get_current().domain,
+                 'protocol' : 'http',
+                 })
             )
         return super().form_valid(form)
 
@@ -85,7 +97,7 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
 @user_passes_test(lambda u: u.is_superuser)
 def update_appointment_status(request, pk, status):
     appointment = get_object_or_404(Appointment, id=pk)
-    therapist_email = request.user.email
+    therapist_email = 'testdjangosaru@gmail.com'
     if status == 'accept':
         appointment.choice = 'A'
         appointment.is_approved = True
@@ -155,3 +167,20 @@ class UserAppointments(SuperUserRequiredMixin, ListView):
         context['past_appointments_response'] = self.get_profile().appointmentresponse_set.filter(appointment_date__lt=datetime.today(), is_approved=True)
         return context
 
+class CalendarView(ListView):
+    model = Appointment
+    template_name = 'therapist/calendar.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        d = get_date(self.request.GET.get('day', None))
+        cal = Calendar(d.year, d.month)
+        html_cal = cal.formatmonth(withyear=True)
+        context['calendar'] = mark_safe(html_cal)
+        return context
+
+def get_date(req_day):
+    if req_day:
+        year, month = (int(x) for x in req_day.split('-'))
+        return datetime.date(year, month, day=1)
+    return datetime.today()

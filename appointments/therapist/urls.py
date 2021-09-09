@@ -11,4 +11,5 @@ urlpatterns = [
     path('appointment_response/<int:pk>', views.AppointmentResponseView.as_view(), name='appointment_response'),
     path('all_users/', views.AllUsersList.as_view(), name='all_users'),
     path('user_appointments/<int:pk>', views.UserAppointments.as_view(), name='user_appointments'),
+    path('calendar/', views.CalendarView.as_view(), name='calendar'),
 ]
