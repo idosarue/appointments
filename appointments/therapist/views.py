@@ -5,14 +5,13 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from patient.models import Appointment, AppointmentResponse
 from django.contrib.auth.decorators import user_passes_test
-from patient.forms import  AppointmentResponseForm, AppointmentForm, EditAppointmentForm, EditAppointmentResponseForm
+from .forms import EditAppointmentForm, EditAppointmentResponseForm, AppointmentResponseForm
 from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from datetime import datetime
 from django.contrib.auth.models import User
 from .utils import Calendar
 from django.utils.safestring import mark_safe
-from django.contrib.sites.models import Site
 from .forms import CalendarForm
 from send_emails import (send_response_email_to_user, 
 send_success_message_email_to_user, 
@@ -173,40 +172,25 @@ class CalendarView(SuperUserRequiredMixin,ListView):
         context['calendar'] = mark_safe(html_cal)
         return context
 
-class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
-    model = Appointment
-    fields = ['start_time', 'appointment_date']
-    success_url = reverse_lazy('calendar')
-    template_name = 'therapist/edit_appoint'
-
-    def get_appoint(self):
-        appoint = self.kwargs['pk']
-        return appoint
 
 class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
     success_url = reverse_lazy('calendar')
     form_class = EditAppointmentForm
     template_name = 'therapist/edit_appoint.html'
+    model = Appointment
 
     def get_appoint(self):
         appoint_id = self.kwargs['pk']
         appoint = Appointment.objects.filter(id=appoint_id, is_approved=True).first()
         return appoint
 
-    def get_object(self, queryset=None):
-        return self.get_appoint()
-
 class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
     success_url = reverse_lazy('calendar')
     template_name = 'therapist/edit_appoint.html'
     form_class = EditAppointmentResponseForm
+    model = AppointmentResponse
 
     def get_appoint(self):
         appoint_id = self.kwargs['pk']
         appoint = AppointmentResponse.objects.filter(id=appoint_id, is_approved=True).first()
         return appoint
-
-    def get_object(self, queryset=None):
-        return self.get_appoint()
-
-
