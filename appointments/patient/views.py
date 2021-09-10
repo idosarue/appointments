@@ -27,7 +27,7 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
         appoint.user = self.request.user.profile
         appoint.save()
         send_message_to_user(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])
-        send_message_to_therapist(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'], 'testdjangosaru@gmail.com')
+        send_message_to_therapist(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])
         return super().form_valid(form)
 
 class CreateAppointmentViewAfterUpdate(LoginRequiredMixin, CreateView):
@@ -46,7 +46,7 @@ class CreateAppointmentViewAfterUpdate(LoginRequiredMixin, CreateView):
         original_appointment.choice = 'R'
         original_appointment.save()
         appoint.save()
-        send_message_to_therapist_after_update(original_appointment, self.request.user, appoint, 'testdjangosaru@gmail.com')
+        send_message_to_therapist_after_update(original_appointment, self.request.user, appoint)
         send_message_to_user(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])
         return super().form_valid(form)
 

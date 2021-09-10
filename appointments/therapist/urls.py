@@ -13,5 +13,7 @@ urlpatterns = [
     path('all_users/', views.AllUsersList.as_view(), name='all_users'),
     path('user_appointments/<int:pk>', views.UserAppointments.as_view(), name='user_appointments'),
     path('calendar/', views.CalendarView.as_view(), name='calendar'),
-    # path('get_appoint/<int:pk>', views.get_appoint, name='get_appoint'),
+    path('delete_appointment/<int:pk>', views.delete_appointment, name='delete_appointment'),
+    path('delete_appointment_response/<int:pk>', views.delete_appointment_response, name='delete_appointment_response'),
+    path('create_appoint/<int:year>/<int:month>/<int:day>/', views.TherapistCreateAppointmentView.as_view(), name='create_appoint'),
 ]

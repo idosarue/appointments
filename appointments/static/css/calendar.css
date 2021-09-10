@@ -24,8 +24,8 @@
     font-size: 25px;
   }
   
-  .date {
-    font-size: 16px;
+  .date a {
+    font-size: 1rem;
   }
   
   ul {

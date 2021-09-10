@@ -46,3 +46,17 @@ python -m smtpd -n -c DebuggingServer localhost:1025
         #     [appoint.original_request.user.user.email],
         #     reply_to=[therapist_email],
         # )
+# change appointment_date and user idea
+def appointment_update_date_validation(appointment_date, start_time, disabled_days, instance):
+    print(appointment_date.weekday())
+    original_appointment = AppointmentResponse.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True)
+    appointment = Appointment.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True)
+    pending_original_appointment = AppointmentResponse.objects.filter(start_time=start_time, appointment_date=appointment_date, choice='P')
+    if appointment.exists() or original_appointment.exists() or pending_original_appointment.exists():
+        if not instance.start_time == start_time or not instance.appointment_date == appointment_date: # if the time for the appointment is the same we can safely change the user
+            raise forms.ValidationError('No Available Appointments for date and time specified. please choose another another time or date')
+    elif appointment_date.weekday() in disabled_days:
+        raise forms.ValidationError('you cannot ask for a meeting on a weekend')
+    elif appointment_date <= date.today():
+        raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
+    return appointment_date
