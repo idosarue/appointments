@@ -1,5 +1,3 @@
-from django.db import models
-from django.http import request
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
@@ -7,10 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from patient.models import Appointment, AppointmentResponse
 from django.contrib.auth.decorators import user_passes_test
-from django.core.mail import EmailMessage
 from patient.forms import  AppointmentResponseForm, AppointmentForm
-from django.core.mail import EmailMessage, send_mail
-from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from datetime import datetime
@@ -19,7 +14,10 @@ from .utils import Calendar
 from django.utils.safestring import mark_safe
 from django.contrib.sites.models import Site
 from .forms import CalendarForm
-from send_emails import send_response_email_to_user, send_success_message_email_to_user, send_success_message_email_to_therapist
+from send_emails import (send_response_email_to_user, 
+send_success_message_email_to_user, 
+send_success_message_email_to_therapist, 
+send_success_repsponse_message_email_to_therapist)
 
 class SuperUserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -99,8 +97,6 @@ def update_appointment_status(request, pk, status):
             messages.error(request, 'you cannot have meetings on the same time, send the user an update request')
             return redirect('appointment_response', pk)
     else:
-        appointment.choice = 'P'
-        appointment.save()
         return redirect('appointment_response', pk)
     return redirect('home')
 
@@ -115,9 +111,9 @@ def update_appointment_response_status(request, pk, status):
             appointment.is_approved = True
             appointment.save()
             send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
-            send_success_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
+            send_success_repsponse_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
         else:
-            return redirect('query_appointment')
+            return redirect('query_appointment_update', pk)
     return redirect('home')
 
 
@@ -149,8 +145,7 @@ class CalendarView(SuperUserRequiredMixin,ListView):
             month = form.cleaned_data['month']
             print(year)
             return {'year' : year, 'month' : month}
-        
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if not self.get_date():

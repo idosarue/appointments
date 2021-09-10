@@ -117,7 +117,7 @@ LANGUAGE_CODE = 'en-us'
 
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'ISRAEL'
 
 USE_I18N = True
 

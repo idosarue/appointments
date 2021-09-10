@@ -2,7 +2,7 @@ import datetime
 from django import forms
 from django.db import models
 from .models import Appointment, AppointmentResponse
-from datetime import time
+from datetime import time, date
 
 HOUR_CHOICES = [(time(hour=x, minute=30), f'{x:02d}:30') for x in range(9, 17)]
 
@@ -25,11 +25,14 @@ class AppointmentForm(forms.ModelForm):
     def clean_appointment_date(self):
         start_time = self.clean_start_time()
         appointment_date = self.cleaned_data['appointment_date']
+        print(appointment_date.weekday())
         original_appointment = AppointmentResponse.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
         appointment = Appointment.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
         if appointment or original_appointment:
             raise forms.ValidationError('No Available Appointments for date and time specified. please choose another another time or date')
-        elif appointment_date <= datetime.date.today():
+        elif appointment_date.weekday() == 4 or appointment_date.weekday() == 5:
+            raise forms.ValidationError('you cannot ask for a meeting on a weekend')
+        elif appointment_date <= date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
         return appointment_date
 
@@ -56,6 +59,8 @@ class AppointmentResponseForm(forms.ModelForm):
         appointment = Appointment.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
         if appointment or original_appointment:
             raise forms.ValidationError('No Available Appointments for date and time specified. please choose another another time or date')
-        if appointment_date <= datetime.date.today():
+        elif appointment_date.weekday() == 4 or appointment_date.weekday() == 5:
+            raise forms.ValidationError('you cannot ask for a meeting on a weekend')
+        elif appointment_date <= datetime.date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
         return appointment_date
