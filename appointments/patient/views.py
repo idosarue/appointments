@@ -43,6 +43,8 @@ class CreateAppointmentViewAfterUpdate(LoginRequiredMixin, CreateView):
         appoint = form.save(commit=False)
         appoint.user = self.request.user.profile
         original_appointment = self.get_appointment() 
+        original_appointment.choice = 'R'
+        original_appointment.save()
         appoint.save()
         send_message_to_therapist_after_update(original_appointment, self.request.user, appoint, 'testdjangosaru@gmail.com')
         send_message_to_user(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])

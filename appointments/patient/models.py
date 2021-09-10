@@ -6,6 +6,7 @@ from django.db.models.deletion import CASCADE
 CHOICES = [
     ('A', 'ACCEPT'),
     ('P','PENDING'),
+    ('R','REJECTED'),
 ]
 class Appointment(models.Model):
     start_time = models.TimeField()
@@ -19,6 +20,7 @@ class AppointmentResponse(models.Model):
     start_time = models.TimeField()
     appointment_date = models.DateField(auto_now_add=False)
     original_request = models.ForeignKey(Appointment, on_delete=models.CASCADE, null=True)
+    choice = models.CharField(choices=CHOICES, null=True, max_length=10) 
     user = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, null=True)
     is_approved = models.BooleanField(default=False)
 

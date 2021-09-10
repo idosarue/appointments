@@ -1,6 +1,6 @@
 import os
 import django
-from datetime import date
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'appointments.settings')
 django.setup()
 

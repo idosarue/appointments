@@ -1,10 +1,25 @@
+from accounts.models import Profile
 import datetime
 from django import forms
 from django.db import models
 from .models import Appointment, AppointmentResponse
 from datetime import time, date
+from django.contrib.auth.models import User
 
 HOUR_CHOICES = [(time(hour=x, minute=30), f'{x:02d}:30') for x in range(9, 17)]
+
+def appointment_date_validation(appointment_date, start_time, disabled_days):
+    print(appointment_date.weekday())
+    original_appointment = AppointmentResponse.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
+    appointment = Appointment.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
+    pending_original_appointment = AppointmentResponse.objects.filter(start_time=start_time, appointment_date=appointment_date, choice='P').exists()
+    if appointment or original_appointment or pending_original_appointment:
+        raise forms.ValidationError('No Available Appointments for date and time specified. please choose another another time or date')
+    elif appointment_date.weekday() in disabled_days:
+        raise forms.ValidationError('you cannot ask for a meeting on a weekend')
+    elif appointment_date <= date.today():
+        raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
+    return appointment_date
 
 class AppointmentForm(forms.ModelForm):
     class Meta:
@@ -25,16 +40,9 @@ class AppointmentForm(forms.ModelForm):
     def clean_appointment_date(self):
         start_time = self.clean_start_time()
         appointment_date = self.cleaned_data['appointment_date']
-        print(appointment_date.weekday())
-        original_appointment = AppointmentResponse.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
-        appointment = Appointment.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
-        if appointment or original_appointment:
-            raise forms.ValidationError('No Available Appointments for date and time specified. please choose another another time or date')
-        elif appointment_date.weekday() == 4 or appointment_date.weekday() == 5:
-            raise forms.ValidationError('you cannot ask for a meeting on a weekend')
-        elif appointment_date <= date.today():
-            raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-        return appointment_date
+        disabled_days = [4,5]
+        date = appointment_date_validation(appointment_date, start_time, disabled_days)
+        return date
 
 class AppointmentResponseForm(forms.ModelForm):
     class Meta:
@@ -55,12 +63,55 @@ class AppointmentResponseForm(forms.ModelForm):
     def clean_appointment_date(self):
         appointment_date = self.cleaned_data['appointment_date']
         start_time = self.clean_start_time()
-        original_appointment = AppointmentResponse.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
-        appointment = Appointment.objects.filter(start_time=start_time, appointment_date=appointment_date, is_approved=True).exists()
-        if appointment or original_appointment:
-            raise forms.ValidationError('No Available Appointments for date and time specified. please choose another another time or date')
-        elif appointment_date.weekday() == 4 or appointment_date.weekday() == 5:
-            raise forms.ValidationError('you cannot ask for a meeting on a weekend')
-        elif appointment_date <= datetime.date.today():
-            raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-        return appointment_date
+        disabled_days = [4,5]
+        date = appointment_date_validation(appointment_date, start_time, disabled_days)
+        return date
+
+
+class EditAppointmentForm(forms.ModelForm):
+    user = forms.ModelChoiceField(queryset=Profile.objects.exclude(id=1))
+    class Meta:
+        model = Appointment
+        exclude = ['is_approved', 'choice']
+
+        widgets = {
+            'appointment_date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
+            'start_time': forms.Select(choices=HOUR_CHOICES),
+        }
+
+    def clean_start_time(self):
+        start_time = self.cleaned_data['start_time']
+        if start_time < time(9,30,00) or start_time > time(16,30,00):
+            raise forms.ValidationError('Only choose times between 9am and 16:30pm')
+        return start_time
+
+    def clean_appointment_date(self):
+        start_time = self.clean_start_time()
+        appointment_date = self.cleaned_data['appointment_date']
+        disabled_days = [4,5]
+        date = appointment_date_validation(appointment_date, start_time, disabled_days)
+        return date
+
+class EditAppointmentResponseForm(forms.ModelForm):
+    user = forms.ModelChoiceField(queryset=User.objects.exclude(is_superuser=True))
+    class Meta:
+        model = AppointmentResponse
+        exclude = ['is_approved', 'choice']
+
+        widgets = {
+            'appointment_date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
+            'start_time': forms.Select(choices=HOUR_CHOICES),
+        }
+
+    def clean_start_time(self):
+        start_time = self.cleaned_data['start_time']
+        if start_time < time(9,30,00) or start_time > time(16,30,00):
+            raise forms.ValidationError('Only choose times between 9am and 16:30pm')
+        return start_time
+
+    def clean_appointment_date(self):
+        start_time = self.clean_start_time()
+        appointment_date = self.cleaned_data['appointment_date']
+        disabled_days = [4,5]
+        date = appointment_date_validation(appointment_date, start_time, disabled_days)
+        return date

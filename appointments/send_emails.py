@@ -23,6 +23,13 @@ def send_message_to_therapist(user, start_time, appointment_date, therapist_emai
     email_message_therapist,
     therapist_email,
     [therapist_email],
+    html_message= render_to_string(
+    'therapist/emails/email_to_therapist.html', 
+    {'user': user, 'domain' : Site.objects.get_current().domain,
+    'protocol' : 'http',
+    'start_time' : start_time,
+    'appointment_date' : appointment_date,
+    })
     )
 
 def send_message_to_therapist_after_update(original_appointment,user, appointment, therapist_email):
@@ -35,8 +42,15 @@ def send_message_to_therapist_after_update(original_appointment,user, appointmen
     email_message_therapist,
     therapist_email,
     [therapist_email],
+    html_message= render_to_string(
+    'therapist/emails/email_therapist_after_update.html', 
+    {'user': user, 'domain' : Site.objects.get_current().domain,
+    'protocol' : 'http',
+    'appointment' : appointment,
+    'original_appointment' : original_appointment
+    })
     )
-    
+  
 def send_response_email_to_user(user, appointment, therapist_email):
         send_mail(
         'Appointment Request',
@@ -45,7 +59,7 @@ def send_response_email_to_user(user, appointment, therapist_email):
         [user.email],
         fail_silently=False,
         html_message= render_to_string(
-            'therapist/email.html', 
+            'therapist/emails/email.html', 
             {'appointment': appointment,
                 'user': user, 'domain' : Site.objects.get_current().domain,
                 'protocol' : 'http',

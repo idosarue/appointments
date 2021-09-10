@@ -6,3 +6,5 @@ class Profile(models.Model):
     date_of_birth = models.DateField(auto_now=False, auto_now_add=False, blank=True)
     phone_number = models.CharField(max_length=10, unique=True, null=True)
 
+    def __str__(self):
+        return f'{self.user}'

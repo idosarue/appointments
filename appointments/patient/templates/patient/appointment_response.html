@@ -10,6 +10,16 @@
     {% endfor %}
 </ul>
 {% endif %}
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h3 class="card-title">Original request</h3>
+        <h5 class="card-title">Patient: {{appointment.user.user.first_name}} {{appointment.user.user.last_name}}</h5>
+        <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
+        <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
+    </div>
+</div>
+
 <form method="POST">
     {% csrf_token %} 
     <small>Office hours are 9am to 6pm</small>

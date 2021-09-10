@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from patient.models import Appointment, AppointmentResponse
 from django.contrib.auth.decorators import user_passes_test
-from patient.forms import  AppointmentResponseForm, AppointmentForm
+from patient.forms import  AppointmentResponseForm, AppointmentForm, EditAppointmentForm, EditAppointmentResponseForm
 from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from datetime import datetime
@@ -37,8 +37,12 @@ class AllUsersList(SuperUserRequiredMixin, ListView):
 class AppointmentListView(SuperUserRequiredMixin, ListView):
     model = Appointment
     template_name = 'therapist/apt_requests.html'
-    context_object_name = 'appointments'
     ordering = 'timestamp'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = Appointment.objects.filter(is_approved=False, choice=None)
+        return context
 
 class AcceptedAppointmentListView(SuperUserRequiredMixin, ListView):
     model = Appointment
@@ -74,11 +78,17 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
         appoint.original_request = self.get_appointment()
         appoint.user = appoint.original_request.user
         appoint.choice = 'P'
+        appoint.original_request.choice = 'R'
+        appoint.original_request.save()
         appoint.save()
         therapist_email = self.request.user.email
         send_response_email_to_user(appoint.original_request.user.user, appoint ,therapist_email)
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointment'] = self.get_appointment()
+        return context
 
 @user_passes_test(lambda u: u.is_superuser)
 def update_appointment_status(request, pk, status):
@@ -87,14 +97,18 @@ def update_appointment_status(request, pk, status):
     start_time = appointment.start_time
     therapist_email = 'testdjangosaru@gmail.com'
     if status == 'accept':
-        if not Appointment.objects.filter(start_time=start_time,appointment_date=appointment_date, is_approved=True).exists():
-            appointment.choice = 'A'
-            appointment.is_approved = True
-            appointment.save()
-            send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
-            send_success_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
+        if not AppointmentResponse.objects.filter(start_time=start_time,appointment_date=appointment_date, choice='P').exists():
+            if not Appointment.objects.filter(start_time=start_time,appointment_date=appointment_date, is_approved=True).exists():
+                appointment.choice = 'A'
+                appointment.is_approved = True
+                appointment.save()
+                send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
+                send_success_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date, therapist_email)
+            else:
+                messages.error(request, 'you cannot have meetings on the same time, send the user an update request')
+                return redirect('appointment_response', pk)
         else:
-            messages.error(request, 'you cannot have meetings on the same time, send the user an update request')
+            messages.error(request, 'you already have a pending meeting on the same time, send the user an update request')
             return redirect('appointment_response', pk)
     else:
         return redirect('appointment_response', pk)
@@ -171,7 +185,7 @@ class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
 
 class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
     success_url = reverse_lazy('calendar')
-    form_class = AppointmentForm
+    form_class = EditAppointmentForm
     template_name = 'therapist/edit_appoint.html'
 
     def get_appoint(self):
@@ -185,7 +199,7 @@ class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
 class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
     success_url = reverse_lazy('calendar')
     template_name = 'therapist/edit_appoint.html'
-    form_class = AppointmentResponseForm
+    form_class = EditAppointmentResponseForm
 
     def get_appoint(self):
         appoint_id = self.kwargs['pk']
