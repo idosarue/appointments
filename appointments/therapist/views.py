@@ -1,3 +1,4 @@
+from django.db.models import query
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
@@ -8,20 +9,24 @@ from django.contrib.auth.decorators import user_passes_test
 from .forms import EditAppointmentForm, EditAppointmentResponseForm, AppointmentResponseForm
 from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
-from datetime import datetime, date
 from django.contrib.auth.models import User
+import datetime
 from .utils import Calendar
 from django.utils.safestring import mark_safe
-from .forms import CalendarForm, TherapistCreateAppointmentForm
+from .forms import CalendarForm, TherapistCreateAppointmentForm, DisabledDaysForm
+from .models import DisabledDays
 from send_emails import (send_response_email_to_user, 
 send_success_message_email_to_user, 
 send_success_message_email_to_therapist, 
 send_success_repsponse_message_email_to_therapist)
 
+
 class SuperUserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         if self.request.user.is_authenticated:
-            return self.request.user.is_superuser 
+            return self.request.user.is_superuser
+        else:
+            return False 
 
 class AllUsersList(SuperUserRequiredMixin, ListView):
     model = Profile
@@ -159,11 +164,12 @@ class CalendarView(SuperUserRequiredMixin,ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if not self.get_date():
-            cal = Calendar(year=datetime.now().year, month=datetime.now().month)
+            cal = Calendar(year=datetime.datetime.now().year, month=datetime.datetime.now().month)
         else:
             year = self.get_date()['year']
             month = self.get_date()['month']
             cal = Calendar(year=int(year), month=int(month))
+        cal.setfirstweekday(6)
         html_cal = cal.formatmonth(withyear=True)
         context['form'] = CalendarForm
         context['calendar'] = mark_safe(html_cal)
@@ -229,7 +235,7 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
         month = self.kwargs['month']
         day = self.kwargs['day']
         print(year, month, day)
-        appoint_date = date(year, month, day)
+        appoint_date = datetime.date(year, month, day)
         return appoint_date
 
     def form_valid(self, form):
@@ -247,10 +253,55 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
         form.fields['user'].queryset = Profile.objects.exclude(id=1)
-        form.fields['appointment_date'].value = date(2021, 1, 1)
+        form.fields['appointment_date'].initial = self.get_date()
         return form
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['date'] = self.get_date()
+        return context
+
+class DisableDaysView(CreateView):
+    form_class = DisabledDaysForm
+    template_name = 'therapist/therapist_settings.html'
+    success_url = reverse_lazy('profile')
+
+    def form_valid(self, form):
+        day = form.save(commit=False)
+        day.is_disabled=True
+        day.save()
+        return super().form_valid(form)
+    
+    # def get_form(self, form_class=None):
+    #     form = super().get_form(form_class=form_class)
+    #     form.fields['days'].choices = DisabledDays.objects.all()
+    #     return form
+
+class DisableDaysView(SuperUserRequiredMixin,UpdateView):
+    form_class = DisabledDaysForm
+    template_name = 'therapist/disable_days.html'
+    success_url = reverse_lazy('profile')
+    model = DisabledDays
+
+    def get_object(self, queryset=None):
+        a = DisabledDays.objects.first()
+        return a
+
+    def form_valid(self, form):
+        day = form.save(commit=False)
+        day.is_disabled=True
+        day.save()
+        return super().form_valid(form)
+
+class PreferencesView(SuperUserRequiredMixin, ListView):
+    model = DisabledDays
+    template_name = 'therapist/therapist_settings.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        days = DisabledDays.objects.last()
+        disabled_days = [int(x) for x in days.days if x.isnumeric()] 
+        day_li = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        day_to_con = [day_li[i] for i in disabled_days]
+        context['disabled_days'] = day_to_con
         return context

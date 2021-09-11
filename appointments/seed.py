@@ -5,6 +5,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'appointments.settings')
 django.setup()
 
 from django.contrib.sites.models import Site
+from therapist.models import DisabledDays
 
 def edit_site():
     site = Site.objects.get(id=1)
@@ -13,4 +14,10 @@ def edit_site():
     site.save()
 
 # edit_site()
+
+# def create_day_choice():
+#     day_num_li = list(range(7))
+#     days = DisabledDays.objects.create(days=day_num_li)
+#     return days
+# create_day_choice()
 

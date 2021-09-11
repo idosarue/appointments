@@ -1,8 +1,7 @@
 from datetime import date, datetime, timedelta
 from calendar import HTMLCalendar
 from patient.models import Appointment, AppointmentResponse
-disabled_days = [4,5]
-
+from therapist.models import DisabledDays
 
 class Calendar(HTMLCalendar):
     def __init__(self, year=None, month=None):
@@ -22,8 +21,11 @@ class Calendar(HTMLCalendar):
 
         if day:
             v_date = date(self.year, self.month, day)
+            
+            days = DisabledDays.objects.last()
+            disabled_days = [int(x) for x in days.days if x.isnumeric()]
             if v_date > date.today() and not v_date.weekday() in disabled_days:
-                return f"<td><span class='date'>{day}<a href='/therapist/create_appoint/{self.year}/{self.month}/{day}/'>Add Appointment</a></span><ul>{d}</ul></td>"
+                return f"<td><span class='date'>{day}<a href='/therapist/create_appoint/{self.year}/{self.month}/{day}/'>+</a></span><ul>{d}</ul></td>"
             else:
                 return f"<td><span class='date'>{day} </span><ul>{d}</ul></td>"
 

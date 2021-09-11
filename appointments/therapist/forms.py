@@ -1,16 +1,25 @@
 from django import forms
 from django.db import models
+from django.db.models import fields
+from django.forms import widgets
 from patient.models import *
+from .models import DisabledDays
 from patient.forms import appointment_date_validation, HOUR_CHOICES
 from datetime import date, time
 
+day_li = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
+DAY_CHOICES = [(x,y) for x,y in enumerate(day_li)]
 
 YEAR_CHOICES = [(x+2021,y) for x,y in enumerate(list(range(2021,2051)))]
 
 month_li = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 MONTH_CHOICES = [(x,y) for x,y in enumerate(month_li, 1)]
+
+days = DisabledDays.objects.last()
+disabled_days = [int(x) for x in days.days if x.isnumeric()]
+
 
 class CalendarForm(forms.Form):
     year = forms.ChoiceField(choices = YEAR_CHOICES)
@@ -35,7 +44,6 @@ class AppointmentResponseForm(forms.ModelForm):
     def clean_appointment_date(self):
         appointment_date = self.cleaned_data['appointment_date']
         start_time = self.clean_start_time()
-        disabled_days = [4,5]
         date = appointment_date_validation(appointment_date, start_time, disabled_days)
         return date
 
@@ -59,7 +67,6 @@ class EditAppointmentResponseForm(forms.ModelForm):
     def clean_appointment_date(self):
         start_time = self.clean_start_time()
         appointment_date = self.cleaned_data['appointment_date']
-        disabled_days = [4,5]
         date = appointment_date_validation(appointment_date, start_time, disabled_days)
         return date
 
@@ -83,7 +90,6 @@ class EditAppointmentForm(forms.ModelForm):
     def clean_appointment_date(self):
         start_time = self.clean_start_time()
         appointment_date = self.cleaned_data['appointment_date']
-        disabled_days = [4,5]
         date = appointment_date_validation(appointment_date, start_time, disabled_days)
         return date
 
@@ -107,6 +113,17 @@ class TherapistCreateAppointmentForm(forms.ModelForm):
     def clean_appointment_date(self):
         appointment_date = self.cleaned_data['appointment_date']
         start_time = self.clean_start_time()
-        disabled_days = [4,5]
         date = appointment_date_validation(appointment_date, start_time, disabled_days)
         return date
+
+
+class DisabledDaysForm(forms.ModelForm):
+    class Meta:
+        model = DisabledDays
+        fields = ['days']
+        widgets = {
+            'days': forms.SelectMultiple(choices=DAY_CHOICES),
+        }
+
+
+

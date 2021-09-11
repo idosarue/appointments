@@ -5,6 +5,7 @@ from django.db import models
 from .models import Appointment, AppointmentResponse
 from datetime import time, date
 from django.contrib.auth.models import User
+from therapist.models import DisabledDays
 
 HOUR_CHOICES = [(time(hour=x, minute=30), f'{x:02d}:30') for x in range(9, 17)]
 
@@ -40,7 +41,8 @@ class AppointmentForm(forms.ModelForm):
     def clean_appointment_date(self):
         start_time = self.clean_start_time()
         appointment_date = self.cleaned_data['appointment_date']
-        disabled_days = [4,5]
+        days = DisabledDays.objects.first()
+        disabled_days = [int(x) for x in days.days if x.isnumeric()]
         date = appointment_date_validation(appointment_date, start_time, disabled_days)
         return date
 
