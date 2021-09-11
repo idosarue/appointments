@@ -54,7 +54,7 @@ class MyLoginView(LoginView):
         if user:
             login(self.request, user)
             if user.is_superuser:
-                return redirect('home')
+                return redirect('calendar')
             else:
                 return redirect('profile')
         return super().form_valid(form)

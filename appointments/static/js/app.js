@@ -24,3 +24,4 @@ $(function calendar_picker() {
         dateFormat: 'dd-mm-yy',
     })
 });
+

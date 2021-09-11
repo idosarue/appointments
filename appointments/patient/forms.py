@@ -5,9 +5,13 @@ from django.db import models
 from .models import Appointment, AppointmentResponse
 from datetime import time, date
 from django.contrib.auth.models import User
-from therapist.models import DisabledDays
+from therapist.models import DisabledDays, WorkingTime
 
-HOUR_CHOICES = [(time(hour=x, minute=30), f'{x:02d}:30') for x in range(9, 17)]
+minutes = WorkingTime.objects.first().minutes
+start_time = WorkingTime.objects.first().start_time
+end_time = WorkingTime.objects.first().end_time
+
+HOUR_CHOICES = [(time(hour=x, minute=minutes), f'{x:02d}:{minutes}') for x in range(start_time, end_time + 1)]
 
 def appointment_date_validation(appointment_date, start_time, disabled_days):
     print(appointment_date.weekday())
@@ -17,7 +21,7 @@ def appointment_date_validation(appointment_date, start_time, disabled_days):
     if appointment or original_appointment or pending_original_appointment:
         raise forms.ValidationError('No Available Appointments for date and time specified. please choose another another time or date')
     elif appointment_date.weekday() in disabled_days:
-        raise forms.ValidationError('you cannot ask for a meeting on a weekend')
+        raise forms.ValidationError('you cannot ask for a meeting on that day')
     elif appointment_date <= date.today():
         raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
     return appointment_date

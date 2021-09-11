@@ -13,8 +13,8 @@ from django.contrib.auth.models import User
 import datetime
 from .utils import Calendar
 from django.utils.safestring import mark_safe
-from .forms import CalendarForm, TherapistCreateAppointmentForm, DisabledDaysForm
-from .models import DisabledDays
+from .forms import CalendarForm, TherapistCreateAppointmentForm, DisabledDaysForm, WorkingTimeForm
+from .models import DisabledDays, WorkingTime
 from send_emails import (send_response_email_to_user, 
 send_success_message_email_to_user, 
 send_success_message_email_to_therapist, 
@@ -272,15 +272,11 @@ class DisableDaysView(CreateView):
         day.save()
         return super().form_valid(form)
     
-    # def get_form(self, form_class=None):
-    #     form = super().get_form(form_class=form_class)
-    #     form.fields['days'].choices = DisabledDays.objects.all()
-    #     return form
 
 class DisableDaysView(SuperUserRequiredMixin,UpdateView):
     form_class = DisabledDaysForm
     template_name = 'therapist/disable_days.html'
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy('preferences')
     model = DisabledDays
 
     def get_object(self, queryset=None):
@@ -293,13 +289,31 @@ class DisableDaysView(SuperUserRequiredMixin,UpdateView):
         day.save()
         return super().form_valid(form)
 
+
+class WorkingTimeView(SuperUserRequiredMixin,UpdateView):
+    form_class = WorkingTimeForm
+    template_name = 'therapist/working_time.html'
+    success_url = reverse_lazy('preferences')
+    model = WorkingTime
+
+    def get_object(self, queryset=None):
+        a = WorkingTime.objects.first()
+        return a
+
+    # def form_valid(self, form):
+    #     day = form.save(commit=False)
+    #     day.is_disabled=True
+    #     day.save()
+    #     return super().form_valid(form)
+
+
 class PreferencesView(SuperUserRequiredMixin, ListView):
     model = DisabledDays
     template_name = 'therapist/therapist_settings.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        days = DisabledDays.objects.last()
+        days = DisabledDays.objects.get(is_disabled=True)
         disabled_days = [int(x) for x in days.days if x.isnumeric()] 
         day_li = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
         day_to_con = [day_li[i] for i in disabled_days]

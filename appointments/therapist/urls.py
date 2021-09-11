@@ -17,5 +17,6 @@ urlpatterns = [
     path('delete_appointment_response/<int:pk>', views.delete_appointment_response, name='delete_appointment_response'),
     path('create_appoint/<int:year>/<int:month>/<int:day>/', views.TherapistCreateAppointmentView.as_view(), name='create_appoint'),
     path('disable_days/', views.DisableDaysView.as_view(), name='disable_days'),
+    path('working_time/', views.WorkingTimeView.as_view(), name='working_time'),
     path('preferences/', views.PreferencesView.as_view(), name='preferences'),
 ]

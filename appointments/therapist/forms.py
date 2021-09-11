@@ -3,9 +3,16 @@ from django.db import models
 from django.db.models import fields
 from django.forms import widgets
 from patient.models import *
-from .models import DisabledDays
-from patient.forms import appointment_date_validation, HOUR_CHOICES
+from .models import DisabledDays, WorkingTime
+from patient.forms import appointment_date_validation
 from datetime import date, time
+from therapist.models import DisabledDays, WorkingTime
+
+minutes = WorkingTime.objects.first().minutes
+start_time = WorkingTime.objects.first().start_time
+end_time = WorkingTime.objects.first().end_time
+
+HOUR_CHOICES = [(time(hour=x, minute=minutes), f'{x:02d}:{minutes}') for x in range(start_time, end_time +1)]
 
 day_li = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -127,3 +134,9 @@ class DisabledDaysForm(forms.ModelForm):
 
 
 
+
+class WorkingTimeForm(forms.ModelForm):
+    class Meta:
+        model = WorkingTime
+        fields = '__all__'
+    
