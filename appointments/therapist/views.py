@@ -276,7 +276,8 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
 @user_passes_test(lambda u: u.is_superuser)
 def disable_day(request, pk):
     day = get_object_or_404(Day, id=pk)
-    if Appointment.can_disable(day.week_day):
+    print(day.week_day)
+    if not Appointment.can_disable(day.week_day) or not AppointmentResponse.can_disable(day.week_day):
         messages.error(request, 'you have meetings or pending meetings on that day please make sure that weekday is clear before disabling')
         return redirect('preferences')
     else:

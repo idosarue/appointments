@@ -29,11 +29,8 @@ class Appointment(models.Model):
             return False
     @classmethod
     def can_disable(cls,week_day):
-        appoint = cls.objects.filter(appointment_date__week_day=week_day, is_approved=True)
-        print(appoint)
-        pending_appoint = AppointmentResponse.objects.filter(appointment_date__week_day=week_day, choice='P')
-        appoint_response = AppointmentResponse.objects.filter(appointment_date__week_day=week_day, is_approved=True)
-        if not appoint.exists() or not pending_appoint.exists() or not appoint_response.exists():
+        appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(is_approved=True)]
+        if not week_day in appoints:
             return True
         else:
             return False    
@@ -57,3 +54,16 @@ class AppointmentResponse(models.Model):
             return True
         else:
             return False
+    
+    @classmethod
+    def can_disable(cls,week_day):
+        appoint = cls.objects.filter(appointment_date__week_day=week_day +2, is_approved=True).exists()
+        pending_appoint = cls.objects.filter(appointment_date__week_day=week_day +2, choice='P').exists()
+    @classmethod
+    def can_disable(cls,week_day):
+        appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(is_approved=True)]
+        pend_appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(choice='P')]
+        if not week_day in appoints and not week_day in pend_appoints:
+            return True
+        else:
+            return False    
