@@ -1,17 +1,14 @@
 from accounts.models import Profile
 import datetime
+from datetime import datetime
 from django import forms
 from django.db import models
 from .models import Appointment, AppointmentResponse
 from datetime import time, date
 from django.contrib.auth.models import User
-from therapist.models import DisabledDays, WorkingTime
+from therapist.models import NewDisabledDays, WorkingTime
 
-minutes = WorkingTime.objects.first().minutes
-start_time = WorkingTime.objects.first().start_time
-end_time = WorkingTime.objects.first().end_time
 
-HOUR_CHOICES = [(time(hour=x, minute=minutes), f'{x:02d}:{minutes}') for x in range(start_time, end_time + 1)]
 
 def appointment_date_validation(appointment_date, start_time, disabled_days):
     print(appointment_date.weekday())
@@ -27,27 +24,39 @@ def appointment_date_validation(appointment_date, start_time, disabled_days):
     return appointment_date
 
 class AppointmentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # minutes = NewWorkingTime.objects.first().minutes
+        start_time = WorkingTime.objects.first().start_time
+        end_time = WorkingTime.objects.first().end_time
+        self.fields['start_time'].choices = [(time(hour=x, minute=00), f'{x:02d}:00') for x in range(start_time, end_time +1)]
+    start_time = forms.ChoiceField()
     class Meta:
         model = Appointment
-        exclude = ['user', 'is_approved', 'choice']
+        fields = ['start_time', 'appointment_date']
 
         widgets = {
             'appointment_date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
-            'start_time': forms.Select(choices=HOUR_CHOICES),
         }
 
     def clean_start_time(self):
-        start_time = self.cleaned_data['start_time']
-        if start_time < time(9,30,00) or start_time > time(16,30,00):
+        start = self.cleaned_data['start_time']
+        print(type(start))
+        # minutes = WorkingTime.objects.first().minutes
+        start_time = WorkingTime.objects.first().start_time
+        end_time = WorkingTime.objects.first().end_time
+        choices = [(time(hour=x, minute=00, second=00)) for x in range(start_time, end_time +1)]
+        if datetime.strptime(start, '%H:%M:%S').time() not in choices:
             raise forms.ValidationError('Only choose times between 9am and 16:30pm')
-        return start_time
+        return start
+
 
     def clean_appointment_date(self):
-        start_time = self.clean_start_time()
-        appointment_date = self.cleaned_data['appointment_date']
-        days = DisabledDays.objects.first()
+        days = NewDisabledDays.objects.last()
         disabled_days = [int(x) for x in days.days if x.isnumeric()]
-        date = appointment_date_validation(appointment_date, start_time, disabled_days)
-        return date
-
-
+        appointment_date = self.cleaned_data['appointment_date']
+        if appointment_date <= date.today():
+            raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
+        elif appointment_date.weekday() in disabled_days:
+            raise forms.ValidationError('you cannot ask for a meeting for that day')
+        return appointment_date

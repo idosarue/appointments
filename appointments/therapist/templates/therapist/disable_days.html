@@ -13,13 +13,11 @@
 {% endif %}
 <h3>{{date}}</h3>
 
-<form  method="POST">
-    <div class="form-group">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit">
-    </div>
-</form>
-<a class="btn btn-primary" href="{% url 'preferences' %}">Cancel</a>
+<ul>
+    {% for day in object_list %}
+    <li>{{day.name}}<a class="btn btn-primary" href="{% url 'disable_days' day.id %}">Disable</a></li>
+    {% endfor %}
+</ul>
+
 
 {% endblock %}

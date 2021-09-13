@@ -11,14 +11,27 @@
     {% endfor %}
 </ul>
 {% endif %}
-<h3>{{date}}</h3>
+
+<h1>Preferences</h1>
+
+<h3>Working Days</h3>
 <ul>
-    {% for day in disabled_days %}
-    <li>{{day}}</li>
+    {% for day in days %}
+        {% if day.is_disabled %}
+        <li>{{day.name}}<a class="btn btn-success" href="{% url 'enable_day' day.id %}">Enable</a></li>
+        {% else %}
+        <li>{{day.name}}<a class="btn btn-danger" href="{% url 'disable_day' day.id %}">Disable</a></li>
+        {% endif %}
     {% endfor %}
 </ul>
 
-<a class="btn btn-primary" href="{% url 'disable_days' %}">disable_days</a>
-<a class="btn btn-primary" href="{% url 'working_time' %}">Edit Working Time</a>
 
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h3 class="card-title">Working time</h3>
+        <h5 class="card-title">Start time: {{working_time.start_time}}</h5>
+        <h5 class="card-title">End time: {{working_time.end_time}}</h5>
+        <a class="btn btn-success" href="{% url 'working_time' %}">Edit working time</a>
+    </div>
+</div>
 {% endblock %}
