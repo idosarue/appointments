@@ -79,6 +79,9 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
         return get_object_or_404(Appointment, id=appoint_id)
 
     def form_valid(self, form):
+        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+            messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
+            return super().form_invalid(form)
         appoint = form.save(commit=False)
         appoint.original_request = self.get_appointment()
         appoint.user = appoint.original_request.user
@@ -100,18 +103,14 @@ def update_appointment_status(request, pk, status):
     appointment_date = appointment.appointment_date
     start_time = appointment.start_time
     if status == 'accept':
-        if not AppointmentResponse.objects.filter(start_time=start_time,appointment_date=appointment_date, choice='P').exists():
-            if not Appointment.objects.filter(start_time=start_time,appointment_date=appointment_date, is_approved=True).exists():
-                appointment.choice = 'A'
-                appointment.is_approved = True
-                appointment.save()
-                send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
-                send_success_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date)
-            else:
-                messages.error(request, 'you cannot have meetings on the same time, send the user an update request')
-                return redirect('appointment_response', pk)
+        if AppointmentResponse.is_vacant(start_time, appointment_date) and Appointment.is_vacant(start_time, appointment_date):
+            appointment.choice = 'A'
+            appointment.is_approved = True
+            appointment.save()
+            send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
+            send_success_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date)
         else:
-            messages.error(request, 'you already have a pending meeting on the same time, send the user an update request')
+            messages.error(request, 'you cannot have meetings on the same time, or set meetings for times pending, send the user an update request')
             return redirect('appointment_response', pk)
     else:
         return redirect('appointment_response', pk)
@@ -189,6 +188,9 @@ class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
         return appoint
     
     def form_valid(self, form):
+        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+            messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
+            return super().form_invalid(form)
         form.save()
         appointment = self.get_appoint()
         print(appointment.start_time)
@@ -207,6 +209,10 @@ class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
         return appoint
 
     def form_valid(self, form):
+        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+            messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
+            print('not')
+            return super().form_invalid(form)
         form.save()
         appointment = self.get_appoint()
         send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
@@ -241,15 +247,16 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
 
 
     def form_valid(self, form):
+        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+            messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
+            return super().form_invalid(form)
         appoint = form.save(commit=False)
-        # print(self.get_date())
-        # appoint.user = form.cleaned_data['user']
-        # appoint.choice = 'A'
-        # appoint.appointment_date = self.get_date()
-        # appoint.is_approved=True
-        duration = WorkingTime.objects.first().appointment_duration
-        # print(appoint.start_time)
-        # appoint.save()
+        appoint.user = form.cleaned_data['user']
+        appoint.choice = 'A'
+        appoint.appointment_date = form.cleaned_data['appointment_date']
+        appoint.is_approved=True
+        print(appoint.start_time)
+        appoint.save()
         send_success_message_email_to_user(appoint.user.user, appoint.start_time, appoint.appointment_date)
         send_success_message_email_to_therapist(appoint.user.user, appoint.start_time, appoint.appointment_date)
         return super().form_valid(form)
@@ -269,8 +276,12 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
 @user_passes_test(lambda u: u.is_superuser)
 def disable_day(request, pk):
     day = get_object_or_404(Day, id=pk)
-    day.is_disabled = True
-    day.save()
+    if Appointment.can_disable(day.week_day):
+        messages.error(request, 'you have meetings or pending meetings on that day please make sure that weekday is clear before disabling')
+        return redirect('preferences')
+    else:
+        day.is_disabled = True
+        day.save()
     return redirect('preferences')
 
 @user_passes_test(lambda u: u.is_superuser)

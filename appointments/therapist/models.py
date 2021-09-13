@@ -1,3 +1,4 @@
+# from patient.models import Appointment, AppointmentResponse
 from django.db import models
 
 # Create your models here.
@@ -10,6 +11,8 @@ class Day(models.Model):
     def __str__(self):
         return self.name
 
+    
+
 class NewDisabledDays(models.Model):
     day = models.ForeignKey(Day, on_delete=models.CASCADE)
 
@@ -21,8 +24,3 @@ class WorkingTime(models.Model):
     end_time = models.IntegerField(default=16)
 
         
-# class NewWorkingTime(models.Model):
-#     start_time = models.IntegerField(default=9)
-#     # minutes = models.IntegerField(default=30)
-#     end = models.IntegerField(default=16)
-#     # appointment_duration = models.IntegerField(default=1)

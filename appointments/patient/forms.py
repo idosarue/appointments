@@ -7,8 +7,7 @@ from .models import Appointment, AppointmentResponse
 from datetime import time, date
 from django.contrib.auth.models import User
 from therapist.models import NewDisabledDays, WorkingTime
-
-
+from therapist.models import Day
 
 def appointment_date_validation(appointment_date, start_time, disabled_days):
     print(appointment_date.weekday())
@@ -26,7 +25,6 @@ def appointment_date_validation(appointment_date, start_time, disabled_days):
 class AppointmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # minutes = NewWorkingTime.objects.first().minutes
         start_time = WorkingTime.objects.first().start_time
         end_time = WorkingTime.objects.first().end_time
         self.fields['start_time'].choices = [(time(hour=x, minute=00), f'{x:02d}:00') for x in range(start_time, end_time +1)]
@@ -38,11 +36,9 @@ class AppointmentForm(forms.ModelForm):
         widgets = {
             'appointment_date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
         }
-
+    
     def clean_start_time(self):
         start = self.cleaned_data['start_time']
-        print(type(start))
-        # minutes = WorkingTime.objects.first().minutes
         start_time = WorkingTime.objects.first().start_time
         end_time = WorkingTime.objects.first().end_time
         choices = [(time(hour=x, minute=00, second=00)) for x in range(start_time, end_time +1)]
@@ -52,8 +48,7 @@ class AppointmentForm(forms.ModelForm):
 
 
     def clean_appointment_date(self):
-        days = NewDisabledDays.objects.last()
-        disabled_days = [int(x) for x in days.days if x.isnumeric()]
+        disabled_days = [day.week_day for day in Day.objects.filter(is_disabled=True)]
         appointment_date = self.cleaned_data['appointment_date']
         if appointment_date <= date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')

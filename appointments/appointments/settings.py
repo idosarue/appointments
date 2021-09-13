@@ -121,7 +121,7 @@ TIME_ZONE = 'ISRAEL'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -137,8 +137,9 @@ STATICFILES_DIRS = [
 STATIC_URL = '/static/'
 
 DATE_FORMAT = "d-m-Y"
+TIME_FORMAT = 'H:i'
+DATETIME_FORMAT = 'd-m-Y H:i'
 
-USE_L10N = False
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

@@ -24,6 +24,7 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+            messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
         appoint = form.save(commit=False)
         appoint.user = self.request.user.profile
