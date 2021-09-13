@@ -201,8 +201,8 @@ class WorkingTimeForm(forms.ModelForm):
         apoointment_response__start_times = AppointmentResponse.objects.filter(is_approved=True, start_time__lt=starting_time).exists()  
         pending_apoointment__start_times = AppointmentResponse.objects.filter(choice='P', start_time__lt=starting_time).exists()  
         less_apoointment__end_times = Appointment.objects.filter(is_approved=True, start_time__gt=ending_time).exists()  
-        less_pending_apoointment__end_times = AppointmentResponse.objects.filter(is_approved=True, start_time__gt=ending_time).exists()
-        less_appoointment_response__end_times = AppointmentResponse.objects.filter(choice='P', start_time__gt=ending_time).exists()
+        less_pending_apoointment__end_times = AppointmentResponse.objects.filter(choice='P', start_time__gt=ending_time).exists()
+        less_appoointment_response__end_times = AppointmentResponse.objects.filter(is_approved=True, start_time__gt=ending_time).exists()
         if apoointment__start_times or apoointment_response__start_times:
             raise forms.ValidationError(f'you have appoitments set before {starting_time}')
         elif less_apoointment__end_times or less_appoointment_response__end_times :

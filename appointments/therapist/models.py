@@ -11,8 +11,6 @@ class Day(models.Model):
     def __str__(self):
         return self.name
 
-    
-
 class NewDisabledDays(models.Model):
     day = models.ForeignKey(Day, on_delete=models.CASCADE)
 
