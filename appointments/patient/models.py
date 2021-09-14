@@ -1,7 +1,7 @@
 from django.db import models
 import datetime
 from django.db.models.deletion import CASCADE
-from therapist.models import NewDisabledDays, Day
+from therapist.models import Day
 # Create your models here.
 CHOICES = [
     ('A', 'ACCEPT'),
@@ -15,6 +15,7 @@ class Appointment(models.Model):
     choice = models.CharField(choices=CHOICES, null=True, max_length=10) 
     user = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, null=True)
     is_approved = models.BooleanField(default=False)
+    is_cancelled = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     @classmethod
@@ -34,6 +35,13 @@ class Appointment(models.Model):
             return True
         else:
             return False    
+    @classmethod
+    def display(cls):
+        appoints = cls.objects.filter(is_cancelled=False, is_approved=True)
+        if appoints.exists():
+            return appoints
+        else:
+            return False
 
 class AppointmentResponse(models.Model):
     start_time = models.TimeField()
@@ -43,6 +51,7 @@ class AppointmentResponse(models.Model):
     choice = models.CharField(choices=CHOICES, null=True, max_length=10) 
     user = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, null=True)
     is_approved = models.BooleanField(default=False)
+    is_cancelled = models.BooleanField(default=False)
 
     @classmethod
     def is_vacant(cls, start_time, appointment_date):
@@ -54,11 +63,7 @@ class AppointmentResponse(models.Model):
             return True
         else:
             return False
-    
-    @classmethod
-    def can_disable(cls,week_day):
-        appoint = cls.objects.filter(appointment_date__week_day=week_day +2, is_approved=True).exists()
-        pending_appoint = cls.objects.filter(appointment_date__week_day=week_day +2, choice='P').exists()
+
     @classmethod
     def can_disable(cls,week_day):
         appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(is_approved=True)]
@@ -67,3 +72,11 @@ class AppointmentResponse(models.Model):
             return True
         else:
             return False    
+
+    @classmethod
+    def display(cls):
+        appoints = cls.objects.filter(is_cancelled=False, is_approved=True)
+        if appoints.exists():
+            return appoints
+        else:
+            return False

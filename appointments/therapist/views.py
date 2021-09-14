@@ -14,8 +14,8 @@ from datetime import datetime
 import datetime as dt
 from therapist.my_calendar import Calendar
 from django.utils.safestring import mark_safe
-from .forms import CalendarForm, TherapistCreateAppointmentForm, DisabledDaysForm, WorkingTimeForm
-from .models import Day, NewDisabledDays, WorkingTime
+from .forms import CalendarForm, TherapistCreateAppointmentForm, WorkingTimeForm
+from .models import Day, WorkingTime
 from send_emails import (send_response_email_to_user, 
 send_success_message_email_to_user, 
 send_success_message_email_to_therapist, 
@@ -35,8 +35,8 @@ class AllUsersList(SuperUserRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = User.objects.get(is_superuser = True)
-        context['user_list'] = Profile.objects.exclude(user= user)
+        users = User.objects.filter(is_superuser=False)
+        context['user_list'] = [user.profile for user in users]
         return context
 
 class AppointmentListView(SuperUserRequiredMixin, ListView):
@@ -46,7 +46,7 @@ class AppointmentListView(SuperUserRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['appointments'] = Appointment.objects.filter(is_approved=False, choice=None)
+        context['appointments'] = Appointment.objects.filter(choice=None)
         return context
 
 class AcceptedAppointmentListView(SuperUserRequiredMixin, ListView):
@@ -56,8 +56,12 @@ class AcceptedAppointmentListView(SuperUserRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['appointments'] = Appointment.objects.filter(is_approved=True)
-        context['appointments_response'] = AppointmentResponse.objects.filter(is_approved=True)
+        appoints_display = Appointment.display()
+        appoints_res_display = AppointmentResponse.display()
+        if appoints_display:
+            context['appointments'] = appoints_display
+        if appoints_res_display:
+            context['appointments_response'] = appoints_res_display
         return context
 
 class PendingAppointmentListView(SuperUserRequiredMixin, ListView):
@@ -87,6 +91,7 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
         appoint.user = appoint.original_request.user
         appoint.choice = 'P'
         appoint.original_request.choice = 'R'
+        appoint.original_request.is_cancelled = True
         appoint.original_request.save()
         appoint.save()
         send_response_email_to_user(appoint.original_request.user.user, appoint)
@@ -221,14 +226,14 @@ class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
 @user_passes_test(lambda u: u.is_superuser)
 def delete_appointment(request, pk):
     appoint = get_object_or_404(Appointment, id=pk)
-    appoint.is_approved = False
+    appoint.is_cancelled = True
     appoint.save()
     return redirect('calendar')
 
 @user_passes_test(lambda u: u.is_superuser) 
 def delete_appointment_response(request, pk):
     appoint = get_object_or_404(AppointmentResponse, id=pk)
-    appoint.is_approved = False
+    appoint.is_cancelled = True
     appoint.save()
     return redirect('calendar')
 
@@ -255,6 +260,7 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
         appoint.choice = 'A'
         appoint.appointment_date = form.cleaned_data['appointment_date']
         appoint.is_approved=True
+        # appoint.end_time = dt.time(hour=appoint.start_time.hour +1, minute=appoint.start_time.minute)
         print(appoint.start_time)
         appoint.save()
         send_success_message_email_to_user(appoint.user.user, appoint.start_time, appoint.appointment_date)
@@ -292,33 +298,6 @@ def enable_day(request, pk):
     day.save()
     return redirect('preferences')
 
-# class DisableDaysView(SuperUserRequiredMixin,UpdateView):
-#     template_name = 'therapist/preferences.html'
-#     success_url = reverse_lazy('preferences')
-#     model = NewDisabledDays
-
-#     def get_day(self):
-#         day_id = self.kwargs['pk']
-#         return 
-
- 
-
-# class EditDisableDaysView(SuperUserRequiredMixin,UpdateView):
-#     form_class = DisabledDaysForm
-#     template_name = 'therapist/disable_days.html'
-#     success_url = reverse_lazy('preferences')
-#     model = NewDisabledDays
-
-#     def form_valid(self, form):
-#         day = form.save(commit=False)
-#         day.is_disabled=False
-#         day.save()
-#         return super().form_valid(form)
-
-#     def get_form(self, form_class=None):
-#         form = super().get_form(form_class=form_class)
-#         form.fields['day'].queryset = NewDisabledDays.objects.filter(is_disabled=True)
-#         return form
 
 class WorkingTimeView(SuperUserRequiredMixin,UpdateView):
     form_class = WorkingTimeForm
@@ -330,13 +309,6 @@ class WorkingTimeView(SuperUserRequiredMixin,UpdateView):
         a = WorkingTime.objects.first()
         return a
 
-    # def form_valid(self, form):
-    #     print('valid')
-    #     return redirect('preferences')
-# class DisableDaysListView(SuperUserRequiredMixin, ListView):
-#     model = Day
-#     template_name = 'therapist/disable_days.html'
-
 
 class PreferencesView(SuperUserRequiredMixin, ListView):
     model = Day
@@ -344,6 +316,10 @@ class PreferencesView(SuperUserRequiredMixin, ListView):
     context_object_name = 'days'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['working_time'] = WorkingTime.objects.first()
+        start_time = WorkingTime.objects.first().start_time
+        end_time = WorkingTime.objects.first().end_time
+        minutes = WorkingTime.objects.first().minutes
+        context['start_time'] = dt.time(hour=start_time, minute=minutes)
+        context['end_time'] = dt.time(hour=end_time, minute=minutes)
         return context
     

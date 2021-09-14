@@ -7,6 +7,9 @@
         {% for user in user_list %}
         <div class="card" style="width: 18rem;">
             <div class="card-body">
+                {% if user.user.is_superuser %}
+                <h5 class="card-title">Therapist</h5>
+                {% endif %}
                 <h5 class="card-title">Name: {{user.user.first_name}} {{user.user.last_name}}</h5>
                 <h5 class="card-title">Email: {{user.user.email}}</h5>
                 <h5 class="card-title">Phone Number: {{user.phone_number}}</h5>

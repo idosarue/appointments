@@ -11,14 +11,15 @@ class Day(models.Model):
     def __str__(self):
         return self.name
 
-class NewDisabledDays(models.Model):
-    day = models.ForeignKey(Day, on_delete=models.CASCADE)
+# class NewDisabledDays(models.Model):
+#     day = models.ForeignKey(Day, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.day.name
+#     def __str__(self):
+#         return self.day.name
 
 class WorkingTime(models.Model):
     start_time = models.IntegerField(default=9)
+    minutes = models.IntegerField(default=30)
     end_time = models.IntegerField(default=16)
 
         

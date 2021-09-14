@@ -6,7 +6,7 @@ from django.db import models
 from .models import Appointment, AppointmentResponse
 from datetime import time, date
 from django.contrib.auth.models import User
-from therapist.models import NewDisabledDays, WorkingTime
+from therapist.models import WorkingTime
 from therapist.models import Day
 
 def appointment_date_validation(appointment_date, start_time, disabled_days):
@@ -27,7 +27,9 @@ class AppointmentForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         start_time = WorkingTime.objects.first().start_time
         end_time = WorkingTime.objects.first().end_time
-        self.fields['start_time'].choices = [(time(hour=x, minute=00), f'{x:02d}:00') for x in range(start_time, end_time +1)]
+        minutes = WorkingTime.objects.first().minutes
+      
+        self.fields['start_time'].choices = [(time(hour=x, minute=minutes), f'{x:02d}:00') for x in range(start_time, end_time +1)]
     start_time = forms.ChoiceField()
     class Meta:
         model = Appointment
@@ -41,7 +43,8 @@ class AppointmentForm(forms.ModelForm):
         start = self.cleaned_data['start_time']
         start_time = WorkingTime.objects.first().start_time
         end_time = WorkingTime.objects.first().end_time
-        choices = [(time(hour=x, minute=00, second=00)) for x in range(start_time, end_time +1)]
+        minutes = WorkingTime.objects.first().minutes
+        choices = [(time(hour=x, minute=minutes, second=00)) for x in range(start_time, end_time +1)]
         if datetime.strptime(start, '%H:%M:%S').time() not in choices:
             raise forms.ValidationError('Only choose times between 9am and 16:30pm')
         return start

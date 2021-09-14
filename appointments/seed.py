@@ -5,8 +5,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'appointments.settings')
 django.setup()
 
 from django.contrib.sites.models import Site
-from therapist.models import NewDisabledDays, WorkingTime, Day
+from therapist.models import WorkingTime, Day
 from datetime import time, timedelta
+
 def edit_site():
     site = Site.objects.get(id=1)
     site.domain = '127.0.0.1:8000'
@@ -28,10 +29,4 @@ def create_working_time():
 
 # create_working_time()
 
-def create_disbaled_days():
-    for i in Day.objects.all():
-        NewDisabledDays.objects.create(day=i)
-# create_disbaled_days()
 
-a = Day.objects.first()
-print(a.newdisableddays_set.all())

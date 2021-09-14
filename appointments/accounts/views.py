@@ -16,25 +16,23 @@ class SignupView(CreateView):
     template_name = 'accounts/signup.html'
 
     def form_valid(self, form):
-        profile_form = ProfileForm(self.request.POST)
+        user = form.save()
+        profile_form = ProfileForm(self.request.POST, instance=user.profile)
         if profile_form.is_valid():
-            form.save()
             user = authenticate(self.request, username=form.cleaned_data['username'], first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'], email=form.cleaned_data['email'], password=form.cleaned_data['password1'] )   
             if user:
-                profile = profile_form.save(commit=False)
-                profile.user = user
-                profile.save()
                 login(self.request, user)
             else:
                 messages.error(self.request, 'Something went wrong')
         else:
+            user.delete()
             return self.form_invalid(form)
 
         return redirect('home')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile_form'] = ProfileForm()
+        context['profile_form'] = ProfileForm(self.request.POST or None)
         return context
 
 class ProfileDetailView(LoginRequiredMixin,DetailView):
