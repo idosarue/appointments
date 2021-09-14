@@ -125,7 +125,7 @@ USE_L10N = False
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'home'
 
 

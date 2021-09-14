@@ -7,9 +7,8 @@ from django.views.generic import CreateView, DetailView, FormView, UpdateView
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
-# Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.conf import settings
 # Create your views here.
 class SignupView(CreateView):
     form_class = SignupForm
@@ -42,20 +41,27 @@ class ProfileDetailView(LoginRequiredMixin,DetailView):
     def get_object(self, queryset=None):
         return self.request.user.profile
 
+# class MyLoginView(LoginView):
+#     template_name = 'accounts/login.html'
+#     def form_valid(self, form):
+#         username = form.cleaned_data['username']
+#         password = form.cleaned_data['password']
+#         user = authenticate(self.request, username=username, password=password)
+#         if user:
+#             if user.is_superuser:
+#                 return redirect('calendar')
+#             else:
+#                 return redirect('profile')
+#         return super().form_valid(form)
+
 class MyLoginView(LoginView):
     template_name = 'accounts/login.html'
 
-    def form_valid(self, form):
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        user = authenticate(self.request, username=username, password=password)
-        if user:
-            login(self.request, user)
-            if user.is_superuser:
-                return redirect('calendar')
-            else:
-                return redirect('profile')
-        return super().form_valid(form)
+    def get_success_url(self) :
+        if self.request.user.is_superuser:
+            return reverse_lazy('calendar') 
+        else:
+            return super().get_success_url()
 
 class ValidationView(FormView):
     pass
@@ -85,7 +91,7 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
 
 class ChangePasswordView(PasswordChangeView):
     template_name = 'accounts/change_password.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('profile')
 
     def form_valid(self, form):
         messages.success(self.request, 'Your password was changed successfully')

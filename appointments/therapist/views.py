@@ -132,9 +132,10 @@ def update_appointment_response_status(request, pk, status):
             appointment.save()
             send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
             send_success_repsponse_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date)
+            messages.success(request, 'appointment approved')
         else:
             return redirect('query_appointment_update', pk)
-    return redirect('home')
+    return redirect('profile')
 
 
 
@@ -222,6 +223,12 @@ class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
         appointment = self.get_appoint()
         send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
         return super().form_valid(form)
+
+# @user_passes_test(lambda u: u.is_superuser)
+# def confirm_delete_appointment(request, pk):
+#     if status == 'yes':
+#         return redirect('delete_appointment', pk)
+#     return render(request, 'therapist/confirm_delete.html')
 
 @user_passes_test(lambda u: u.is_superuser)
 def delete_appointment(request, pk):

@@ -22,7 +22,7 @@ class Appointment(models.Model):
     def is_vacant(cls, start_time, appointment_date):
         print()
         disabled_days = [day.week_day for day in Day.objects.filter(is_disabled=True)]
-        appoint = cls.objects.filter(appointment_date=appointment_date, start_time=start_time,is_approved=True)
+        appoint = cls.objects.filter(appointment_date=appointment_date, start_time=start_time,is_approved=True, is_cancelled=False)
         pending_appoint = cls.objects.filter(appointment_date=appointment_date, start_time=start_time, choice='P')
         if not appoint.exists() and not pending_appoint.exists() and not appointment_date.weekday() in disabled_days:
             return True
@@ -30,7 +30,7 @@ class Appointment(models.Model):
             return False
     @classmethod
     def can_disable(cls,week_day):
-        appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(is_approved=True)]
+        appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(is_approved=True, is_cancelled=True)]
         if not week_day in appoints:
             return True
         else:
@@ -57,7 +57,7 @@ class AppointmentResponse(models.Model):
     def is_vacant(cls, start_time, appointment_date):
         print()
         disabled_days = [day.week_day for day in Day.objects.filter(is_disabled=True)]
-        appoint = cls.objects.filter(appointment_date=appointment_date, start_time=start_time,is_approved=True)
+        appoint = cls.objects.filter(appointment_date=appointment_date, start_time=start_time,is_approved=True, is_cancelled=False)
         pending_appoint = cls.objects.filter(appointment_date=appointment_date, start_time=start_time, choice='P')
         if not appoint.exists() and not pending_appoint.exists() and not appointment_date.weekday() in disabled_days:
             return True
@@ -66,8 +66,10 @@ class AppointmentResponse(models.Model):
 
     @classmethod
     def can_disable(cls,week_day):
-        appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(is_approved=True)]
-        pend_appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(choice='P')]
+        appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(is_approved=True, is_cancelled=False)]
+        pend_appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(choice='P', is_cancelled=False)]
+        print(pend_appoints)
+        print(appoints)
         if not week_day in appoints and not week_day in pend_appoints:
             return True
         else:

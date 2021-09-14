@@ -5,7 +5,6 @@ from django.db.models import fields
 from django.forms import widgets
 from django.utils.regex_helper import Choice
 from patient.models import *
-from patient.forms import appointment_date_validation
 from datetime import date, time, datetime
 from .models import WorkingTime, Day
 from django.forms.widgets import NumberInput
@@ -27,7 +26,12 @@ class AppointmentResponseForm(forms.ModelForm):
         start_time = WorkingTime.objects.first().start_time
         end_time = WorkingTime.objects.first().end_time
         minutes = WorkingTime.objects.first().minutes
-        self.fields['start_time'].choices = [(time(hour=x, minute=minutes), f'{x:02d}:{minutes}') for x in range(start_time, end_time +1)]
+        if minutes == 0:
+            display_minutes = '00'
+        else:
+            display_minutes = minutes
+        self.fields['start_time'].choices = [(time(hour=x, minute=minutes), f'{x:02d}:{display_minutes}') for x in range(start_time, end_time +1)]
+    start_time = forms.ChoiceField()
     start_time = forms.ChoiceField()
     class Meta:
         model = AppointmentResponse
@@ -64,11 +68,16 @@ class EditAppointmentResponseForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         start_time = WorkingTime.objects.first().start_time
         end_time = WorkingTime.objects.first().end_time
-        self.fields['start_time'].choices = [(time(hour=x, minute=00), f'{x:02d}:00') for x in range(start_time, end_time +1)]
+        minutes = WorkingTime.objects.first().minutes
+        if minutes == 0:
+            display_minutes = '00'
+        else:
+            display_minutes = minutes
+        self.fields['start_time'].choices = [(time(hour=x, minute=minutes), f'{x:02d}:{display_minutes}') for x in range(start_time, end_time +1)]
     start_time = forms.ChoiceField()
     class Meta:
         model = AppointmentResponse
-        exclude = ['user', 'is_approved', 'choice','original_request']
+        fields = ['start_time', 'appointment_date']
 
         widgets = {
             'appointment_date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
@@ -98,7 +107,12 @@ class EditAppointmentForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         start_time = WorkingTime.objects.first().start_time
         end_time = WorkingTime.objects.first().end_time
-        self.fields['start_time'].choices = [(time(hour=x, minute=00), f'{x:02d}:00') for x in range(start_time, end_time +1)]
+        minutes = WorkingTime.objects.first().minutes
+        if minutes == 0:
+            display_minutes = '00'
+        else:
+            display_minutes = minutes
+        self.fields['start_time'].choices = [(time(hour=x, minute=minutes), f'{x:02d}:{display_minutes}') for x in range(start_time, end_time +1)]
     start_time = forms.ChoiceField()
     class Meta:
         model = Appointment
@@ -154,6 +168,8 @@ class TherapistCreateAppointmentForm(forms.ModelForm):
         start_time = WorkingTime.objects.first().start_time
         end_time = WorkingTime.objects.first().end_time
         minutes = WorkingTime.objects.first().minutes
+
+
         choices = [(time(hour=x, minute=minutes, second=00)) for x in range(start_time, end_time +1)]
         if datetime.strptime(start, '%H:%M:%S').time() not in choices:
             raise forms.ValidationError('Only choose times from choices')

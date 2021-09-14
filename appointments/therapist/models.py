@@ -1,4 +1,3 @@
-# from patient.models import Appointment, AppointmentResponse
 from django.db import models
 
 # Create your models here.

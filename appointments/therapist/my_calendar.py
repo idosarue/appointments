@@ -3,6 +3,7 @@ from calendar import HTMLCalendar
 from patient.models import Appointment, AppointmentResponse
 from therapist.models import Day
 from django.urls import reverse_lazy
+import holidays
 class Calendar(HTMLCalendar):
     def __init__(self, year=None, month=None):
         self.year = year
@@ -14,20 +15,26 @@ class Calendar(HTMLCalendar):
         events_per_day2 = events2.filter(appointment_date__day=day)
         d = ''
         for event in events_per_day:
-            d += f'<li> {event.user.user.first_name} {event.user.user.last_name} {event.start_time}<a href="{reverse_lazy("update_apt", kwargs={"pk":event.id})}">edit</a> <br> <a href="{reverse_lazy("delete_appointment", kwargs= {"pk" :event.id})}">Delete</a></li>'
+            print()
+            d += f'<li> {event.user.user.first_name} {event.user.user.last_name} {event.start_time}<a  href="{reverse_lazy("update_apt", kwargs={"pk":event.id})}">edit</a> <br> <a href="{reverse_lazy("delete_appointment", kwargs= {"pk" :event.id})}" class="confirm_delete">Cancel</a></li>'
 
         for event in events_per_day2:
-            d += f'<li> {event.user.user.first_name} {event.user.user.last_name} {event.start_time}<a href="{reverse_lazy("update_apt_res", kwargs={"pk":event.id})}">edit</a> <br><a href="{reverse_lazy("delete_appointment_response", kwargs= {"pk" :event.id})}">Delete</a></li>'
+            d += f'<li> {event.user.user.first_name} {event.user.user.last_name} {event.start_time}<a href="{reverse_lazy("update_apt_res", kwargs={"pk":event.id})}">edit</a> <br><a href="{reverse_lazy("delete_appointment_response", kwargs= {"pk" :event.id})}" class="confirm_delete">Cancel</a></li>'
 
         if day:
             v_date = date(self.year, self.month, day)
-            
+            isr_holidays = holidays.CountryHoliday('ISR')
+            holi = ''
+            print()
+            if v_date in isr_holidays:
+                holi += isr_holidays.get(f'{v_date.year}-{v_date.month}-{v_date.day}')
+                print(holi)
             disabled_days = [x.week_day for x in Day.objects.filter(is_disabled=True)]
             if v_date > date.today() and not v_date.weekday() in disabled_days:
-                return f"<td><span class='date'>{day}<a href='{reverse_lazy('create_appoint', kwargs={'year': self.year, 'month': self.month, 'day': day})}'>+</a></span><ul>{d}</ul></td>"
+                return f"<td><span class='date'>{day} {holi} <a href='{reverse_lazy('create_appoint', kwargs={'year': self.year, 'month': self.month, 'day': day})}'>+</a></span><ul>{d}</ul></td>"
             else:
-                return f"<td><span class='date'>{day} </span><ul>{d}</ul></td>"
-
+                return f"<td><span class='date'>{day} {holi}</span><ul>{d}</ul></td>"
+        
         return '<td></td>'
 
     def formatweek(self, theweek, events, events2):
@@ -37,8 +44,8 @@ class Calendar(HTMLCalendar):
         return f'<tr> {week} </tr>'
     
     def formatmonth(self, withyear = True):
-        events = Appointment.objects.filter(appointment_date__year=self.year, appointment_date__month=self.month, is_approved=True, is_cancelled=False)
-        events2 = AppointmentResponse.objects.filter(appointment_date__year=self.year, appointment_date__month=self.month, is_approved=True, is_cancelled=False)
+        events = Appointment.objects.filter(appointment_date__year=self.year, appointment_date__month=self.month, is_approved=True, is_cancelled=False).order_by('start_time')
+        events2 = AppointmentResponse.objects.filter(appointment_date__year=self.year, appointment_date__month=self.month, is_approved=True, is_cancelled=False).order_by('start_time')
        	cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar">\n'
         cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
         cal += f'{self.formatweekheader()}\n'
