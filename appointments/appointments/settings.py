@@ -117,13 +117,19 @@ LANGUAGE_CODE = 'en-us'
 
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
 
+DATE_FORMAT = "d-m-Y"
+
+TIME_FORMAT = 'H:i'
+
+DATETIME_FORMAT = 'd-m-Y H:i'
+
 TIME_ZONE = 'ISRAEL'
 
 USE_I18N = True
 
 USE_L10N = False
-
-USE_TZ = True
+ 
+USE_TZ = False
 
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'home'
@@ -136,9 +142,7 @@ STATICFILES_DIRS = [
 ]
 STATIC_URL = '/static/'
 
-DATE_FORMAT = "d-m-Y"
-TIME_FORMAT = 'H:i'
-DATETIME_FORMAT = 'd-m-Y H:i'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

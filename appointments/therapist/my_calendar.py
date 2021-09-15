@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 from calendar import HTMLCalendar
 from patient.models import Appointment, AppointmentResponse
-from therapist.models import Day
+from therapist.models import Date, Day
 from django.urls import reverse_lazy
 import holidays
 class Calendar(HTMLCalendar):
@@ -27,9 +27,8 @@ class Calendar(HTMLCalendar):
             holi = ''
             if v_date in isr_holidays:
                 holi += isr_holidays.get(f'{v_date.year}-{v_date.month}-{v_date.day}')
-                print(holi)
-            disabled_days = [x.week_day for x in Day.objects.filter(is_disabled=True)]
-            if v_date > date.today() and not v_date.weekday() in disabled_days:
+                # print(holi)
+            if v_date > date.today() and not v_date.weekday() in Day.disabled_days() and not v_date in Date.disabled_dates():
                 return f"<td><span class='date'>{day} {holi}  <a href='{reverse_lazy('create_appoint', kwargs={'year': self.year, 'month': self.month, 'day': day})}'>+</a> </span><ul>{d}</ul></td>"
             else:
                 return f"<td><span class='date'>{day} {holi}</span><ul>{d}</ul></td>"
@@ -43,8 +42,8 @@ class Calendar(HTMLCalendar):
         return f'<tr> {week} </tr>'
     
     def formatmonth(self, withyear = True):
-        events = Appointment.objects.filter(appointment_date__year=self.year, appointment_date__month=self.month, is_approved=True, is_cancelled=False).order_by('start_time')
-        events2 = AppointmentResponse.objects.filter(appointment_date__year=self.year, appointment_date__month=self.month, is_approved=True, is_cancelled=False).order_by('start_time')
+        events = Appointment.display(appointment_date__year=self.year, appointment_date__month=self.month).order_by('start_time')
+        events2 = AppointmentResponse.display(appointment_date__year=self.year, appointment_date__month=self.month).order_by('start_time')
        	cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar">\n'
         cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
         cal += f'{self.formatweekheader()}\n'

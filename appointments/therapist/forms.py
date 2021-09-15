@@ -53,11 +53,10 @@ class AppointmentResponseForm(forms.ModelForm):
 
 
     def clean_appointment_date(self):
-        disabled_days = [day.week_day for day in Day.objects.filter(is_disabled=True)]
         appointment_date = self.cleaned_data['appointment_date']
         if appointment_date <= date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-        elif appointment_date.weekday() in disabled_days:
+        elif appointment_date.weekday() in Day.disabled_days():
             raise forms.ValidationError('you cannot ask for a meeting for that day')
         return appointment_date
     
@@ -94,11 +93,10 @@ class EditAppointmentResponseForm(forms.ModelForm):
 
 
     def clean_appointment_date(self):
-        disabled_days = [day.week_day for day in Day.objects.filter(is_disabled=True)]
         appointment_date = self.cleaned_data['appointment_date']
         if appointment_date <= date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-        elif appointment_date.weekday() in disabled_days:
+        elif appointment_date.weekday() in Day.disabled_days():
             raise forms.ValidationError('you cannot ask for a meeting for that day')
         return appointment_date
     
@@ -134,11 +132,10 @@ class EditAppointmentForm(forms.ModelForm):
 
 
     def clean_appointment_date(self):
-        disabled_days = [day.week_day for day in Day.objects.filter(is_disabled=True)]
         appointment_date = self.cleaned_data['appointment_date']
         if appointment_date <= date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-        elif appointment_date.weekday() in disabled_days:
+        elif appointment_date.weekday() in Day.disabled_days():
             raise forms.ValidationError('you cannot ask for a meeting for that day')
         return appointment_date
 
@@ -177,11 +174,10 @@ class TherapistCreateAppointmentForm(forms.ModelForm):
 
 
     def clean_appointment_date(self):
-        disabled_days = [day.week_day for day in Day.objects.filter(is_disabled=True)]
         appointment_date = self.cleaned_data['appointment_date']
         if appointment_date <= date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-        elif appointment_date.weekday() in disabled_days:
+        elif appointment_date.weekday() in Day.disabled_days():
             raise forms.ValidationError('you cannot ask for a meeting for that day')
         return appointment_date
 
@@ -194,15 +190,14 @@ class DisabledDatesForm(forms.ModelForm):
         }
 
     def clean_date(self):
-        disabled_dates = [x.date for x in Date.objects.filter(is_disabled=True)]
         # appoint = 
         d = self.cleaned_data['date']
-        print(d in disabled_dates)
         if d <= date.today():
             raise forms.ValidationError('day has passed')
-        elif d in disabled_dates:
-            print('asd')
+        elif d in Date.disabled_dates():
             raise forms.ValidationError('date already disabled')
+        elif Appointment.valid_appoint(appointment_date=d) or AppointmentResponse.valid_appoint(appointment_date=d) or AppointmentResponse.valid_pending_appoint(appointment_date=d):
+            raise forms.ValidationError('you have appointments for that day')
         return d
 
 class WorkingTimeForm(forms.ModelForm):
@@ -227,12 +222,12 @@ class WorkingTimeForm(forms.ModelForm):
             starting_time = time(hour=start_time, minute=minutes)
             ending_time = time(hour=end_time, minute=minutes)
             print(ending_time)
-            apoointment__start_times = Appointment.objects.filter(is_approved=True, start_time__lt=starting_time).exists()  
-            apoointment_response__start_times = AppointmentResponse.objects.filter(is_approved=True, start_time__lt=starting_time).exists()  
-            pending_apoointment__start_times = AppointmentResponse.objects.filter(choice='P', start_time__lt=starting_time).exists()  
-            less_apoointment__end_times = Appointment.objects.filter(is_approved=True, start_time__gt=ending_time).exists()  
-            less_pending_apoointment__end_times = AppointmentResponse.objects.filter(choice='P', start_time__gt=ending_time).exists()
-            less_appoointment_response__end_times = AppointmentResponse.objects.filter(is_approved=True, start_time__gt=ending_time).exists()
+            apoointment__start_times = Appointment.valid_appoint(start_time__lt=starting_time)
+            apoointment_response__start_times = AppointmentResponse.valid_appoint(start_time__lt=starting_time) 
+            pending_apoointment__start_times = AppointmentResponse.valid_pending_appoint(start_time__lt=starting_time)
+            less_apoointment__end_times = Appointment.valid_appoint(start_time__gt=ending_time)
+            less_pending_apoointment__end_times = AppointmentResponse.valid_pending_appoint(start_time__gt=ending_time)
+            less_appoointment_response__end_times = AppointmentResponse.valid_appoint(start_time__gt=ending_time)
         except ValueError:
             if start_time >= end_time:
                 raise forms.ValidationError('start time must be bigger than your end time')

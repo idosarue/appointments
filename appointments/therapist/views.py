@@ -100,6 +100,14 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
         appoint.original_request.choice = 'R'
         appoint.original_request.is_cancelled = True
         appoint.original_request.save()
+        x = datetime(
+            appoint.appointment_date.year,
+            appoint.appointment_date.month,
+            appoint.appointment_date.day,
+            appoint.start_time.hour,
+            appoint.start_time.minute,
+            )
+        appoint.date_t = x
         appoint.save()
         send_response_email_to_user(appoint.original_request.user.user, appoint)
         return super().form_valid(form)
@@ -156,10 +164,18 @@ class UserAppointments(SuperUserRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['past_appointments'] = self.get_profile().appointment_set.filter(appointment_date__lt=datetime.today(), is_approved=True)
-        context['future_appointments'] = self.get_profile().appointment_set.filter(appointment_date__gte=datetime.today(),is_approved=True)
-        context['future_appointments_response'] = self.get_profile().appointmentresponse_set.filter(appointment_date__gte=datetime.today(),is_approved=True)
-        context['past_appointments_response'] = self.get_profile().appointmentresponse_set.filter(appointment_date__lt=datetime.today(), is_approved=True)
+        past_appointments = Appointment.display(user=self.get_profile(), date_t__lt=datetime.today())
+        future_appointments = Appointment.display(user=self.get_profile(), date_t__gt=datetime.today())
+        past_appointments_response =  AppointmentResponse.display(user=self.get_profile(), date_t__lt=datetime.today())
+        future_appointments_response = AppointmentResponse.display(user=self.get_profile(), date_t__gt=datetime.today())
+        if past_appointments:
+            context['past_appointments'] = past_appointments
+        if future_appointments:
+            context['future_appointments'] = future_appointments
+        if past_appointments_response :
+            context['past_appointments_response'] = past_appointments_response
+        if future_appointments_response:
+            context['future_appointments_response'] = AppointmentResponse.display(user=self.get_profile(), date_t__gt=datetime.today())
         return context
 
 class CalendarView(SuperUserRequiredMixin,ListView):
@@ -312,11 +328,11 @@ def enable_day(request, pk):
     day.save()
     return redirect('preferences')
 # create_appoint/<int:year>/<int:month>/<int:day>/
-@user_passes_test(lambda u: u.is_superuser)
-def disable_date(request, year, month, day):
-    date = dt.date(year, month, day)
-    Date.objects.create(date=date, is_disabled=True)
-    return redirect('calendar')
+# @user_passes_test(lambda u: u.is_superuser)
+# def disable_date(request, year, month, day):
+#     date = dt.date(year, month, day)
+#     Date.objects.create(date=date, is_disabled=True)
+#     return redirect('calendar')
 
 class WorkingTimeView(SuperUserRequiredMixin,UpdateView):
     form_class = WorkingTimeForm

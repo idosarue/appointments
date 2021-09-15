@@ -1,3 +1,4 @@
+
 import os
 import django
 
@@ -6,8 +7,8 @@ django.setup()
 
 from django.contrib.sites.models import Site
 from therapist.models import WorkingTime, Day
-from datetime import time, timedelta
-
+from datetime import datetime, time, timedelta
+from patient.models import Appointment, AppointmentResponse
 def edit_site():
     site = Site.objects.get(id=1)
     site.domain = '127.0.0.1:8000'
@@ -29,4 +30,23 @@ def create_working_time():
 
 # create_working_time()
 
-
+def create_date_t():
+  
+    for appoint in Appointment.objects.all():
+        appoint.date_t = datetime(
+        appoint.appointment_date.year,
+        appoint.appointment_date.month,
+        appoint.appointment_date.day,
+        appoint.start_time.hour,
+        appoint.start_time.minute)
+        appoint.save()
+    for appoint in AppointmentResponse.objects.all():
+        appoint.date_t = datetime(
+        appoint.appointment_date.year,
+        appoint.appointment_date.month,
+        appoint.appointment_date.day,
+        appoint.start_time.hour,
+        appoint.start_time.minute)
+        appoint.save()
+# create_date_t()
+print(datetime.today().date())

@@ -28,6 +28,14 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
             return super().form_invalid(form)
         appoint = form.save(commit=False)
         appoint.user = self.request.user.profile
+        x = datetime(
+            appoint.appointment_date.year,
+            appoint.appointment_date.month,
+            appoint.appointment_date.day,
+            appoint.start_time.hour,
+            appoint.start_time.minute,
+            )
+        appoint.date_t = x
         appoint.save()
         send_message_to_user(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])
         send_message_to_therapist(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])
@@ -60,8 +68,14 @@ class FutureAppointmentsListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['appointments'] = Appointment.objects.filter(is_approved=True, user=self.request.user.profile, appointment_date__gte = datetime.today())
-        context['appointments_response'] = AppointmentResponse.objects.filter(is_approved=True, user=self.request.user.profile, appointment_date__gte = datetime.today())
+        a = datetime(2021,11,11, 11,11,11)
+        print(a)
+        appoint = Appointment.display(user=self.request.user.profile, date_t__gt = datetime.today())
+        appoint_response = AppointmentResponse.display(user=self.request.user.profile, date_t__gt = datetime.today())
+        if appoint:
+            context['appointments'] = appoint
+        if appoint_response:
+            context['appointments_response'] = appoint_response
         return context
 
 class PastAppointmentsListView(ListView):
@@ -70,8 +84,10 @@ class PastAppointmentsListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['appointments'] = Appointment.objects.filter(is_approved=True, user=self.request.user.profile, appointment_date__lt = datetime.today())
-        context['appointments_response'] = AppointmentResponse.objects.filter(is_approved=True, user=self.request.user.profile, appointment_date__lt = datetime.today())
+        appoint = Appointment.display(user=self.request.user.profile, date_t__lt=datetime.today())
+        appoint_response = AppointmentResponse.display(user=self.request.user.profile, date_t__lt=datetime.today())
+        context['appointments'] = appoint
+        context['appointments_response'] = appoint_response
         return context
 
 

@@ -10,9 +10,20 @@ class Day(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def disabled_days(cls):
+        disabled_days_li = [disabled_day.week_day for disabled_day in cls.objects.filter(is_disabled=True)]
+        return disabled_days_li
+        
 class Date(models.Model):
     date = models.DateField(null=True)
     is_disabled = models.BooleanField(default=False)
+
+    @classmethod
+    def disabled_dates(cls):
+        disabled_dates_li = [disabled_date.date for disabled_date in cls.objects.filter(is_disabled=True)]
+        return disabled_dates_li
 # class NewDisabledDays(models.Model):
 #     day = models.ForeignKey(Day, on_delete=models.CASCADE)
 
