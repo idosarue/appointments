@@ -6,7 +6,7 @@ from django.forms import widgets
 from django.utils.regex_helper import Choice
 from patient.models import *
 from datetime import date, time, datetime
-from .models import WorkingTime, Day
+from .models import Date, WorkingTime, Day
 from django.forms.widgets import NumberInput
 
 
@@ -185,11 +185,25 @@ class TherapistCreateAppointmentForm(forms.ModelForm):
             raise forms.ValidationError('you cannot ask for a meeting for that day')
         return appointment_date
 
-# class DisabledDaysForm(forms.ModelForm):
-#     # day = forms.ModelMultipleChoiceField(queryset=Day.objects.all())
-#     class Meta:
-#         model = NewDisabledDays
-#         fields = ['day']
+class DisabledDatesForm(forms.ModelForm):
+    class Meta:
+        model = Date
+        fields = ['date']
+        widgets = {
+            'date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
+        }
+
+    def clean_date(self):
+        disabled_dates = [x.date for x in Date.objects.filter(is_disabled=True)]
+        # appoint = 
+        d = self.cleaned_data['date']
+        print(d in disabled_dates)
+        if d <= date.today():
+            raise forms.ValidationError('day has passed')
+        elif d in disabled_dates:
+            print('asd')
+            raise forms.ValidationError('date already disabled')
+        return d
 
 class WorkingTimeForm(forms.ModelForm):
 

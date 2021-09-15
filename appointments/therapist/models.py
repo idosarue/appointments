@@ -1,3 +1,4 @@
+from datetime import date
 from django.db import models
 
 # Create your models here.
@@ -9,7 +10,9 @@ class Day(models.Model):
 
     def __str__(self):
         return self.name
-
+class Date(models.Model):
+    date = models.DateField(null=True)
+    is_disabled = models.BooleanField(default=False)
 # class NewDisabledDays(models.Model):
 #     day = models.ForeignKey(Day, on_delete=models.CASCADE)
 

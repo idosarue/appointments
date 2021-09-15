@@ -25,13 +25,12 @@ class Calendar(HTMLCalendar):
             v_date = date(self.year, self.month, day)
             isr_holidays = holidays.CountryHoliday('ISR')
             holi = ''
-            print()
             if v_date in isr_holidays:
                 holi += isr_holidays.get(f'{v_date.year}-{v_date.month}-{v_date.day}')
                 print(holi)
             disabled_days = [x.week_day for x in Day.objects.filter(is_disabled=True)]
             if v_date > date.today() and not v_date.weekday() in disabled_days:
-                return f"<td><span class='date'>{day} {holi} <a href='{reverse_lazy('create_appoint', kwargs={'year': self.year, 'month': self.month, 'day': day})}'>+</a></span><ul>{d}</ul></td>"
+                return f"<td><span class='date'>{day} {holi}  <a href='{reverse_lazy('create_appoint', kwargs={'year': self.year, 'month': self.month, 'day': day})}'>+</a> </span><ul>{d}</ul></td>"
             else:
                 return f"<td><span class='date'>{day} {holi}</span><ul>{d}</ul></td>"
         

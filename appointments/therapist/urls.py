@@ -18,6 +18,7 @@ urlpatterns = [
     path('create_appoint/<int:year>/<int:month>/<int:day>/', views.TherapistCreateAppointmentView.as_view(), name='create_appoint'),
     path('disable_day/<int:pk>/', views.disable_day, name='disable_day'),
     path('enable_day/<int:pk>/', views.enable_day, name='enable_day'),
+    path('disable_date/', views.DisableDatesView.as_view(), name='disable_dates'),
     # path('days/', views.DisableDaysListView.as_view(), name='disable_days_list'),
     path('working_time/', views.WorkingTimeView.as_view(), name='working_time'),
     path('preferences/', views.PreferencesView.as_view(), name='preferences'),

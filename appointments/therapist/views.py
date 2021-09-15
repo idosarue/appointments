@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from patient.models import Appointment, AppointmentResponse
 from django.contrib.auth.decorators import user_passes_test
-from .forms import EditAppointmentForm, EditAppointmentResponseForm, AppointmentResponseForm
 from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from django.contrib.auth.models import User
@@ -14,12 +13,20 @@ from datetime import datetime
 import datetime as dt
 from therapist.my_calendar import Calendar
 from django.utils.safestring import mark_safe
-from .forms import CalendarForm, TherapistCreateAppointmentForm, WorkingTimeForm
-from .models import Day, WorkingTime
+from .models import Day, WorkingTime, Date
 from send_emails import (send_response_email_to_user, 
 send_success_message_email_to_user, 
 send_success_message_email_to_therapist, 
 send_success_repsponse_message_email_to_therapist)
+from .forms import(
+     DisabledDatesForm, 
+     EditAppointmentForm, 
+     EditAppointmentResponseForm, 
+     AppointmentResponseForm, 
+     CalendarForm, 
+     TherapistCreateAppointmentForm, 
+     WorkingTimeForm
+     )
 
 
 class SuperUserRequiredMixin(UserPassesTestMixin):
@@ -304,7 +311,12 @@ def enable_day(request, pk):
     day.is_disabled = False
     day.save()
     return redirect('preferences')
-
+# create_appoint/<int:year>/<int:month>/<int:day>/
+@user_passes_test(lambda u: u.is_superuser)
+def disable_date(request, year, month, day):
+    date = dt.date(year, month, day)
+    Date.objects.create(date=date, is_disabled=True)
+    return redirect('calendar')
 
 class WorkingTimeView(SuperUserRequiredMixin,UpdateView):
     form_class = WorkingTimeForm
@@ -330,3 +342,13 @@ class PreferencesView(SuperUserRequiredMixin, ListView):
         context['end_time'] = dt.time(hour=end_time, minute=minutes)
         return context
     
+class DisableDatesView(SuperUserRequiredMixin,CreateView):
+    form_class = DisabledDatesForm
+    template_name = 'therapist/disable_dates.html'
+    success_url = reverse_lazy('preferences')
+
+    def form_valid(self, form):
+        date = form.save(commit=False)
+        date.is_disabled = True
+        date.save()
+        return super().form_valid(form)
