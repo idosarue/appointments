@@ -60,3 +60,12 @@ def appointment_update_date_validation(appointment_date, start_time, disabled_da
     elif appointment_date <= date.today():
         raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
     return appointment_date
+
+# filter
+# display phone number and email for user
+# all users page alphabet
+# all appoints by user and day 
+# show day name on list
+
+# calendar
+# add comment

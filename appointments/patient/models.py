@@ -19,6 +19,7 @@ class Appointment(models.Model):
     is_cancelled = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     date_t = models.DateTimeField(null=True)
+
     @classmethod
     def is_vacant(cls, start_time, appointment_date):
         print()
@@ -29,6 +30,7 @@ class Appointment(models.Model):
             return True
         else:
             return False
+
     @classmethod
     def can_disable(cls,week_day):
         appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(is_approved=True, is_cancelled=True)]
@@ -36,7 +38,6 @@ class Appointment(models.Model):
             return True
         else:
             return False    
-
 
     @classmethod
     def valid_appoint(cls, **kwargs):
@@ -49,11 +50,8 @@ class Appointment(models.Model):
     @classmethod
     def display(cls, **kwargs):
         appoints = cls.objects.filter(is_cancelled=False, is_approved=True, **kwargs)
-        if cls.valid_appoint(**kwargs):
-            # if appoints.exists():
-            return appoints
-            # else:
-            #     return False
+        return appoints
+
 class AppointmentResponse(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField(null=True)
@@ -102,15 +100,12 @@ class AppointmentResponse(models.Model):
             return True
         else:
             return False
+            
     @classmethod
     def display(cls, **kwargs):
         appoints = cls.objects.filter(is_cancelled=False, is_approved=True, **kwargs)
-        if cls.valid_appoint(**kwargs) and cls.valid_pending_appoint(**kwargs):
-            return appoints
-        # if appoints.exists():
-        #     return appoints
-        # else:
-        #     return False
+        return appoints
+ 
 
 
     

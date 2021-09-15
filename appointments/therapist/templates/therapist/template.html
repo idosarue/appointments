@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <form method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+    {% for obj in filter.qs %}
+    {{ obj.start_time }}   {{ obj.appointment_date }}<br /> {{ obj.user }} 
+    {% endfor %}
+{% endblock %}
+

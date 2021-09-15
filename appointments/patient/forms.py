@@ -6,8 +6,7 @@ from django.db import models
 from .models import Appointment, AppointmentResponse
 from datetime import time, date
 from django.contrib.auth.models import User
-from therapist.models import WorkingTime
-from therapist.models import Day
+from therapist.models import WorkingTime, Day, Date
 
 
 class AppointmentForm(forms.ModelForm):
@@ -16,8 +15,8 @@ class AppointmentForm(forms.ModelForm):
         start_time = WorkingTime.objects.first().start_time
         end_time = WorkingTime.objects.first().end_time
         minutes = WorkingTime.objects.first().minutes
-      
         self.fields['start_time'].choices = [(time(hour=x, minute=minutes), f'{x:02d}:00') for x in range(start_time, end_time +1)]
+        
     start_time = forms.ChoiceField()
     class Meta:
         model = Appointment
@@ -39,10 +38,9 @@ class AppointmentForm(forms.ModelForm):
 
 
     def clean_appointment_date(self):
-        disabled_days = [day.week_day for day in Day.objects.filter(is_disabled=True)]
         appointment_date = self.cleaned_data['appointment_date']
         if appointment_date <= date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-        elif appointment_date.weekday() in disabled_days:
+        elif appointment_date.weekday() in Day.disabled_days() or appointment_date in Date.disabled_dates():
             raise forms.ValidationError('you cannot ask for a meeting for that day')
         return appointment_date

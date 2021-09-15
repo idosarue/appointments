@@ -25,7 +25,8 @@ from .forms import(
      AppointmentResponseForm, 
      CalendarForm, 
      TherapistCreateAppointmentForm, 
-     WorkingTimeForm
+     WorkingTimeForm,
+     AppointmentFilter
      )
 
 
@@ -168,14 +169,10 @@ class UserAppointments(SuperUserRequiredMixin, ListView):
         future_appointments = Appointment.display(user=self.get_profile(), date_t__gt=datetime.today())
         past_appointments_response =  AppointmentResponse.display(user=self.get_profile(), date_t__lt=datetime.today())
         future_appointments_response = AppointmentResponse.display(user=self.get_profile(), date_t__gt=datetime.today())
-        if past_appointments:
-            context['past_appointments'] = past_appointments
-        if future_appointments:
-            context['future_appointments'] = future_appointments
-        if past_appointments_response :
-            context['past_appointments_response'] = past_appointments_response
-        if future_appointments_response:
-            context['future_appointments_response'] = AppointmentResponse.display(user=self.get_profile(), date_t__gt=datetime.today())
+        context['past_appointments'] = past_appointments
+        context['future_appointments'] = future_appointments
+        context['past_appointments_response'] = past_appointments_response
+        context['future_appointments_response'] = future_appointments_response
         return context
 
 class CalendarView(SuperUserRequiredMixin,ListView):
@@ -336,7 +333,7 @@ def enable_day(request, pk):
 
 class WorkingTimeView(SuperUserRequiredMixin,UpdateView):
     form_class = WorkingTimeForm
-    template_name = 'therapist/working_time.html'
+    template_name = 'therapist/preferences/working_time.html'
     success_url = reverse_lazy('preferences')
     model = WorkingTime
 
@@ -347,7 +344,7 @@ class WorkingTimeView(SuperUserRequiredMixin,UpdateView):
 
 class PreferencesView(SuperUserRequiredMixin, ListView):
     model = Day
-    template_name = 'therapist/therapist_settings.html'
+    template_name = 'therapist/preferences/therapist_settings.html'
     context_object_name = 'days'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -356,11 +353,12 @@ class PreferencesView(SuperUserRequiredMixin, ListView):
         minutes = WorkingTime.objects.first().minutes
         context['start_time'] = dt.time(hour=start_time, minute=minutes)
         context['end_time'] = dt.time(hour=end_time, minute=minutes)
+        context['disabled_dates'] = Date.objects.filter(is_disabled=True)
         return context
     
 class DisableDatesView(SuperUserRequiredMixin,CreateView):
     form_class = DisabledDatesForm
-    template_name = 'therapist/disable_dates.html'
+    template_name = 'therapist/preferences/disable_dates.html'
     success_url = reverse_lazy('preferences')
 
     def form_valid(self, form):
@@ -368,3 +366,15 @@ class DisableDatesView(SuperUserRequiredMixin,CreateView):
         date.is_disabled = True
         date.save()
         return super().form_valid(form)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def enable_date(request, pk):
+    date = get_object_or_404(Date, id=pk)
+    date.is_disabled = False
+    date.save()
+    return redirect('preferences')
+
+def appoint_list(request):
+    filter = AppointmentFilter(request.GET, queryset=Appointment.objects.filter(is_approved=True, is_cancelled=False))
+    return render(request, 'therapist/template.html', {'filter': filter})

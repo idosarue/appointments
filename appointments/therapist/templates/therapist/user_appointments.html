@@ -10,6 +10,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
                     <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
+                    <h5 class="card-title">phone: {{appointment.user.user.phone_number}}</h5>
                     <h5 class="card-title">Requested on: {{appointment.timestamp}}</h5>
                 </div>
             </div>
@@ -19,6 +20,8 @@
                 <div class="card-body">
                     <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
                     <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
+                    <h5 class="card-title">phone: {{appointment.user.phone_number}}</h5>
+
                     <h5 class="card-title">Requested on: {{appointment.original_request.timestamp}}</h5>
                 </div>
             </div>
@@ -30,7 +33,10 @@
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
+                    <h5 class="card-title">phone: {{appointment.user.phone_number}}</h5>
+
                     <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
+                    <h5 class="card-title">Date: {{appointment.appointment_date.weekday}}</h5>
                     <h5 class="card-title">Requested on: {{appointment.timestamp}}</h5>
                 </div>
             </div>
@@ -39,6 +45,8 @@
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
+                    <h5 class="card-title">phone: {{appointment.user.phone_number}}</h5>
+
                     <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
                     <h5 class="card-title">Requested on: {{appointment.original_request.timestamp}}</h5>
                 </div>

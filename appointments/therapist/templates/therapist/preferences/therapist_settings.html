@@ -25,6 +25,12 @@
     {% endfor %}
 </ul>
 
+<ul>
+    {% for date in disabled_dates %}
+        <li>{{date.date}}<a class="btn btn-success" href="{% url 'enable_date' date.id %}">Enable</a></li>
+    {% endfor %}
+</ul>
+
 
 <div class="card" style="width: 18rem;">
     <div class="card-body">
@@ -35,5 +41,5 @@
     </div>
 </div>
 
-<a href="{% url 'disable_dates' %}">Disable Dates</a>
+<a class="btn btn-success" href="{% url 'disable_dates' %}">Disable Dates</a>
 {% endblock %}

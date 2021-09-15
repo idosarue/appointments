@@ -8,7 +8,7 @@ from patient.models import *
 from datetime import date, time, datetime
 from .models import Date, WorkingTime, Day
 from django.forms.widgets import NumberInput
-
+import django_filters
 
 
 class CalendarForm(forms.Form):
@@ -256,3 +256,10 @@ class WorkingTimeForm(forms.ModelForm):
             
         return data
 
+class AppointmentFilter(django_filters.FilterSet):
+    class Meta:
+        model = Appointment
+        fields = ['user', 'appointment_date']
+        widgets = {
+            'date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
+        }

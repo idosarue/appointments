@@ -68,14 +68,10 @@ class FutureAppointmentsListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        a = datetime(2021,11,11, 11,11,11)
-        print(a)
         appoint = Appointment.display(user=self.request.user.profile, date_t__gt = datetime.today())
         appoint_response = AppointmentResponse.display(user=self.request.user.profile, date_t__gt = datetime.today())
-        if appoint:
-            context['appointments'] = appoint
-        if appoint_response:
-            context['appointments_response'] = appoint_response
+        context['appointments'] = appoint
+        context['appointments_response'] = appoint_response
         return context
 
 class PastAppointmentsListView(ListView):
