@@ -9,7 +9,7 @@ from datetime import date, time, datetime
 from .models import Date, WorkingTime, Day
 from django.forms.widgets import NumberInput
 import django_filters
-
+from django.core.paginator import Paginator
 
 class CalendarForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -257,9 +257,15 @@ class WorkingTimeForm(forms.ModelForm):
         return data
 
 class AppointmentFilter(django_filters.FilterSet):
+    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}))
     class Meta:
         model = Appointment
         fields = ['user', 'appointment_date']
-        widgets = {
-            'date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
-        }
+
+# class AppointmentResponseFilter(django_filters.FilterSet):
+#     class Meta:
+#         model = AppointmentResponse
+#         fields = ['user', 'appointment_date']
+#         widgets = {
+#             'date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
+#         }

@@ -7,7 +7,10 @@
         {{ filter.form.as_p }}
         <input type="submit" />
     </form>
-    {% for obj in filter.qs %}
+    {% for obj in page_obj %}
+    {{ obj.start_time }}   {{ obj.appointment_date }}<br /> {{ obj.user }} 
+    {% endfor %}
+    {% for obj in page_obj2 %}
     {{ obj.start_time }}   {{ obj.appointment_date }}<br /> {{ obj.user }} 
     {% endfor %}
 {% endblock %}

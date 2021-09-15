@@ -1,7 +1,9 @@
+from django.core.paginator import Paginator
 from django.db.models import query
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
+from django_filters.views import FilterView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from patient.models import Appointment, AppointmentResponse
@@ -375,6 +377,18 @@ def enable_date(request, pk):
     date.save()
     return redirect('preferences')
 
+@user_passes_test(lambda u: u.is_superuser)
 def appoint_list(request):
-    filter = AppointmentFilter(request.GET, queryset=Appointment.objects.filter(is_approved=True, is_cancelled=False))
-    return render(request, 'therapist/template.html', {'filter': filter})
+    filter = AppointmentFilter(request.GET, queryset=Appointment.display())
+    filter2 = AppointmentFilter(request.GET, queryset=AppointmentResponse.display())
+    pag = Paginator(filter.qs,5)
+    pag2 = Paginator(filter2.qs, 5)
+    page_number = request.GET.get('page')
+    page_obj = pag.get_page(page_number)
+    page_obj2 = pag2.get_page(page_number)
+    return render(request, 'therapist/template.html', {'filter': filter, 'page_obj':page_obj, 'page_obj2':page_obj2})
+
+class AppointsView(FilterView):
+    template_name = 'therapist/template.html'
+    paginate_by = 2
+    model = Appointment

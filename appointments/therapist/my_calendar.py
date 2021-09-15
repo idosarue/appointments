@@ -30,8 +30,10 @@ class Calendar(HTMLCalendar):
                 # print(holi)
             if v_date > date.today() and not v_date.weekday() in Day.disabled_days() and not v_date in Date.disabled_dates():
                 return f"<td><span class='date'>{day} {holi}  <a href='{reverse_lazy('create_appoint', kwargs={'year': self.year, 'month': self.month, 'day': day})}'>+</a> </span><ul>{d}</ul></td>"
-            else:
+            elif v_date.weekday() in Day.disabled_days():
                 return f"<td><span class='date'>{day}  {holi}</span><ul>{d}</ul> <span class='dis'>disabled</span></td>"
+            else:
+                return f"<td><span class='date'>{day}  {holi}</span><ul>{d}</ul></td>"
         
         return '<td></td>'
 

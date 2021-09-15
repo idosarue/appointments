@@ -24,4 +24,5 @@ urlpatterns = [
     path('working_time/', views.WorkingTimeView.as_view(), name='working_time'),
     path('preferences/', views.PreferencesView.as_view(), name='preferences'),
     path('appoint_list/', views.appoint_list, name='appoint_list'),
+    # path('appoint_list/', views.AppointsView.as_view(), name='appoint_list'),
 ]
