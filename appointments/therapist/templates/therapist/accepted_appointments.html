@@ -14,7 +14,8 @@
             <tr>
                 <th>start time</th>
                 <th>appointment date</th>
-                <th>patient name</th>
+                <th>First name</th>
+                <th>Last name</th>
                 <th>patient phone</th>
                 <th>patient email</th>
                 <th>options</th>
@@ -30,7 +31,10 @@
                 {{ obj.appointment_date }}
             </td> 
             <td>
-                {{ obj.user }} 
+                {{ obj.user.user.first_name }}  
+            </td>
+            <td>
+                {{ obj.user.user.last_name }}  
             </td>
             <td>
                 {{ obj.user.phone_number }} 

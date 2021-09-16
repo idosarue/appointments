@@ -1,24 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content%}
-
-<div class="container">
-    <div class="row">
-        {% for user in user_list %}
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                {% if user.user.is_superuser %}
-                <h5 class="card-title">Therapist</h5>
-                {% endif %}
-                <h5 class="card-title">Name: {{user.user.first_name}} {{user.user.last_name}}</h5>
-                <h5 class="card-title">Email: {{user.user.email}}</h5>
-                <h5 class="card-title">Phone Number: {{user.phone_number}}</h5>
-                <a href="{% url 'user_appointments' user.id %}" class='btn btn-success' name='a' type="submit">Appoint</a>
-            </div>
-        </div>
+<div class="container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 50vh;">
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>first name</th>
+                <th>last name</th>
+                <th>patient phone</th>
+                <th>patient email</th>
+            </tr>
+        </thead>
+        {% for obj in page_obj %}
+        <tr>
+            <td>
+                {{ obj.user.first_name }}  
+            </td>
+            <td>
+                {{ obj.user.last_name }}  
+            </td>
+            <td>
+                {{ obj.phone_number }}
+            </td>
+            <td>
+                {{ obj.user.email }}
+            </td>
+        </tr>
         {% endfor %}
+    </table>
 
-    </div>
+
+    {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo First</a>
+        <a href="?page={{page_obj.previous_page_number}}">Previous</a>
+    {% endif %}
+
+    Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{page_obj.next_page_number}}">&raquo Next</a>
+        <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo</a>
+    {% endif %}
 
 </div>
 {% endblock %}

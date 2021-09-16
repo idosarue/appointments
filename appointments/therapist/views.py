@@ -29,7 +29,8 @@ from .forms import(
      CalendarForm, 
      TherapistCreateAppointmentForm, 
      WorkingTimeForm,
-     AppointmentFilter
+     AppointmentFilter,
+     PendingAppointmentFilter,
      )
 
 
@@ -46,8 +47,12 @@ class AllUsersList(SuperUserRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        users = User.objects.filter(is_superuser=False)
-        context['user_list'] = [user.profile for user in users]
+        users = Profile.objects.filter(user__is_superuser=False)
+        pag = Paginator(users,10)
+        page_number = self.request.GET.get('page')
+        page_obj = pag.get_page(page_number) 
+        context['user_list'] = users
+        context['page_obj'] = page_obj
         return context
 
 class AppointmentListView(SuperUserRequiredMixin, ListView):
@@ -390,7 +395,7 @@ def enable_date(request, pk):
 #     print(date.today())
 #     return render(request, 'therapist/template.html', {'filter': filter, 'page_obj':page_obj})
 
-class AppointsView(FilterView):
+class AppointsView(SuperUserRequiredMixin,FilterView):
     template_name = 'therapist/accepted_appointments.html'
     model = Appointment
 
@@ -404,8 +409,8 @@ class AppointsView(FilterView):
         return {'filter':filter, 'filter2':filter2}
 
     def get_context_data(self, **kwargs):
-        filter = self.get_multiple()['filter']
-        filter2 = self.get_multiple()['filter2']
+        filter = AppointmentFilter(self.request.GET, queryset=Appointment.display())
+        filter2 = AppointmentFilter(self.request.GET, queryset=AppointmentResponse.display())
         x = sorted(list(chain(filter.qs, filter2.qs)), key=lambda x: x.appointment_date)
         pag = Paginator(x,10)
         page_number = self.request.GET.get('page')
@@ -415,4 +420,32 @@ class AppointsView(FilterView):
         context['filter'] = filter
         context['filter2'] = filter2
         context['today'] = date.today()
+        return context
+
+class PendingAppointsView(SuperUserRequiredMixin,FilterView):
+    template_name = 'therapist/pending_apts.html'
+    model = AppointmentResponse
+
+    def get_context_data(self, **kwargs):
+        filter = PendingAppointmentFilter(self.request.GET, queryset=AppointmentResponse.objects.filter(choice='P', is_cancelled=False, is_approved=False))
+        pag = Paginator(filter.qs,10)
+        page_number = self.request.GET.get('page')
+        page_obj = pag.get_page(page_number) 
+        context = super().get_context_data(**kwargs)
+        context['page_obj'] = page_obj
+        context['filter'] = filter
+        return context
+
+class AppointsRequestsView(SuperUserRequiredMixin,FilterView):
+    template_name = 'therapist/apt_requests.html'
+    model = Appointment
+
+    def get_context_data(self, **kwargs):
+        filter = PendingAppointmentFilter(self.request.GET, queryset=Appointment.objects.filter(choice=None, is_cancelled=False, is_approved=False))
+        pag = Paginator(filter.qs,10)
+        page_number = self.request.GET.get('page')
+        page_obj = pag.get_page(page_number) 
+        context = super().get_context_data(**kwargs)
+        context['page_obj'] = page_obj
+        context['filter'] = filter
         return context

@@ -1,3 +1,4 @@
+from accounts.models import Profile
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -267,7 +268,7 @@ class WorkingTimeForm(forms.ModelForm):
 class AppointmentFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.form.fields['user'].queryset = User.objects.exclude(is_superuser=True)
+        self.form.fields['user'].queryset = Profile.objects.exclude(user__is_superuser=True)
     appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date', 'autocomplete':'off'}))
     class Meta:
         model = Appointment
@@ -279,14 +280,15 @@ class AppointmentFilter(django_filters.FilterSet):
     #     x = Appointment.display()
     #     return parent.filter(appointment_date=date.today(), is_cancelled=False, is_)
     
-class AppointmentRequestFilter(django_filters.FilterSet):
+class PendingAppointmentFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.form.fields['appointment_date'].queryset = User.objects.exclude(is_superuser=True)
+        self.form.fields['user'].queryset = Profile.objects.exclude(user__is_superuser=True)
     appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date', 'autocomplete':'off'}))
     class Meta:
-        model = Appointment
+        model = AppointmentResponse
         fields = ['user', 'appointment_date']
+
 
 # class AppointmentResponseFilter(django_filters.FilterSet):
 #     class Meta:

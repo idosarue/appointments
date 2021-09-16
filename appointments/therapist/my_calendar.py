@@ -46,7 +46,7 @@ class Calendar(HTMLCalendar):
     def formatmonth(self, withyear = True):
         events = Appointment.display(appointment_date__year=self.year, appointment_date__month=self.month)
         events2 = AppointmentResponse.display(appointment_date__year=self.year, appointment_date__month=self.month)
-        cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar">\n'
+        cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar table table-primary">\n'
         cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
         cal += f'{self.formatweekheader()}\n'
         for week in self.monthdays2calendar(self.year, self.month):

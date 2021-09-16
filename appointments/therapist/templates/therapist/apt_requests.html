@@ -1,27 +1,74 @@
 {% extends 'base.html' %}
 
 {% block content%}
+<form method="get">
+    {{ filter.form.as_p }}
+    <input class="btn btn-primary" type="submit"/>
+</form>
+<a class="btn btn-primary" href="{% url 'apt_requests' %}">Reset</a>
 
-<div class="container">
-    <div class="row">
-        {% for appointment in appointments %}
-        {% if appointment.choice == None and not appointment.is_approved %}
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Patient: {{appointment.user.user.first_name}} {{appointment.user.user.last_name}}</h5>
-                <h5 class="card-title">Phone Number: {{appointment.user.phone_number}}</h5>
-                <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
-                <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
-                <h5 class="card-title">Requested on: {{appointment.timestamp}}</h5>
-                <a href="{% url 'apt_status' appointment.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
-                <a href="{% url 'apt_status' appointment.id 'update' %}" class='btn btn-primary' name='a' type="submit">Update</a>
-            </div>
-        </div>
- 
-        {% endif %}
+<hr>
 
-    {% endfor %}
-    </div>
-</div>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>start time</th>
+                <th>appointment date</th>
+                <th>first name</th>
+                <th>last name</th>
+                <th>patient phone</th>
+                <th>patient email</th>
+                <th>Requested on</th>
+
+                <th>options</th>
+            </tr>
+        </thead>
+        {% for obj in page_obj %}
+        <tr>
+            <td>
+                {{obj.start_time}}
+            </td>
+            <td>
+                {{obj.appointment_date}}
+            </td>
+    
+            <td>
+                {{ obj.user.user.first_name }} 
+            </td>
+            <td>
+                 {{ obj.user.user.last_name }}
+            </td>
+            <td>
+                {{ obj.user.phone_number }}
+            </td>
+            <td>
+                {{ obj.user.user.email }}
+            </td>
+            <td>
+                {{obj.timestamp}}
+            </td>
+            <td>
+                <a href="{% url 'apt_status' obj.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
+                <a href="{% url 'apt_status' obj.id 'update' %}" class='btn btn-primary' name='a' type="submit">Update</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+    {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo First</a>
+        <a href="?page={{page_obj.previous_page_number}}">Previous</a>
+    {% endif %}
+
+    Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{page_obj.next_page_number}}">&raquo Next</a>
+        <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo</a>
+    {% endif %}
+
+
+
 {% endblock %}
 
