@@ -50,7 +50,7 @@ class Appointment(models.Model):
     @classmethod
     def display(cls, **kwargs):
         appoints = cls.objects.filter(is_cancelled=False, is_approved=True, **kwargs)
-        return appoints
+        return appoints.order_by('start_time')
 
 class AppointmentResponse(models.Model):
     start_time = models.TimeField()
@@ -104,7 +104,7 @@ class AppointmentResponse(models.Model):
     @classmethod
     def display(cls, **kwargs):
         appoints = cls.objects.filter(is_cancelled=False, is_approved=True, **kwargs)
-        return appoints
+        return appoints.order_by('start_time')
  
 
 

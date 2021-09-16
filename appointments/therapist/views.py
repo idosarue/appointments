@@ -1,5 +1,4 @@
 from django.core.paginator import Paginator
-from django.db.models import query
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
@@ -11,8 +10,10 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import date, datetime
 import datetime as dt
+import numpy as np
+from itertools import chain
 from therapist.my_calendar import Calendar
 from django.utils.safestring import mark_safe
 from .models import Day, WorkingTime, Date
@@ -181,26 +182,20 @@ class CalendarView(SuperUserRequiredMixin,ListView):
     model = Appointment
     template_name = 'therapist/calendar.html'
 
-    def get_date(self):
-        form = CalendarForm(self.request.GET)
-        if form.is_valid():
-            year = form.cleaned_data['year']
-            month = form.cleaned_data['month']
-            print(year)
-            return {'year' : year, 'month' : month}
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if not self.get_date():
-            cal = Calendar(year=datetime.now().year, month=datetime.now().month)
+        year = self.request.GET.get('year')
+        month = self.request.GET.get('month')
+        if not year and not month:
+            cal = Calendar(year=datetime.now().year or year, month=datetime.now().month or month)
         else:
-            year = self.get_date()['year']
-            month = self.get_date()['month']
             cal = Calendar(year=int(year), month=int(month))
         cal.setfirstweekday(6)
         html_cal = cal.formatmonth(withyear=True)
-        context['form'] = CalendarForm
+        context['form'] = CalendarForm(self.request.GET or None)
         context['calendar'] = mark_safe(html_cal)
+        context['today'] = date.today()
         return context
 
 
@@ -348,6 +343,7 @@ class PreferencesView(SuperUserRequiredMixin, ListView):
     model = Day
     template_name = 'therapist/preferences/therapist_settings.html'
     context_object_name = 'days'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         start_time = WorkingTime.objects.first().start_time
@@ -369,6 +365,12 @@ class DisableDatesView(SuperUserRequiredMixin,CreateView):
         date.save()
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['day'] = Day.disabled_days()
+        print(Day.disabled_days())
+        return context
 
 @user_passes_test(lambda u: u.is_superuser)
 def enable_date(request, pk):
@@ -377,18 +379,40 @@ def enable_date(request, pk):
     date.save()
     return redirect('preferences')
 
-@user_passes_test(lambda u: u.is_superuser)
-def appoint_list(request):
-    filter = AppointmentFilter(request.GET, queryset=Appointment.display())
-    filter2 = AppointmentFilter(request.GET, queryset=AppointmentResponse.display())
-    pag = Paginator(filter.qs,5)
-    pag2 = Paginator(filter2.qs, 5)
-    page_number = request.GET.get('page')
-    page_obj = pag.get_page(page_number)
-    page_obj2 = pag2.get_page(page_number)
-    return render(request, 'therapist/template.html', {'filter': filter, 'page_obj':page_obj, 'page_obj2':page_obj2})
+# @user_passes_test(lambda u: u.is_superuser)
+# def appoint_list(request):
+#     filter = AppointmentFilter(request.GET, queryset=Appointment.display())
+#     filter2 = AppointmentFilter(request.GET, queryset=AppointmentResponse.display())
+#     x = sorted(list(chain(filter.qs, filter2.qs)), key=lambda x: x.appointment_date)
+#     pag = Paginator(x,10)
+#     page_number = request.GET.get('page')
+#     page_obj = pag.get_page(page_number)
+#     print(date.today())
+#     return render(request, 'therapist/template.html', {'filter': filter, 'page_obj':page_obj})
 
 class AppointsView(FilterView):
-    template_name = 'therapist/template.html'
-    paginate_by = 2
+    template_name = 'therapist/accepted_appointments.html'
     model = Appointment
+
+    def get_multiple(self):
+        # if not 'appointment_date' in self.request.GET:
+        #     filter = AppointmentFilter(self.request.GET, queryset=Appointment.display(appointment_date=date.today()))
+        #     filter2 = AppointmentFilter(self.request.GET, queryset=AppointmentResponse.display(appointment_date=date.today()))
+        # else:
+        filter = AppointmentFilter(self.request.GET, queryset=Appointment.display())
+        filter2 = AppointmentFilter(self.request.GET, queryset=AppointmentResponse.display())
+        return {'filter':filter, 'filter2':filter2}
+
+    def get_context_data(self, **kwargs):
+        filter = self.get_multiple()['filter']
+        filter2 = self.get_multiple()['filter2']
+        x = sorted(list(chain(filter.qs, filter2.qs)), key=lambda x: x.appointment_date)
+        pag = Paginator(x,10)
+        page_number = self.request.GET.get('page')
+        page_obj = pag.get_page(page_number) 
+        context = super().get_context_data(**kwargs)
+        context['page_obj'] = page_obj
+        context['filter'] = filter
+        context['filter2'] = filter2
+        context['today'] = date.today()
+        return context

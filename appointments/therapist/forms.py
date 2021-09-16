@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import fields
@@ -181,12 +182,19 @@ class TherapistCreateAppointmentForm(forms.ModelForm):
             raise forms.ValidationError('you cannot ask for a meeting for that day')
         return appointment_date
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+    
 class DisabledDatesForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args,**kwargs)
+        for x in self.fields['date'].widget.attrs:
+            print(self.fields['date'])
     class Meta:
         model = Date
         fields = ['date']
         widgets = {
-            'date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
+            'date': forms.DateInput(attrs={'id':'datepicker','placeholder':'Select a date', 'autocomplete':'off',  'onclick':'someFunc()'}),
         }
 
     def clean_date(self):
@@ -257,7 +265,25 @@ class WorkingTimeForm(forms.ModelForm):
         return data
 
 class AppointmentFilter(django_filters.FilterSet):
-    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}))
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.form.fields['user'].queryset = User.objects.exclude(is_superuser=True)
+    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date', 'autocomplete':'off'}))
+    class Meta:
+        model = Appointment
+        fields = ['user', 'appointment_date']
+        
+    # @property
+    # def qs(self):
+    #     parent = super().qs
+    #     x = Appointment.display()
+    #     return parent.filter(appointment_date=date.today(), is_cancelled=False, is_)
+    
+class AppointmentRequestFilter(django_filters.FilterSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.form.fields['appointment_date'].queryset = User.objects.exclude(is_superuser=True)
+    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date', 'autocomplete':'off'}))
     class Meta:
         model = Appointment
         fields = ['user', 'appointment_date']
