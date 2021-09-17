@@ -281,7 +281,8 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
 
 
     def form_valid(self, form):
-        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+        # if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+        if not Appointment.new_is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
             messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
         appoint = form.save(commit=False)
@@ -289,7 +290,7 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
         appoint.choice = 'A'
         appoint.appointment_date = form.cleaned_data['appointment_date']
         appoint.is_approved=True
-        # appoint.end_time = dt.time(hour=appoint.start_time.hour +1, minute=appoint.start_time.minute)
+        appoint.end_time = dt.time(hour=appoint.start_time.hour +1, minute=appoint.start_time.minute)
         print(appoint.start_time)
         appoint.save()
         send_success_message_email_to_user(appoint.user.user, appoint.start_time, appoint.appointment_date)
