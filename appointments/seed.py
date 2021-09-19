@@ -11,6 +11,7 @@ from datetime import date, datetime, time, timedelta
 from patient.models import Appointment, AppointmentResponse
 import pandas as pd
 from functools import reduce
+from accounts.models import Profile
 
 # import pandas as pd
 def edit_site():
@@ -72,23 +73,26 @@ print(datetime.today().date())
 '1045'
 '12'
 
-def create_time_choice():
-    c = 0
-    li = []
-    # start_time = WorkingTime.objects.first().start_time
-    start_time = 9
-    minutes = 15
-    end_time = time(hour=15, minute=15)
-    break_time = WorkingTime.objects.first().break_time
+def send_message():
+    x = datetime.now() + timedelta(days=7)
 
-    for x in range(start_time , end_time.hour +1):
-        y = datetime.combine(date.today(),time(hour=x, minute=minutes))+timedelta(minutes=c)
-        b = y + timedelta(hours=1)
-        if b.time() < end_time:
-            li.append((y.time(), f'{y.time().hour:02d}:{y.time().minute}'))
-            c+=break_time
+    a = Appointment.display(user=Profile.objects.get(id=2))
+    for i in a:
+        if i.appointment_date == x.date():
+            print(i.appointment_date,'i appoin date', x,'x')
+            print(i.start_time,'i appoin date', x,'x')
 
-    # print(li)
-    return li
+send_message()
+def send_reminder_email(user, appointment_date):
+        x = datetime.now() + timedelta(days=7)
+        a = Appointment.display(user=user)
+        for i in a:
+            if i.appointment_date == x.date():
+                print(i.appointment_date,'i appoin date', x,'x')
+                print(i.start_time,'i appoin date', x,'x')
+                email_message_therapist = f'''
+                Hello {user.user.first_name} {user.user.last_name} reminder, for: {i.start_time} ,{appointment_date}
+                '''
+                print(email_message_therapist)
 
-print(create_time_choice())
+send_reminder_email(Profile.objects.get(id=2), date(2021,9,26))

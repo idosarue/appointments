@@ -1,14 +1,19 @@
+from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
 from patient.models import Appointment, AppointmentResponse
 from accounts.models import Profile
 from django.db import models
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse_lazy
-from .forms import AppointmentForm
+from .forms import AppointmentForm, UserAppointmentFilter
 from django.views.generic import CreateView, ListView, UpdateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from datetime import datetime, time 
+from datetime import datetime, time, date 
+from django_filters.views import FilterView
+from itertools import chain
+from django.core.paginator import Paginator
+
 from send_emails import (send_message_to_therapist, 
 send_message_to_user, 
 send_message_to_therapist_after_update)
@@ -27,7 +32,7 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
         appointment_date = form.cleaned_data['appointment_date']
         start = datetime.strptime(start_time, '%H:%M:%S').time()
         end_time = time(hour = start.hour + 1, minute=start.minute)
-        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
+        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time) or Appointment.valid_appoint(user=self.request.user.profile, appointment_date=appointment_date) or AppointmentResponse.valid_appoint(user=self.request.user.profile, appointment_date=appointment_date) or AppointmentResponse.valid_pending_appoint(user=self.request.user.profile, appointment_date=appointment_date):
             messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
         appoint = form.save(commit=False)
@@ -42,8 +47,8 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
         appoint.end_time = end_time
         appoint.date_t = x
         appoint.save()
-        send_message_to_user(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])
-        send_message_to_therapist(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])
+        send_message_to_user(self.request.user, start_time, appointment_date)
+        send_message_to_therapist(self.request.user, start_time, appointment_date)
         return super().form_valid(form)
 
 class CreateAppointmentViewAfterUpdate(LoginRequiredMixin, CreateView):
@@ -65,7 +70,34 @@ class CreateAppointmentViewAfterUpdate(LoginRequiredMixin, CreateView):
         send_message_to_therapist_after_update(original_appointment, self.request.user, appoint)
         send_message_to_user(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])
         return super().form_valid(form)
+    
 
+class AppointsListView(LoginRequiredMixin,FilterView):
+    template_name = 'patient/appointments.html'
+    model = Appointment
+
+    # def get_multiple(self):
+    #     # if not 'appointment_date' in self.request.GET:
+    #     #     self.request.GET.update({'appointment_date':date.today()})
+    #     #     # filter = AppointmentFilter(self.request.GET, queryset=Appointment.display(appointment_date=date.today()))
+    #     #     # filter2 = AppointmentFilter(self.request.GET, queryset=AppointmentResponse.display(appointment_date=date.today()))
+    #     filter = UserAppointmentFilter(self.request.GET, queryset=Appointment.display())
+    #     filter2 = UserAppointmentFilter(self.request.GET, queryset=AppointmentResponse.display())
+    #     return {'filter':filter, 'filter2':filter2}
+
+    def get_context_data(self, **kwargs):
+        filter = UserAppointmentFilter(self.request.GET, queryset=Appointment.display(user=self.request.user.profile))
+        filter2 = UserAppointmentFilter(self.request.GET, queryset=AppointmentResponse.display(user=self.request.user.profile))
+        x = sorted(list(chain(filter.qs, filter2.qs)), key=lambda x: x.appointment_date)
+        pag = Paginator(x,10)
+        page_number = self.request.GET.get('page')
+        page_obj = pag.get_page(page_number) 
+        context = super().get_context_data(**kwargs)
+        context['page_obj'] = page_obj
+        context['filter'] = filter
+        context['filter2'] = filter2
+        context['today'] = date.today()
+        return context
 
 class FutureAppointmentsListView(ListView):
     model = Appointment
@@ -77,6 +109,7 @@ class FutureAppointmentsListView(ListView):
         appoint_response = AppointmentResponse.display(user=self.request.user.profile, date_t__gt = datetime.today())
         context['appointments'] = appoint
         context['appointments_response'] = appoint_response
+        
         return context
 
 class PastAppointmentsListView(ListView):
@@ -92,3 +125,4 @@ class PastAppointmentsListView(ListView):
         return context
 
 
+    

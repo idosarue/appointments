@@ -1,6 +1,8 @@
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
+from datetime import datetime, timedelta, date
+from patient.models import Appointment
 
 therapist_email = 'testdjangosaru@gmail.com'
 
@@ -102,3 +104,18 @@ def send_success_repsponse_message_email_to_therapist(user, start_time, appointm
             therapist_email,
             [therapist_email],
         )
+
+def send_reminder_email(today):
+        x = today + timedelta(days=1)
+        a = Appointment.display()
+        for i in a:
+            if i.appointment_date == x.date():
+                email_message_therapist = f'''
+                Hello {i.user.user.first_name} {i.user.user.last_name} reminder, for: an appointment tommorow at {i.start_time},
+                '''
+                send_mail(
+                'Appointment Reminder',
+                email_message_therapist,
+                therapist_email,
+                [i.user.user.email],
+                )

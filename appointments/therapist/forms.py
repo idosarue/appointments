@@ -11,7 +11,6 @@ from datetime import date, time, datetime, timedelta
 from .models import Date, WorkingTime, Day
 from django.forms.widgets import NumberInput
 import django_filters
-from django.core.paginator import Paginator
 
 
 

@@ -53,12 +53,9 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'query_appointment' %}">Ask For Appointment</a>
           </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'future_appointments' %}">Future appointments</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'past_appointments' %}">Past appointments</a>
-        </li>
+          <li>
+            <a class="nav-link" href="{% url 'appointments' %}">Your Appointments</a>
+          </li>
         {% endif %}
       {% else %}
       <li class="nav-item">

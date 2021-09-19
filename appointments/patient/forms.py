@@ -7,6 +7,7 @@ from .models import Appointment, AppointmentResponse
 from datetime import time, date
 from django.contrib.auth.models import User
 from therapist.models import WorkingTime, Day, Date
+import django_filters
 
 
 class AppointmentForm(forms.ModelForm):
@@ -41,3 +42,12 @@ class AppointmentForm(forms.ModelForm):
         elif appointment_date.weekday() in Day.disabled_days() or appointment_date in Date.disabled_dates():
             raise forms.ValidationError('you cannot ask for a meeting for that day')
         return appointment_date
+
+class UserAppointmentFilter(django_filters.FilterSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date', 'autocomplete':'off'}))
+    class Meta:
+        model = Appointment
+        fields = ['appointment_date']
+        

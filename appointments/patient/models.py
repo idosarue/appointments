@@ -41,7 +41,9 @@ class Appointment(models.Model):
     @classmethod
     def valid_appoint(cls, **kwargs):
         appoints = cls.objects.filter(is_cancelled=False, is_approved=True, **kwargs)
+        print(kwargs, '44')
         if appoints.exists():
+            print('true')
             return True
         else:
             return False

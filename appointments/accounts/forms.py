@@ -4,7 +4,7 @@ from .models import Profile
 from django import forms
 from appointments.settings import DATE_INPUT_FORMATS
 from datetime import date
- 
+
 def calculateAge(birth_date):
     today = date.today()
     age = ((today - birth_date).days)//365
@@ -72,3 +72,5 @@ class EditProfileForm(forms.ModelForm):
        if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Email exists")
        return email
+
+    

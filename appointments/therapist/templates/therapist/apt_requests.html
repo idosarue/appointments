@@ -50,6 +50,7 @@
             <td>
                 <a href="{% url 'apt_status' obj.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
                 <a href="{% url 'apt_status' obj.id 'update' %}" class='btn btn-primary' name='a' type="submit">Update</a>
+                <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment' obj.id %}">cancel</a>
             </td>
         </tr>
         {% endfor %}

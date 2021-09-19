@@ -20,7 +20,8 @@ from .models import Day, WorkingTime, Date
 from send_emails import (send_response_email_to_user, 
 send_success_message_email_to_user, 
 send_success_message_email_to_therapist, 
-send_success_repsponse_message_email_to_therapist)
+send_success_repsponse_message_email_to_therapist,
+send_reminder_email)
 from .forms import(
      DisabledDatesForm, 
      EditAppointmentForm, 
@@ -72,12 +73,10 @@ class AcceptedAppointmentListView(SuperUserRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        appoints_display = Appointment.display()
-        appoints_res_display = AppointmentResponse.display()
-        if appoints_display:
-            context['appointments'] = appoints_display
-        if appoints_res_display:
-            context['appointments_response'] = appoints_res_display
+        appoints_display = Appointment.display().order_by('-timestamp')
+        appoints_res_display = AppointmentResponse.display().order_by('-timestamp')
+        context['appointments'] = appoints_display
+        context['appointments_response'] = appoints_res_display
         return context
 
 class PendingAppointmentListView(SuperUserRequiredMixin, ListView):
@@ -121,6 +120,7 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
             appoint.start_time.minute,
             )
         appoint.date_t = x
+        appoint.end_time = end_time
         appoint.save()
         send_response_email_to_user(appoint.original_request.user.user, appoint)
         return super().form_valid(form)
@@ -228,7 +228,18 @@ class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
         if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
             messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
-        form.save()
+        
+        appoint = form.save(commit=False)
+        x = datetime(
+            appoint.appointment_date.year,
+            appoint.appointment_date.month,
+            appoint.appointment_date.day,
+            appoint.start_time.hour,
+            appoint.start_time.minute,
+            )
+        appoint.date_t = x
+        appoint.end_time = end_time
+        appoint.save()
         appointment = self.get_appoint()
         print(appointment.start_time)
         send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
@@ -253,7 +264,16 @@ class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
         if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
             messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
-        form.save()
+        appoint = form.save(commit=False)
+        x = datetime(
+            appoint.appointment_date.year,
+            appoint.appointment_date.month,
+            appoint.appointment_date.day,
+            appoint.start_time.hour,
+            appoint.start_time.minute,
+            )
+        appoint.date_t = x
+        appoint.end_time = end_time
         appointment = self.get_appoint()
         send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
         return super().form_valid(form)
@@ -302,7 +322,15 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
         appoint.appointment_date = appointment_date
         appoint.is_approved=True
         appoint.end_time = end_time
-        print(appoint.start_time)
+        x = datetime(
+            appoint.appointment_date.year,
+            appoint.appointment_date.month,
+            appoint.appointment_date.day,
+            appoint.start_time.hour,
+            appoint.start_time.minute,
+            )
+        appoint.date_t = x
+        appoint.end_time = end_time
         appoint.save()
         send_success_message_email_to_user(appoint.user.user, appoint.start_time, appoint.appointment_date)
         send_success_message_email_to_therapist(appoint.user.user, appoint.start_time, appoint.appointment_date)
@@ -449,3 +477,5 @@ class AppointsRequestsView(SuperUserRequiredMixin,FilterView):
         context['page_obj'] = page_obj
         context['filter'] = filter
         return context
+
+send_reminder_email(datetime.today())
