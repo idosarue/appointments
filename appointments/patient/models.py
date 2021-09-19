@@ -21,31 +21,18 @@ class Appointment(models.Model):
     date_t = models.DateTimeField(null=True)
 
     @classmethod
-    def is_vacant(cls, start_time, appointment_date):
+    def is_vacant(cls, start_time, appointment_date, end_time):
         print()
-        appoint = cls.valid_appoint(appointment_date=appointment_date, end_time__gte=start_time)
-        pending_appoint = AppointmentResponse.valid_pending_appoint(appointment_date=appointment_date, end_time__gte=start_time)
-        if not appoint and not pending_appoint and not appointment_date.weekday() in Day.disabled_days():
-            return True
-        else:
-            return False
-    @classmethod
-    def new_is_vacant(cls, start_time, appointment_date):
-        print()
-        appoint = cls.valid_appoint(appointment_date=appointment_date, end_time__gte=start_time)
-        print(appoint)
-        # pending_appoint = AppointmentResponse.valid_pending_appoint(appointment_date=appointment_date, start_time=start_time)
+        appoint = cls.valid_appoint(appointment_date=appointment_date, end_time__gte=start_time, start_time__lte=end_time)
         if not appoint and not appointment_date.weekday() in Day.disabled_days():
-            print('true')
             return True
         else:
-            print('false')
-
             return False
+
 
     @classmethod
     def can_disable(cls,week_day):
-        appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(is_approved=True, is_cancelled=True)]
+        appoints = [appoint.appointment_date.weekday() for appoint in cls.objects.filter(is_approved=True, is_cancelled=False)]
         if not week_day in appoints:
             return True
         else:
@@ -76,10 +63,10 @@ class AppointmentResponse(models.Model):
     is_cancelled = models.BooleanField(default=False)
 
     @classmethod
-    def is_vacant(cls, start_time, appointment_date):
+    def is_vacant(cls, start_time, appointment_date, end_time):
         print()
-        appoint = cls.valid_appoint(appointment_date=appointment_date, end_time__gte=start_time)
-        pending_appoint = cls.valid_pending_appoint(appointment_date=appointment_date, end_time__gte=start_time)
+        appoint = cls.valid_appoint(appointment_date=appointment_date, end_time__gte=start_time,start_time__lte=end_time)
+        pending_appoint = cls.valid_pending_appoint(appointment_date=appointment_date, end_time__gte=start_time, start_time__lte=end_time)
         if not appoint and not pending_appoint and not appointment_date.weekday() in Day.disabled_days():
             return True
         else:

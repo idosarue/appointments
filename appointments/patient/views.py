@@ -8,7 +8,7 @@ from .forms import AppointmentForm
 from django.views.generic import CreateView, ListView, UpdateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from datetime import datetime
+from datetime import datetime, time 
 from send_emails import (send_message_to_therapist, 
 send_message_to_user, 
 send_message_to_therapist_after_update)
@@ -23,7 +23,11 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('profile')
 
     def form_valid(self, form):
-        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+        start_time = form.cleaned_data['start_time']
+        appointment_date = form.cleaned_data['appointment_date']
+        start = datetime.strptime(start_time, '%H:%M:%S').time()
+        end_time = time(hour = start.hour + 1, minute=start.minute)
+        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
             messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
         appoint = form.save(commit=False)
@@ -35,6 +39,7 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
             appoint.start_time.hour,
             appoint.start_time.minute,
             )
+        appoint.end_time = end_time
         appoint.date_t = x
         appoint.save()
         send_message_to_user(self.request.user, form.cleaned_data['start_time'], form.cleaned_data['appointment_date'])

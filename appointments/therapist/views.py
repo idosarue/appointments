@@ -99,7 +99,11 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
         return get_object_or_404(Appointment, id=appoint_id)
 
     def form_valid(self, form):
-        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+        start_time = form.cleaned_data['start_time']
+        appointment_date = form.cleaned_data['appointment_date']
+        start = datetime.strptime(start_time, '%H:%M:%S').time()
+        end_time = time(hour = start.hour + 1, minute=start.minute)
+        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
             messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
         appoint = form.save(commit=False)
@@ -131,8 +135,9 @@ def update_appointment_status(request, pk, status):
     appointment = get_object_or_404(Appointment, id=pk)
     appointment_date = appointment.appointment_date
     start_time = appointment.start_time
+    end_time = time(hour = start_time.hour + 1, minute=start_time.minute)
     if status == 'accept':
-        if AppointmentResponse.is_vacant(start_time, appointment_date) and Appointment.is_vacant(start_time, appointment_date):
+        if AppointmentResponse.is_vacant(start_time, appointment_date, end_time) and Appointment.is_vacant(start_time, appointment_date, end_time):
             appointment.choice = 'A'
             appointment.is_approved = True
             appointment.save()
@@ -216,7 +221,11 @@ class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
         return appoint
     
     def form_valid(self, form):
-        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+        start_time = form.cleaned_data['start_time']
+        appointment_date = form.cleaned_data['appointment_date']
+        start = datetime.strptime(start_time, '%H:%M:%S').time()
+        end_time = time(hour = start.hour + 1, minute=start.minute)
+        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
             messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
         form.save()
@@ -237,20 +246,18 @@ class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
         return appoint
 
     def form_valid(self, form):
-        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+        start_time = form.cleaned_data['start_time']
+        appointment_date = form.cleaned_data['appointment_date']
+        start = datetime.strptime(start_time, '%H:%M:%S').time()
+        end_time = time(hour = start.hour + 1, minute=start.minute)
+        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
             messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
-            print('not')
             return super().form_invalid(form)
         form.save()
         appointment = self.get_appoint()
         send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
         return super().form_valid(form)
 
-# @user_passes_test(lambda u: u.is_superuser)
-# def confirm_delete_appointment(request, pk):
-#     if status == 'yes':
-#         return redirect('delete_appointment', pk)
-#     return render(request, 'therapist/confirm_delete.html')
 
 @user_passes_test(lambda u: u.is_superuser)
 def delete_appointment(request, pk):
@@ -281,15 +288,20 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
 
 
     def form_valid(self, form):
-        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+        start_time = form.cleaned_data['start_time']
+        appointment_date = form.cleaned_data['appointment_date']
+        start = datetime.strptime(start_time, '%H:%M:%S').time()
+        end_time = time(hour = start.hour + 1, minute=start.minute)
+        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
             messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
+        
         appoint = form.save(commit=False)
         appoint.user = form.cleaned_data['user']
         appoint.choice = 'A'
-        appoint.appointment_date = form.cleaned_data['appointment_date']
+        appoint.appointment_date = appointment_date
         appoint.is_approved=True
-        appoint.end_time = dt.time(hour=appoint.start_time.hour +1, minute=appoint.start_time.minute)
+        appoint.end_time = end_time
         print(appoint.start_time)
         appoint.save()
         send_success_message_email_to_user(appoint.user.user, appoint.start_time, appoint.appointment_date)
@@ -326,12 +338,7 @@ def enable_day(request, pk):
     day.is_disabled = False
     day.save()
     return redirect('preferences')
-# create_appoint/<int:year>/<int:month>/<int:day>/
-# @user_passes_test(lambda u: u.is_superuser)
-# def disable_date(request, year, month, day):
-#     date = dt.date(year, month, day)
-#     Date.objects.create(date=date, is_disabled=True)
-#     return redirect('calendar')
+
 
 class WorkingTimeView(SuperUserRequiredMixin,UpdateView):
     form_class = WorkingTimeForm
@@ -342,7 +349,6 @@ class WorkingTimeView(SuperUserRequiredMixin,UpdateView):
     def get_object(self, queryset=None):
         a = WorkingTime.objects.first()
         return a
-
 
 class PreferencesView(SuperUserRequiredMixin, ListView):
     model = Day
@@ -356,9 +362,9 @@ class PreferencesView(SuperUserRequiredMixin, ListView):
         last_appoint_time = WorkingTime.create_time_choice()[-1][0]
         y = time(hour = last_appoint_time.hour +1, minute=last_appoint_time.minute)
         message = f'based on time specified your last appointment will end at {y}'
-        messages.info(self.request, message)
         context['start_time'] = start_time
         context['end_time'] = y
+        context['message'] = message
         context['disabled_dates'] = Date.objects.filter(is_disabled=True)
         return context
     
@@ -387,16 +393,7 @@ def enable_date(request, pk):
     date.save()
     return redirect('preferences')
 
-# @user_passes_test(lambda u: u.is_superuser)
-# def appoint_list(request):
-#     filter = AppointmentFilter(request.GET, queryset=Appointment.display())
-#     filter2 = AppointmentFilter(request.GET, queryset=AppointmentResponse.display())
-#     x = sorted(list(chain(filter.qs, filter2.qs)), key=lambda x: x.appointment_date)
-#     pag = Paginator(x,10)
-#     page_number = request.GET.get('page')
-#     page_obj = pag.get_page(page_number)
-#     print(date.today())
-#     return render(request, 'therapist/template.html', {'filter': filter, 'page_obj':page_obj})
+
 
 class AppointsView(SuperUserRequiredMixin,FilterView):
     template_name = 'therapist/accepted_appointments.html'

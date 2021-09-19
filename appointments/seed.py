@@ -75,34 +75,20 @@ print(datetime.today().date())
 def create_time_choice():
     c = 0
     li = []
-    start_time = time(hour=8, minute=30)
-    end_time = time(hour=16, minute=15)
+    # start_time = WorkingTime.objects.first().start_time
+    start_time = 9
+    minutes = 15
+    end_time = time(hour=15, minute=15)
     break_time = WorkingTime.objects.first().break_time
 
-    for x in range(start_time.hour , end_time.hour +1):
-        y = datetime.combine(date.today(),time(hour=x, minute=start_time.minute))+timedelta(minutes=c)
-        if y.time().hour > end_time.hour:
-            li.pop()
-            print(f'based on time specified your last appointment will end at {li[-1][0].hour+1}:{li[-1][0].minute}')
-            if li[-1][0].minute > start_time.minute:
-                y = time(hour=end_time, minute=li[-1][0].minute)
-                li.insert(len(li),y)
-            print(li)
-            return li
-                
-        li.append((y.time(), f'{y.time().hour:02d}:{y.time().minute}'))
-        c+=break_time
+    for x in range(start_time , end_time.hour +1):
+        y = datetime.combine(date.today(),time(hour=x, minute=minutes))+timedelta(minutes=c)
+        b = y + timedelta(hours=1)
+        if b.time() < end_time:
+            li.append((y.time(), f'{y.time().hour:02d}:{y.time().minute}'))
+            c+=break_time
+
+    # print(li)
+    return li
+
 print(create_time_choice())
-# # print(timedelta)
-# '7:33'
-# '8:48'
-# '9:03'
-# x = datetime.combine(date.today(),time(hour=8,minute=15))+ timedelta(minutes=15)
-# print(x.time())
-# start_time = WorkingTime.objects.first().start_time
-# end_time = WorkingTime.objects.first().end_time
-# minutes = 15
-# x = [datetime.combine(date.today(),time(hour=x, minute=minutes)) for x in range(start_time, end_time +1)]
-# for i in x:
-#     i += timedelta(minutes=15)
-#     print(i)
