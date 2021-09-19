@@ -12,10 +12,7 @@ from therapist.models import WorkingTime, Day, Date
 class AppointmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        start_time = WorkingTime.objects.first().start_time
-        end_time = WorkingTime.objects.first().end_time
-        minutes = WorkingTime.objects.first().minutes
-        self.fields['start_time'].choices = [(time(hour=x, minute=minutes), f'{x:02d}:00') for x in range(start_time, end_time +1)]
+        self.fields['start_time'].choices = WorkingTime.create_time_choice()
         
     start_time = forms.ChoiceField()
     class Meta:
@@ -26,15 +23,15 @@ class AppointmentForm(forms.ModelForm):
             'appointment_date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
         }
     
-    def clean_start_time(self):
-        start = self.cleaned_data['start_time']
-        start_time = WorkingTime.objects.first().start_time
-        end_time = WorkingTime.objects.first().end_time
-        minutes = WorkingTime.objects.first().minutes
-        choices = [(time(hour=x, minute=minutes, second=00)) for x in range(start_time, end_time +1)]
-        if datetime.strptime(start, '%H:%M:%S').time() not in choices:
-            raise forms.ValidationError('Only choose times between 9am and 16:30pm')
-        return start
+    # def clean_start_time(self):
+    #     start = self.cleaned_data['start_time']
+    #     start_time = WorkingTime.objects.first().start_time
+    #     end_time = WorkingTime.objects.first().end_time
+    #     minutes = WorkingTime.objects.first().minutes
+    #     choices = [(time(hour=x, minute=minutes, second=00)) for x in range(start_time, end_time +1)]
+    #     if datetime.strptime(start, '%H:%M:%S').time() not in choices:
+    #         raise forms.ValidationError('Only choose times between 9am and 16:30pm')
+    #     return start
 
 
     def clean_appointment_date(self):

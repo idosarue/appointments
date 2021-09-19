@@ -9,6 +9,7 @@ from django.contrib.sites.models import Site
 from therapist.models import WorkingTime, Day
 from datetime import date, datetime, time, timedelta
 from patient.models import Appointment, AppointmentResponse
+import pandas as pd
 from functools import reduce
 
 # import pandas as pd
@@ -73,21 +74,23 @@ print(datetime.today().date())
 
 def create_time_choice():
     c = 0
-    break_time = 15
-    new_li = []
     li = []
-    start_time = WorkingTime.objects.first().start_time
-    end_time = WorkingTime.objects.first().end_time
-    minutes = 30
-    for x in range(start_time , end_time +1):
-        y = datetime.combine(date.today(),time(hour=x, minute=minutes))+timedelta(minutes=c)
-        if y.time().hour >= end_time +1:
-            if li[-1].minute > minutes:
-                x = li.pop()
-                y = time(hour=end_time, minute=li[-1].minute)
+    start_time = time(hour=8, minute=30)
+    end_time = time(hour=16, minute=15)
+    break_time = WorkingTime.objects.first().break_time
+
+    for x in range(start_time.hour , end_time.hour +1):
+        y = datetime.combine(date.today(),time(hour=x, minute=start_time.minute))+timedelta(minutes=c)
+        if y.time().hour > end_time.hour:
+            li.pop()
+            print(f'based on time specified your last appointment will end at {li[-1][0].hour+1}:{li[-1][0].minute}')
+            if li[-1][0].minute > start_time.minute:
+                y = time(hour=end_time, minute=li[-1][0].minute)
                 li.insert(len(li),y)
+            print(li)
             return li
-        li.append(y.time())
+                
+        li.append((y.time(), f'{y.time().hour:02d}:{y.time().minute}'))
         c+=break_time
 print(create_time_choice())
 # # print(timedelta)

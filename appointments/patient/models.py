@@ -23,8 +23,8 @@ class Appointment(models.Model):
     @classmethod
     def is_vacant(cls, start_time, appointment_date):
         print()
-        appoint = cls.valid_appoint(appointment_date=appointment_date, start_time=start_time)
-        pending_appoint = AppointmentResponse.valid_pending_appoint(appointment_date=appointment_date, start_time=start_time)
+        appoint = cls.valid_appoint(appointment_date=appointment_date, end_time__gte=start_time)
+        pending_appoint = AppointmentResponse.valid_pending_appoint(appointment_date=appointment_date, end_time__gte=start_time)
         if not appoint and not pending_appoint and not appointment_date.weekday() in Day.disabled_days():
             return True
         else:
@@ -33,6 +33,7 @@ class Appointment(models.Model):
     def new_is_vacant(cls, start_time, appointment_date):
         print()
         appoint = cls.valid_appoint(appointment_date=appointment_date, end_time__gte=start_time)
+        print(appoint)
         # pending_appoint = AppointmentResponse.valid_pending_appoint(appointment_date=appointment_date, start_time=start_time)
         if not appoint and not appointment_date.weekday() in Day.disabled_days():
             print('true')
@@ -77,9 +78,8 @@ class AppointmentResponse(models.Model):
     @classmethod
     def is_vacant(cls, start_time, appointment_date):
         print()
-        disabled_days = [day.week_day for day in Day.objects.filter(is_disabled=True)]
-        appoint = cls.valid_appoint(appointment_date=appointment_date, start_time=start_time)
-        pending_appoint = cls.valid_pending_appoint(appointment_date=appointment_date, start_time=start_time)
+        appoint = cls.valid_appoint(appointment_date=appointment_date, end_time__gte=start_time)
+        pending_appoint = cls.valid_pending_appoint(appointment_date=appointment_date, end_time__gte=start_time)
         if not appoint and not pending_appoint and not appointment_date.weekday() in Day.disabled_days():
             return True
         else:

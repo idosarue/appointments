@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from django.contrib.auth.models import User
-from datetime import date, datetime
+from datetime import date, datetime, time
 import datetime as dt
 import numpy as np
 from itertools import chain
@@ -281,8 +281,7 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
 
 
     def form_valid(self, form):
-        # if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
-        if not Appointment.new_is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
+        if not Appointment.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']) or not AppointmentResponse.is_vacant(start_time=form.cleaned_data['start_time'], appointment_date=form.cleaned_data['appointment_date']):
             messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
         appoint = form.save(commit=False)
@@ -353,10 +352,13 @@ class PreferencesView(SuperUserRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         start_time = WorkingTime.objects.first().start_time
-        end_time = WorkingTime.objects.first().end_time
-        minutes = WorkingTime.objects.first().minutes
-        context['start_time'] = dt.time(hour=start_time, minute=minutes)
-        context['end_time'] = dt.time(hour=end_time, minute=minutes)
+        print(WorkingTime.create_time_choice())
+        last_appoint_time = WorkingTime.create_time_choice()[-1][0]
+        y = time(hour = last_appoint_time.hour +1, minute=last_appoint_time.minute)
+        message = f'based on time specified your last appointment will end at {y}'
+        messages.info(self.request, message)
+        context['start_time'] = start_time
+        context['end_time'] = y
         context['disabled_dates'] = Date.objects.filter(is_disabled=True)
         return context
     
@@ -402,9 +404,9 @@ class AppointsView(SuperUserRequiredMixin,FilterView):
 
     def get_multiple(self):
         # if not 'appointment_date' in self.request.GET:
-        #     filter = AppointmentFilter(self.request.GET, queryset=Appointment.display(appointment_date=date.today()))
-        #     filter2 = AppointmentFilter(self.request.GET, queryset=AppointmentResponse.display(appointment_date=date.today()))
-        # else:
+        #     self.request.GET.update({'appointment_date':date.today()})
+        #     # filter = AppointmentFilter(self.request.GET, queryset=Appointment.display(appointment_date=date.today()))
+        #     # filter2 = AppointmentFilter(self.request.GET, queryset=AppointmentResponse.display(appointment_date=date.today()))
         filter = AppointmentFilter(self.request.GET, queryset=Appointment.display())
         filter2 = AppointmentFilter(self.request.GET, queryset=AppointmentResponse.display())
         return {'filter':filter, 'filter2':filter2}
