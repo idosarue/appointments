@@ -13,7 +13,6 @@ from datetime import datetime, time, date
 from django_filters.views import FilterView
 from itertools import chain
 from django.core.paginator import Paginator
-
 from send_emails import (send_message_to_therapist, 
 send_message_to_user, 
 send_message_to_therapist_after_update)
@@ -97,31 +96,6 @@ class AppointsListView(LoginRequiredMixin,FilterView):
         context['filter'] = filter
         context['filter2'] = filter2
         context['today'] = date.today()
-        return context
-
-class FutureAppointmentsListView(ListView):
-    model = Appointment
-    template_name = 'patient/future_appointments_list.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        appoint = Appointment.display(user=self.request.user.profile, date_t__gt = datetime.today())
-        appoint_response = AppointmentResponse.display(user=self.request.user.profile, date_t__gt = datetime.today())
-        context['appointments'] = appoint
-        context['appointments_response'] = appoint_response
-        
-        return context
-
-class PastAppointmentsListView(ListView):
-    model = Appointment
-    template_name = 'patient/past_appointments.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        appoint = Appointment.display(user=self.request.user.profile, date_t__lt=datetime.today())
-        appoint_response = AppointmentResponse.display(user=self.request.user.profile, date_t__lt=datetime.today())
-        context['appointments'] = appoint
-        context['appointments_response'] = appoint_response
         return context
 
 

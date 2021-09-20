@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
     path('apt_requests/', views.AppointsRequestsView.as_view(), name='apt_requests'),
-    path('accepted_apts/', views.AcceptedAppointmentListView.as_view(), name='accepted_apts'),
     path('pending_apts/', views.PendingAppointsView.as_view(), name='pending_apts'),
     path('update_apt/<int:pk>/', views.AppointmentUpdateView.as_view(), name='update_apt'),
     path('update_apt_res/<int:pk>/', views.AppointmentResponseUpdateView.as_view(), name='update_apt_res'),
@@ -21,9 +20,7 @@ urlpatterns = [
     path('enable_day/<int:pk>/', views.enable_day, name='enable_day'),
     path('disable_date/', views.DisableDatesView.as_view(), name='disable_dates'),
     path('enable_date/<int:pk>/', views.enable_date, name='enable_date'),
-    # path('days/', views.DisableDaysListView.as_view(), name='disable_days_list'),
     path('working_time/', views.WorkingTimeView.as_view(), name='working_time'),
     path('preferences/', views.PreferencesView.as_view(), name='preferences'),
     path('appoint_list/', views.AppointsView.as_view(), name='appoint_list'),
-    # path('appoint_list/', views.AppointsView.as_view(), name='appoint_list'),
 ]

@@ -170,7 +170,7 @@ class DisabledDatesForm(forms.ModelForm):
         model = Date
         fields = ['date']
         widgets = {
-            'date': forms.DateInput(attrs={'id':'datepicker','placeholder':'Select a date', 'autocomplete':'off',  'onclick':'someFunc()'}),
+            'date': forms.DateInput(attrs={'id':'datepicker','placeholder':'Select a date', 'autocomplete':'off'}),
         }
 
     def clean_date(self):
@@ -190,60 +190,17 @@ class WorkingTimeForm(forms.ModelForm):
         self.fields['break_time'].choices = [(5,'5'), (10,'10'), (15,'15')]
         self.fields['start_time'].widget = forms.TimeInput(attrs={'type':'time'})
         self.fields['end_time'].widget = forms.TimeInput(attrs={'type':'time'})
+        self.fields['end_time'].label = 'End by time'
     break_time = forms.ChoiceField()
     class Meta:
         model = WorkingTime
         fields = '__all__'
     
         help_texts = {
-            'start_time': ('set hour from 1 to 24'),
-            'end_time': ('set hour from 1 to 24'),
+            'start_time': ('set the time you want to start working'),
+            'end_time': ('set the time you want to end working by'),
         }
 
-    # def clean(self):
-    #     data = self.cleaned_data
-    #     start_time = data['start_time'].hour
-    #     end_time = data['end_time'].hour
-    #     minutes = data['minutes']
-    #     print(start_time)
-    #     print(end_time)
-    #     try:
-    #         starting_time = time(hour=start_time, minute=minutes)
-    #         ending_time = time(hour=end_time, minute=minutes)
-    #         print(ending_time)
-    #         apoointment__start_times = Appointment.valid_appoint(start_time__lt=starting_time)
-    #         apoointment_response__start_times = AppointmentResponse.valid_appoint(start_time__lt=starting_time) 
-    #         pending_apoointment__start_times = AppointmentResponse.valid_pending_appoint(start_time__lt=starting_time)
-    #         less_apoointment__end_times = Appointment.valid_appoint(start_time__gt=ending_time)
-    #         less_pending_apoointment__end_times = AppointmentResponse.valid_pending_appoint(start_time__gt=ending_time)
-    #         less_appoointment_response__end_times = AppointmentResponse.valid_appoint(start_time__gt=ending_time)
-    #     except ValueError:
-    #         if start_time >= end_time:
-    #             raise forms.ValidationError('start time must be bigger than your end time')
-    #         elif end_time > 24:
-    #             raise forms.ValidationError('hour doesn\'t exist')
-    #         elif end_time <= 0:
-    #             raise forms.ValidationError('you cannot set your end time to 0 or less')
-    #         elif start_time <= 0:
-    #             raise forms.ValidationError('you cannot set your start time to 0 or less')
-    #         elif start_time > 24:
-    #             raise forms.ValidationError('hour doesn\'t exist')
-    #         elif minutes > 59:
-    #             raise forms.ValidationError('minute doesn\'t exist')
-    #         else:
-    #             raise forms.ValidationError('something terrible happend')
-
-    #     if apoointment__start_times or apoointment_response__start_times:
-    #         raise forms.ValidationError(f'you have appoitments set before {starting_time}')
-    #     elif less_apoointment__end_times or less_appoointment_response__end_times :
-    #         raise forms.ValidationError(f'you have appoitments set after {ending_time}')
-    #     elif less_pending_apoointment__end_times or pending_apoointment__start_times:
-    #         raise forms.ValidationError('you have appoitments pending for later time')
-    #     elif end_time <= start_time:
-    #         raise forms.ValidationError('end time must be bigger than your start time')
-
-            
-    #     return data
 
     def clean(self):
         data = self.cleaned_data
@@ -273,8 +230,7 @@ class WorkingTimeForm(forms.ModelForm):
                 raise forms.ValidationError('you cannot set your start time to 0 or less')
             elif start_time > 24:
                 raise forms.ValidationError('hour doesn\'t exist')
-            # elif minutes > 59:
-            #     raise forms.ValidationError('minute doesn\'t exist')
+
             else:
                 raise forms.ValidationError('something terrible happend')
 
@@ -294,7 +250,7 @@ class AppointmentFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.form.fields['user'].queryset = Profile.objects.exclude(user__is_superuser=True)
-    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date', 'autocomplete':'off'}))
+    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker2', 'placeholder':'Select a date', 'autocomplete':'off'}))
     class Meta:
         model = Appointment
         fields = ['user', 'appointment_date']
@@ -304,7 +260,7 @@ class PendingAppointmentFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.form.fields['user'].queryset = Profile.objects.exclude(user__is_superuser=True)
-    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date', 'autocomplete':'off'}))
+    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker2', 'placeholder':'Select a date', 'autocomplete':'off'}))
     class Meta:
         model = AppointmentResponse
         fields = ['user', 'appointment_date']

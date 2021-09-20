@@ -10,7 +10,9 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from django.contrib.auth.models import User
-from datetime import date, datetime, time
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from datetime import date, datetime, time, timedelta
 import datetime as dt
 import numpy as np
 from itertools import chain
@@ -64,28 +66,6 @@ class AppointmentListView(SuperUserRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['appointments'] = Appointment.objects.filter(choice=None)
-        return context
-
-class AcceptedAppointmentListView(SuperUserRequiredMixin, ListView):
-    model = Appointment
-    template_name = 'therapist/accepted_apt.html'
-    ordering = 'timestamp'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        appoints_display = Appointment.display().order_by('-timestamp')
-        appoints_res_display = AppointmentResponse.display().order_by('-timestamp')
-        context['appointments'] = appoints_display
-        context['appointments_response'] = appoints_res_display
-        return context
-
-class PendingAppointmentListView(SuperUserRequiredMixin, ListView):
-    model = AppointmentResponse
-    template_name = 'therapist/pending_apts.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['appointments'] = AppointmentResponse.objects.exclude(is_approved=True)
         return context
 
 class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
@@ -383,19 +363,22 @@ class PreferencesView(SuperUserRequiredMixin, ListView):
     template_name = 'therapist/preferences/therapist_settings.html'
     context_object_name = 'days'
 
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         start_time = WorkingTime.objects.first().start_time
-        print(WorkingTime.create_time_choice())
         last_appoint_time = WorkingTime.create_time_choice()[-1][0]
-        y = time(hour = last_appoint_time.hour +1, minute=last_appoint_time.minute)
+        c = datetime.combine(date.today(), time(hour = last_appoint_time.hour, minute=last_appoint_time.minute)) + timedelta(hours=1)
+        y = c.time()
         message = f'based on time specified your last appointment will end at {y}'
         context['start_time'] = start_time
         context['end_time'] = y
         context['message'] = message
         context['disabled_dates'] = Date.objects.filter(is_disabled=True)
+        context['working_form'] = WorkingTimeForm(instance=WorkingTime.objects.first())
         return context
-    
+
 class DisableDatesView(SuperUserRequiredMixin,CreateView):
     form_class = DisabledDatesForm
     template_name = 'therapist/preferences/disable_dates.html'
@@ -407,12 +390,6 @@ class DisableDatesView(SuperUserRequiredMixin,CreateView):
         date.save()
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['day'] = Day.disabled_days()
-        print(Day.disabled_days())
-        return context
 
 @user_passes_test(lambda u: u.is_superuser)
 def enable_date(request, pk):

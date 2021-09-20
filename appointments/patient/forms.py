@@ -46,7 +46,7 @@ class AppointmentForm(forms.ModelForm):
 class UserAppointmentFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date', 'autocomplete':'off'}))
+    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker2', 'placeholder':'Select a date', 'autocomplete':'off'}))
     class Meta:
         model = Appointment
         fields = ['appointment_date']

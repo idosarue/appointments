@@ -41,18 +41,7 @@ class ProfileDetailView(LoginRequiredMixin,DetailView):
     def get_object(self, queryset=None):
         return self.request.user.profile
 
-# class MyLoginView(LoginView):
-#     template_name = 'accounts/login.html'
-#     def form_valid(self, form):
-#         username = form.cleaned_data['username']
-#         password = form.cleaned_data['password']
-#         user = authenticate(self.request, username=username, password=password)
-#         if user:
-#             if user.is_superuser:
-#                 return redirect('calendar')
-#             else:
-#                 return redirect('profile')
-#         return super().form_valid(form)
+
 
 class MyLoginView(LoginView):
     template_name = 'accounts/login.html'

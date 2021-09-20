@@ -51,12 +51,11 @@ class WorkingTime(models.Model):
         for x in range(start_time.hour , end_time.hour +1):
             y = datetime.combine(date.today(),time(hour=x, minute=start_time.minute))+timedelta(minutes=c)
             b = y + timedelta(hours=1)
-            if b.time() < end_time:
-  
+            if b < datetime.combine(date.today(),end_time):
+                print(b.time(), 'b')
                 time_display = datetime.strftime(y,"%H:%M")
                 li.append((y.time(), time_display))
                 print(y)
                 c+=break_time
 
-        # print(li)
         return li

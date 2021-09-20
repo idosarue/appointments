@@ -29,34 +29,21 @@
 
 
     {% endblock %}
-
+    {{day|json_script:'hello'}}
     <script type="text/javascript">
-        function someFunc(){
-            var arr = '{{day}}'.replace('[', '').replace(']','').split(", ")
-            console.log(arr)
-            return arr
-        }
-
-        
-        $(function date () {
-            $("#datepicker2").datepicker({
+        $(function() {
+            $("#datepicker").datepicker({
                 changeMonth: true,
                 dateFormat: "dd-mm-yy",
-                
                 beforeShowDay: function(d) {
                 var day = d.getDay();
-                console.log(day)
-                var a = someFunc()
-                var y = a.map(x => x)
-                console.log(day == y)
-                console.log(a.includes(day))
-                for (let i = 0; i< a.length; i++){
-                    console.log(a[i], 'asd')
+                const value = JSON.parse(document.getElementById('hello').textContent);
+                const arr = []
+                for (let i = 0; i< value.length; i++){
+                    value[i] += 1
+                    arr.push(value[i])
                 }
-                return [(day != 5 && day != 6)]
-                
-                // a = someFunc()
-                
+                return [(!arr.includes(day))]
             }
             });
         });

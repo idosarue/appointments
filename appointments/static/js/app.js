@@ -1,12 +1,8 @@
 $(function date () {
-    $("#datepicker").datepicker({
+    $("#datepicker2").datepicker({
         changeMonth: true,
         changeYear: true,
         dateFormat: "dd-mm-yy",        
-        beforeShowDay: function(d) {
-        var day = d.getDay();
-        return [(day != 5 && day != 6)];
-    }
     });
 });
 
@@ -26,14 +22,3 @@ $(function calendar_picker() {
     })
 });
 
-
-var timepicker = new TimePicker('time', {
-    lang: 'en',
-    theme: 'dark'
-  });
-  timepicker.on('change', function(evt) {
-    
-    var value = (evt.hour || '00') + ':' + (evt.minute || '00');
-    evt.element.value = value;
-  
-  });

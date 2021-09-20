@@ -108,6 +108,7 @@ def send_success_repsponse_message_email_to_therapist(user, start_time, appointm
 def send_reminder_email(today):
         x = today + timedelta(days=1)
         a = Appointment.display()
+        print(x)
         for i in a:
             if i.appointment_date == x.date():
                 email_message_therapist = f'''
