@@ -23,4 +23,7 @@ urlpatterns = [
     path('working_time/', views.WorkingTimeView.as_view(), name='working_time'),
     path('preferences/', views.PreferencesView.as_view(), name='preferences'),
     path('appoint_list/', views.AppointsView.as_view(), name='appoint_list'),
+    path('create_comment/<int:year>/<int:month>/<int:day>/', views.CreateCommentView.as_view(), name='create_comment'),
+    path('edit_comment/<int:pk>/', views.EditCommentView.as_view(), name='edit_comment'),
+    path('delete_comment/<int:pk>/', views.delete_comment, name='delete_comment'),
 ]

@@ -85,3 +85,4 @@ class ChangePasswordView(PasswordChangeView):
     def form_valid(self, form):
         messages.success(self.request, 'Your password was changed successfully')
         return super().form_valid(form)
+    

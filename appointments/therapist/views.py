@@ -18,12 +18,11 @@ import numpy as np
 from itertools import chain
 from therapist.my_calendar import Calendar
 from django.utils.safestring import mark_safe
-from .models import Day, WorkingTime, Date
+from .models import Comment, Day, WorkingTime, Date
 from send_emails import (send_response_email_to_user, 
 send_success_message_email_to_user, 
 send_success_message_email_to_therapist, 
-send_success_repsponse_message_email_to_therapist,
-send_reminder_email)
+send_success_repsponse_message_email_to_therapist)
 from .forms import(
      DisabledDatesForm, 
      EditAppointmentForm, 
@@ -34,6 +33,7 @@ from .forms import(
      WorkingTimeForm,
      AppointmentFilter,
      PendingAppointmentFilter,
+     CreateCommentForm
      )
 
 
@@ -101,6 +101,8 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
             )
         appoint.date_t = x
         appoint.end_time = end_time
+        appoint.week_day = Day.objects.get(week_day=appoint.appointment_date.weekday())
+
         appoint.save()
         send_response_email_to_user(appoint.original_request.user.user, appoint)
         return super().form_valid(form)
@@ -219,6 +221,8 @@ class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
             )
         appoint.date_t = x
         appoint.end_time = end_time
+        appoint.week_day = Day.objects.get(week_day=appoint.appointment_date.weekday())
+
         appoint.save()
         appointment = self.get_appoint()
         print(appointment.start_time)
@@ -254,6 +258,7 @@ class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
             )
         appoint.date_t = x
         appoint.end_time = end_time
+        appoint.week_day = Day.objects.get(week_day=appoint.appointment_date.weekday())
         appointment = self.get_appoint()
         send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
         return super().form_valid(form)
@@ -311,7 +316,9 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
             )
         appoint.date_t = x
         appoint.end_time = end_time
+        appoint.week_day = Day.objects.get(week_day=appoint.appointment_date.weekday())
         appoint.save()
+
         send_success_message_email_to_user(appoint.user.user, appoint.start_time, appoint.appointment_date)
         send_success_message_email_to_therapist(appoint.user.user, appoint.start_time, appoint.appointment_date)
         return super().form_valid(form)
@@ -377,6 +384,7 @@ class PreferencesView(SuperUserRequiredMixin, ListView):
         context['message'] = message
         context['disabled_dates'] = Date.objects.filter(is_disabled=True)
         context['working_form'] = WorkingTimeForm(instance=WorkingTime.objects.first())
+        context['date_form'] = DisabledDatesForm()
         return context
 
 class DisableDatesView(SuperUserRequiredMixin,CreateView):
@@ -455,4 +463,38 @@ class AppointsRequestsView(SuperUserRequiredMixin,FilterView):
         context['filter'] = filter
         return context
 
-send_reminder_email(datetime.today())
+class CreateCommentView(SuperUserRequiredMixin, CreateView):
+    form_class = CreateCommentForm
+    template_name = 'therapist/create_comment.html'
+    success_url = reverse_lazy('calendar')
+
+
+    def get_date(self):
+        year = self.kwargs['year']
+        month = self.kwargs['month']
+        day = self.kwargs['day']
+        print(year, month, day)
+        appoint_date = dt.date(year, month, day)
+        return appoint_date
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.date = self.get_date()
+        comment.save
+        return super().form_valid(form)
+
+class EditCommentView(SuperUserRequiredMixin, UpdateView):
+    template_name = 'therapist/create_comment.html'
+    success_url = reverse_lazy('calendar')
+    fields = ['title','content']
+
+    def get_object(self, queryset=None):
+        comment = get_object_or_404(Comment, id=self.kwargs['pk'])
+        return comment
+
+@user_passes_test(lambda u: u.is_superuser)
+def delete_comment(request, pk):
+    comment = get_object_or_404(Comment, id=pk)
+    comment.is_deleted = True
+    comment.save()
+    return redirect('calendar')

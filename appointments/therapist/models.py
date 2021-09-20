@@ -1,6 +1,9 @@
+from calendar import week
 from datetime import date, timedelta
 from django.db import models
 from datetime import datetime, time, timedelta
+
+from django.db.models.deletion import CASCADE
 # Create your models here.
 
 class Day(models.Model):
@@ -15,6 +18,13 @@ class Day(models.Model):
     def disabled_days(cls):
         disabled_days_li = [disabled_day.week_day for disabled_day in cls.objects.filter(is_disabled=True)]
         return disabled_days_li
+    
+    # @classmethod
+    # def week_days(cls, appo):
+    #     x =1
+    #     week_days_li = [y.name for y in cls.objects.filter(week_day=x)]
+    #     print(week_days_li)
+    #     return week_days_li
         
 class Date(models.Model):
     date = models.DateField(null=True)
@@ -24,6 +34,7 @@ class Date(models.Model):
     def disabled_dates(cls):
         disabled_dates_li = [disabled_date.date for disabled_date in cls.objects.filter(is_disabled=True)]
         return disabled_dates_li
+
 # class NewDisabledDays(models.Model):
 #     day = models.ForeignKey(Day, on_delete=models.CASCADE)
 
@@ -52,10 +63,15 @@ class WorkingTime(models.Model):
             y = datetime.combine(date.today(),time(hour=x, minute=start_time.minute))+timedelta(minutes=c)
             b = y + timedelta(hours=1)
             if b < datetime.combine(date.today(),end_time):
-                print(b.time(), 'b')
                 time_display = datetime.strftime(y,"%H:%M")
                 li.append((y.time(), time_display))
-                print(y)
                 c+=break_time
 
         return li
+
+class Comment(models.Model):
+    title = models.CharField(max_length=50)
+    content = models.CharField(max_length=255)
+    date = models.DateField(null=True)
+    is_deleted = models.BooleanField(default=False)
+    

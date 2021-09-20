@@ -8,7 +8,7 @@ from django.forms import widgets
 from django.utils.regex_helper import Choice
 from patient.models import *
 from datetime import date, time, datetime, timedelta
-from .models import Date, WorkingTime, Day
+from .models import Date, WorkingTime, Day, Comment
 from django.forms.widgets import NumberInput
 import django_filters
 
@@ -265,3 +265,7 @@ class PendingAppointmentFilter(django_filters.FilterSet):
         model = AppointmentResponse
         fields = ['user', 'appointment_date']
 
+class CreateCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        exclude= ['date', 'is_deleted']

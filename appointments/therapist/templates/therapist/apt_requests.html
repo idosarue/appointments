@@ -14,6 +14,7 @@
             <tr>
                 <th>start time</th>
                 <th>appointment date</th>
+                <th>day</th>
                 <th>first name</th>
                 <th>last name</th>
                 <th>patient phone</th>
@@ -31,7 +32,9 @@
             <td>
                 {{obj.appointment_date}}
             </td>
-    
+            <td>
+                {{obj.week_day}}
+            </td>
             <td>
                 {{ obj.user.user.first_name }} 
             </td>

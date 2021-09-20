@@ -19,6 +19,7 @@ class Appointment(models.Model):
     is_cancelled = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     date_t = models.DateTimeField(null=True)
+    week_day = models.ForeignKey('therapist.Day', on_delete=models.CASCADE, null=True)
 
     @classmethod
     def is_vacant(cls, start_time, appointment_date, end_time):
@@ -63,6 +64,7 @@ class AppointmentResponse(models.Model):
     user = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, null=True)
     is_approved = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
+    week_day = models.ForeignKey('therapist.Day', on_delete=models.CASCADE, null=True)
 
     @classmethod
     def is_vacant(cls, start_time, appointment_date, end_time):

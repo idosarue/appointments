@@ -49,3 +49,12 @@
   width: 50px;
   height: 50px;
 }
+
+.comment{
+  color: red;
+}
+
+.comment:hover{
+  color: #000;
+}
+

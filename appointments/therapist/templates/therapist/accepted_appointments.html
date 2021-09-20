@@ -14,6 +14,7 @@
             <tr>
                 <th>start time</th>
                 <th>appointment date</th>
+                <th>day</th>
                 <th>First name</th>
                 <th>Last name</th>
                 <th>patient phone</th>
@@ -29,7 +30,10 @@
             </td> 
             <td>
                 {{ obj.appointment_date }}
-            </td> 
+            </td>
+            <td>
+                {{obj.week_day}}
+            </td>
             <td>
                 {{ obj.user.user.first_name }}  
             </td>
@@ -42,6 +46,7 @@
             <td>
                 {{ obj.user.user.email }} 
             </td>
+         
             <td>
                 {% if obj in filter2.qs %}
                 <a class="btn btn-success" href="{% url 'update_apt_res' obj.id %}">Edit</a>

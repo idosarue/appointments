@@ -13,6 +13,7 @@
             <tr>
                 <th>start time</th>
                 <th>appointment date</th>
+                <th>day</th>
                 <th>First name</th>
                 <th>Last name</th>
                 <th>patient phone</th>
@@ -29,6 +30,9 @@
             <td>
                 {{ obj.appointment_date }}
             </td> 
+            <td>
+                {{obj.week_day}}
+            </td>
             <td>
                 {{ obj.user.user.first_name }} 
             </td>
