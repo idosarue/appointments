@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse_lazy
+from django.utils import html
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
 from django_filters.views import FilterView
 from django.contrib import messages
@@ -183,11 +184,15 @@ class CalendarView(SuperUserRequiredMixin,ListView):
             cal = Calendar(year=datetime.now().year or year, month=datetime.now().month or month)
         else:
             cal = Calendar(year=int(year), month=int(month))
+
         cal.setfirstweekday(6)
         html_cal = cal.formatmonth(withyear=True)
         context['form'] = CalendarForm(self.request.GET or None)
-        context['calendar'] = mark_safe(html_cal)
-        context['today'] = date.today()
+        context['comment_form'] = CreateCommentForm()
+        context['calendar'] = html_cal
+        for week in html_cal['month']:
+            for day in week:
+                print(day, '195')
         return context
 
 
@@ -468,7 +473,6 @@ class CreateCommentView(SuperUserRequiredMixin, CreateView):
     template_name = 'therapist/create_comment.html'
     success_url = reverse_lazy('calendar')
 
-
     def get_date(self):
         year = self.kwargs['year']
         month = self.kwargs['month']
@@ -482,6 +486,7 @@ class CreateCommentView(SuperUserRequiredMixin, CreateView):
         comment.date = self.get_date()
         comment.save
         return super().form_valid(form)
+
 
 class EditCommentView(SuperUserRequiredMixin, UpdateView):
     template_name = 'therapist/create_comment.html'

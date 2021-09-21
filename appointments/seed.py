@@ -6,12 +6,21 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'appointments.settings')
 django.setup()
 
 from django.contrib.sites.models import Site
-from therapist.models import WorkingTime, Day
+from therapist.models import WorkingTime, Day, Comment
 from datetime import date, datetime, time, timedelta
 from patient.models import Appointment, AppointmentResponse
 import pandas as pd
 from functools import reduce
 from accounts.models import Profile
+from datetime import date, datetime, timedelta
+from calendar import HTMLCalendar
+from patient.models import Appointment, AppointmentResponse
+from therapist.models import Date, Day, Comment
+from django.urls import reverse_lazy
+import holidays
+from therapist.forms import CreateCommentForm
+from django.template.loader import render_to_string
+from django.template.context_processors import csrf
 
 # import pandas as pd
 def edit_site():
@@ -54,7 +63,6 @@ def create_date_t():
         appoint.start_time.minute)
         appoint.save()
 # create_date_t()
-print(datetime.today().date())
 # a_start= '9:30'
 # a_end = '10:30'
 # b_start = '10:30'
@@ -72,27 +80,9 @@ print(datetime.today().date())
 '930'
 '1045'
 '12'
+# events = Appointment.display(appointment_date__year=self.year, appointment_date__month=self.month)
+# events2 = AppointmentResponse.display(appointment_date__year=self.year, appointment_date__month=self.month)
+# comments = Comment.objects.filter(date__year=self.year, date__month=self.month, is_deleted=False)
 
-def send_message():
-    x = datetime.now() + timedelta(days=7)
 
-    a = Appointment.display(user=Profile.objects.get(id=2))
-    for i in a:
-        if i.appointment_date == x.date():
-            print(i.appointment_date,'i appoin date', x,'x')
-            print(i.start_time,'i appoin date', x,'x')
 
-send_message()
-def send_reminder_email(user, appointment_date):
-        x = datetime.now() + timedelta(days=7)
-        a = Appointment.display(user=user)
-        for i in a:
-            if i.appointment_date == x.date():
-                print(i.appointment_date,'i appoin date', x,'x')
-                print(i.start_time,'i appoin date', x,'x')
-                email_message_therapist = f'''
-                Hello {user.user.first_name} {user.user.last_name} reminder, for: {i.start_time} ,{appointment_date}
-                '''
-                print(email_message_therapist)
-
-send_reminder_email(Profile.objects.get(id=2), date(2021,9,26))
