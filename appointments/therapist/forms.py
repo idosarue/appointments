@@ -11,7 +11,7 @@ from datetime import date, time, datetime, timedelta
 from .models import Date, WorkingTime, Day, Comment
 from django.forms.widgets import NumberInput
 import django_filters
-
+from django.http import JsonResponse
 
 
 
@@ -49,13 +49,14 @@ class AppointmentResponseForm(forms.ModelForm):
     #     return start
 
 
-    def clean_appointment_date(self):
-        appointment_date = self.cleaned_data['appointment_date']
+    def clean(self):
+        data = self.cleaned_data
+        appointment_date = data['appointment_date']
         if appointment_date <= date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
         elif appointment_date.weekday() in Day.disabled_days():
             raise forms.ValidationError('you cannot ask for a meeting for that day')
-        return appointment_date
+        return data
     
 
 
@@ -127,6 +128,7 @@ class TherapistCreateAppointmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['start_time'].choices = WorkingTime.create_time_choice()
+        self.fields['user'].queryset = Profile.objects.exclude(user__is_superuser=True)
     start_time = forms.ChoiceField()
 
     class Meta:
@@ -134,7 +136,7 @@ class TherapistCreateAppointmentForm(forms.ModelForm):
         fields = ['user', 'start_time', 'appointment_date']
 
         widgets = {
-            'appointment_date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
+            'appointment_date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date', 'autocomplete':'off'}),
         }
 
     # def clean_start_time(self):
@@ -268,4 +270,15 @@ class PendingAppointmentFilter(django_filters.FilterSet):
 class CreateCommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        exclude= ['date', 'is_deleted']
+        exclude= ['is_deleted']
+
+        widgets = {
+            'date': forms.DateInput(attrs={'id':'datepicker2','placeholder':'Select a date', 'autocomplete':'off'}),
+        }
+
+class EditCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        exclude= ['is_deleted', 'date']
+
+  

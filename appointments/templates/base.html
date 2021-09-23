@@ -30,23 +30,63 @@
 
     {% endblock %}
     {{day|json_script:'hello'}}
-    <script type="text/javascript">
-        $(function() {
-            $("#datepicker").datepicker({
-                changeMonth: true,
-                dateFormat: "dd-mm-yy",
-                beforeShowDay: function(d) {
-                var day = d.getDay();
-                const value = JSON.parse(document.getElementById('hello').textContent);
-                const arr = []
-                for (let i = 0; i< value.length; i++){
-                    value[i] += 1
-                    arr.push(value[i])
-                }
-                return [(!arr.includes(day))]
+
+    <script>
+    $("#appoint-form").submit(function (e) {
+        // preventing from page reload and default actions
+        e.preventDefault();
+        // serialize the data for sending the form data.
+        var serializedData = $(this).serialize();
+        // make POST ajax call
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'create_appoint' %}",
+            data: serializedData,
+            success: function (response) {
+                // on successfull creating object
+                // 1. clear the form.
+                $("#appoint-form").trigger('reset');
+                // 2. focus to nickname input 
+                location.reload(true);
+                // display the newly friend to table.
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                var x = Object.values(response.responseJSON.error)[0][0]
+                $('#appoint-result').html(`<div> ${x} </div>`);
             }
-            });
-        });
-        </script>
+        })
+    });
+
+    $("#comment-form").submit(function (e) {
+        // preventing from page reload and default actions
+        e.preventDefault();
+        // serialize the data for sending the form data.
+        var serializedData = $(this).serialize();
+        // make POST ajax call
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'create_comment' %}",
+            data: serializedData,
+            success: function (response) {
+                // on successfull creating object
+                // 1. clear the form.
+                $("#comment-form").trigger('reset');
+                // 2. focus to nickname input 
+                location.reload(true);
+
+                // display the newly friend to table.
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                var x = Object.values(response.responseJSON.error)[0][0]
+                $('#comment-result').html(`<div> ${x} </div>`);
+            }
+        })
+    });
+</script>
+    </script>
+
 </body>
 </html>
+

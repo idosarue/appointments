@@ -18,6 +18,8 @@ import datetime as dt
 import numpy as np
 from itertools import chain
 from therapist.my_calendar import Calendar
+from django.http import JsonResponse
+
 from django.utils.safestring import mark_safe
 from .models import Comment, Day, WorkingTime, Date
 from send_emails import (send_response_email_to_user, 
@@ -34,7 +36,8 @@ from .forms import(
      WorkingTimeForm,
      AppointmentFilter,
      PendingAppointmentFilter,
-     CreateCommentForm
+     CreateCommentForm,
+     EditCommentForm
      )
 
 
@@ -171,6 +174,11 @@ class UserAppointments(SuperUserRequiredMixin, ListView):
         context['future_appointments_response'] = future_appointments_response
         return context
 
+
+def get_date_f(request, year, month, day):
+    print(date(year, month, day))
+    return date(year, month, day)
+
 class CalendarView(SuperUserRequiredMixin,ListView):
     model = Appointment
     template_name = 'therapist/calendar.html'
@@ -189,10 +197,10 @@ class CalendarView(SuperUserRequiredMixin,ListView):
         html_cal = cal.formatmonth(withyear=True)
         context['form'] = CalendarForm(self.request.GET or None)
         context['comment_form'] = CreateCommentForm()
+        context['edit_comment_form'] = EditCommentForm()
+        context['appoint_form'] = TherapistCreateAppointmentForm()
         context['calendar'] = html_cal
-        for week in html_cal['month']:
-            for day in week:
-                print(day, '195')
+
         return context
 
 
@@ -288,14 +296,16 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
     template_name = 'therapist/create_appoint.html'
     success_url = reverse_lazy('calendar')
 
-    def get_date(self):
-        year = self.kwargs['year']
-        month = self.kwargs['month']
-        day = self.kwargs['day']
-        print(year, month, day)
-        appoint_date = dt.date(year, month, day)
-        return appoint_date
+    # def get_date(self):
+    #     year = self.kwargs['year']
+    #     month = self.kwargs['month']
+    #     day = self.kwargs['day']
+    #     print(year, month, day)
+    #     appoint_date = dt.date(year, month, day)
+    #     return appoint_date
 
+    def form_invalid(self, form):
+        return JsonResponse({"error": form.errors}, status=400)
 
     def form_valid(self, form):
         start_time = form.cleaned_data['start_time']
@@ -303,9 +313,8 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
         start = datetime.strptime(start_time, '%H:%M:%S').time()
         end_time = time(hour = start.hour + 1, minute=start.minute)
         if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
-            messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
             return super().form_invalid(form)
-        
+        response_data = {}
         appoint = form.save(commit=False)
         appoint.user = form.cleaned_data['user']
         appoint.choice = 'A'
@@ -323,7 +332,6 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
         appoint.end_time = end_time
         appoint.week_day = Day.objects.get(week_day=appoint.appointment_date.weekday())
         appoint.save()
-
         send_success_message_email_to_user(appoint.user.user, appoint.start_time, appoint.appointment_date)
         send_success_message_email_to_therapist(appoint.user.user, appoint.start_time, appoint.appointment_date)
         return super().form_valid(form)
@@ -331,13 +339,13 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
         form.fields['user'].queryset = Profile.objects.exclude(id=1)
-        form.fields['appointment_date'].initial = self.get_date()
+        # form.fields['appointment_date'].initial = self.get_date()
         return form
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['date'] = self.get_date()
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['date'] = self.get_date()
+    #     return context
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -473,19 +481,21 @@ class CreateCommentView(SuperUserRequiredMixin, CreateView):
     template_name = 'therapist/create_comment.html'
     success_url = reverse_lazy('calendar')
 
-    def get_date(self):
-        year = self.kwargs['year']
-        month = self.kwargs['month']
-        day = self.kwargs['day']
-        print(year, month, day)
-        appoint_date = dt.date(year, month, day)
-        return appoint_date
+    def form_invalid(self, form):
+        return JsonResponse({"error": form.errors}, status=400)
+    # def get_date(self):
+    #     year = self.kwargs['year']
+    #     month = self.kwargs['month']
+    #     day = self.kwargs['day']
+    #     print(year, month, day)
+    #     appoint_date = dt.date(year, month, day)
+    #     return appoint_date
 
-    def form_valid(self, form):
-        comment = form.save(commit=False)
-        comment.date = self.get_date()
-        comment.save
-        return super().form_valid(form)
+    # def form_valid(self, form):
+    #     comment = form.save(commit=False)
+    #     # comment.date = self.get_date()
+    #     comment.save
+    #     return super().form_valid(form)
 
 
 class EditCommentView(SuperUserRequiredMixin, UpdateView):

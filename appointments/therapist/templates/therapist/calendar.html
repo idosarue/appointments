@@ -19,17 +19,17 @@
     {% endfor %}
     <tbody>
         {% for week in calendar.month %}
-        <tr>
+        <tr> 
             {% for day in week %}
-                <td>
+                <td id="{{day.day_num}}-{{day.month}}-{{day.year}}" >
                     {% if day.disabled %}
                         <span class='dis'>disabled</span>
                     {% endif %}
                     {% if day.day_num %}  
                     {{day.day_num}}     
-                    <button type="button" class="btn btn-primary hide" data-toggle="modal" data-target="#exampleModal{{day.day_num}}">
+                    <button type="button"  class="btn btn-primary hide" data-toggle="modal" data-target="#exampleModal">
                     </button>
-                    <div class="modal fade" id="exampleModal{{day.day_num}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
@@ -39,12 +39,34 @@
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <ul>
-                                    {{day.comments|safe}}
-                                </ul>
-                                <form action="{% url 'create_comment' day.year day.month day.day_num %}" method="POST">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#commentModal">
+                                    add comment
+                                </button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#appointModal">
+                                    add appointment
+                                </button>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  </div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form id="comment-form" action="{% url 'create_comment' %}" method="POST"> 
                                     {% csrf_token %}
                                     {{comment_form.as_p}}
+                                  </div>
+                                  <div id="comment-result">
                                   </div>
                                   <div class="modal-footer">
                                       <button type="submit" class="btn btn-primary">Save changes</button>
@@ -54,7 +76,89 @@
                             </div>
                         </div>
                     </div>
- 
+                      <button class='comment-list' type="button" class="btn btn-primary" data-toggle="modal" data-target="#commentListModal{{day.day_num}}">
+                      </button>
+                      <div class="modal fade" id="commentListModal{{day.day_num}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Comments for {{day.day_num}}/{{day.month}}/{{day.year}}</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <ul>
+                                {% for comment in day.comments %}
+                                <li class="t">
+                                  Title: {{comment.title}}
+                                </li>
+                                <li class="c">
+                                  Content: {{comment.content}}
+                                </li>
+                                <li>
+                                  <span> <a class="comment-confirm-delete" href="{% url 'delete_comment' comment.id %}">Delete comment</a>  <button type="button" id="edit-comment-btn" class="btn btn-primary" data-toggle="modal" data-target="#EditcommentModal{{comment.id}}"> edit comment </button></span>
+                                </li>
+                                <hr>
+                                <div class="modal fade" id="EditcommentModal{{comment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title">Modal title</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <form id="comment-form" action="{% url 'edit_comment' comment.id %}" method="POST"> 
+                                              {% csrf_token %}
+                                              {{edit_comment_form.as_p}}
+                                            </div>
+                                            <div id="comment-result">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </form>
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+                                {% endfor %}
+                              </ul>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <div class="modal fade" id="appointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form id="appoint-form" action="{% url 'create_appoint' %}" method="POST"> 
+                                    {% csrf_token %}
+                                    {{appoint_form.as_p}}
+                                  </div>
+                                  <div id="appoint-result">
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="submit" class="btn btn-primary">Save changes</button>
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  </form>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {% endif %}
                     {{day.content|safe}}
 
@@ -65,3 +169,6 @@
     </tbody>
 </table>
 {% endblock %}
+<ul>
+  {{day.comments|safe}}
+</ul>
