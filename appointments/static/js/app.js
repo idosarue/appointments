@@ -45,7 +45,7 @@ $(document).ready(function(){
         var x = $(e.target).find(".comment-list");
         timer = setTimeout(function(){
             x.click()
-        }, 1500)
+        }, 1000)
 
     }).mouseleave(function(){
         clearTimeout(timer)
@@ -65,11 +65,8 @@ $(document).ready(function(){
 });
 
 
-$(document).ready(function(){
-    $(":button").click(function(e){
-        console.log($(this))
-    })
-});
+
+document.addEventListener('click', someFunc)
 
 function someFunc(e){
     var td = e.target
@@ -81,5 +78,52 @@ function someFunc(e){
     }
 }
 
-document.addEventListener('click', someFunc)
+// function editCommentDefaultValue(e){
+//     var button = e.target;
+//     var li1 = button.closest('ul').children[0].innerText;
+//     var li2 = button.closest('ul').children[1].innerText;
+//     var commentForm = button.closest('.modal').nextElementSibling;
+//     // var title = commentForm.children[1].children[1];
+//     console.log(commentForm.find('#comment-form'))
+//     title.defaultValue = li1
+// }
+$(document).ready(function(){
+    $(".edit-comment-btn").click(function(e){
+        var button = $(e.target);
+        var li1 = button.closest('ul').children()[0];
+        var li2 = button.closest('ul').children()[1];
+        console.log(li1);
 
+        var commentForm = button.closest('.modal').next()
+        
+        // console.log(button.attr('id'))
+        // var form = document.getElementById('form' + button.attr('id'))
+        // console.log(button)
+        // var title = form.getElementsByTagName('input')[1]
+        // var content = form.getElementsByTagName('textarea')[0]
+        // title.defaultValue = li1.textContent
+        // content.defaultValue = li2.textContent
+        // console.log(form)
+
+
+        // var content = commentForm.find('.content');
+        // console.log(commentForm.closest('.text').attr('class'))
+
+    });
+});
+
+
+$(document).ready(function(){
+    $(".edit-comment-btn").click(function(e){
+        console.log('s')
+    });
+});
+
+
+function getData(request){
+    console.log(request)
+    return request
+}
+function gData(){
+    console.log(getData())
+}

@@ -268,6 +268,11 @@ class PendingAppointmentFilter(django_filters.FilterSet):
         fields = ['user', 'appointment_date']
 
 class CreateCommentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].widget = forms.TextInput(attrs={'id':'title'})
+        self.fields['content'].widget = forms.Textarea(attrs={'id':'content'})
+
     class Meta:
         model = Comment
         exclude= ['is_deleted']
@@ -277,8 +282,11 @@ class CreateCommentForm(forms.ModelForm):
         }
 
 class EditCommentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].widget = forms.TextInput(attrs={'class':'title'})
+        self.fields['content'].widget = forms.Textarea(attrs={'class':'content'})
+
     class Meta:
         model = Comment
         exclude= ['is_deleted', 'date']
-
-  

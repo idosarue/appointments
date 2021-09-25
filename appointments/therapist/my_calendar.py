@@ -44,7 +44,6 @@ class Calendar(HTMLCalendar):
                 create_appoint_a = ''
             for comment in comments:
                 y.append(comment)
-            print(self.year)
             day_dic = {'day_num': day, 'content': d, 'disabled':disabled, 'year':int(self.year), 'month':self.month, 'comments':y}
             return day_dic
 

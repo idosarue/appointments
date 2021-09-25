@@ -19,7 +19,7 @@ import numpy as np
 from itertools import chain
 from therapist.my_calendar import Calendar
 from django.http import JsonResponse
-
+import json
 from django.utils.safestring import mark_safe
 from .models import Comment, Day, WorkingTime, Date
 from send_emails import (send_response_email_to_user, 
@@ -483,6 +483,44 @@ class CreateCommentView(SuperUserRequiredMixin, CreateView):
 
     def form_invalid(self, form):
         return JsonResponse({"error": form.errors}, status=400)
+
+    def form_valid(self, form):
+        title = self.request.POST.get('title')
+        content= self.request.POST.get('content')
+        date_string= self.request.POST.get('date')
+        date = datetime.strptime(date_string, "%d-%m-%Y").date()
+        new_comment = Comment(title=title, content=content,date=date)
+        new_comment.save()
+        response_data = {}
+        response_data['title'] = title
+        response_data['content'] = content
+        response_data['date'] = date_string
+        response_data['id'] = new_comment.id
+        # response_data['edit'] = f'{reverse_lazy("edit_comment",kwargs={"pk":new_comment.id})}'
+        return HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+
+# def create_comment(request):
+#     if request.method == 'POST':
+#         title = request.POST.get('title')
+#         content= request.POST.get('content')
+#         date_string= request.POST.get('date')
+#         date = datetime.strptime(date_string, "%d-%m-%Y").date()
+#         new_comment = Comment(title=title, content=content,date=date)
+#         new_comment.save()
+#         response_data = {}
+#         response_data['title'] = title
+#         response_data['content'] = content
+#         response_data['date'] = date_string
+#         response_data['id'] = new_comment.id
+#         response_data['edit'] = f'{reverse_lazy("edit_comment",kwargs={"pk":new_comment.id})}'
+#         return HttpResponse(
+#             json.dumps(response_data),
+#             content_type="application/json"
+#         )
+
     # def get_date(self):
     #     year = self.kwargs['year']
     #     month = self.kwargs['month']
@@ -498,14 +536,15 @@ class CreateCommentView(SuperUserRequiredMixin, CreateView):
     #     return super().form_valid(form)
 
 
-class EditCommentView(SuperUserRequiredMixin, UpdateView):
+class EditCommentView(SuperUserRequiredMixin, FormView):
     template_name = 'therapist/create_comment.html'
     success_url = reverse_lazy('calendar')
-    fields = ['title','content']
+    form_class = EditCommentForm
 
-    def get_object(self, queryset=None):
-        comment = get_object_or_404(Comment, id=self.kwargs['pk'])
-        return comment
+    def post(self, request, *args, **kwargs):
+        comment_id = self.request.POST.get('id')
+        print(comment_id)
+        return super().post(request, *args, **kwargs)
 
 @user_passes_test(lambda u: u.is_superuser)
 def delete_comment(request, pk):
