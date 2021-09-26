@@ -77,6 +77,9 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
     template_name = 'patient/appointment_response.html'
     success_url = reverse_lazy('home')
     
+    def form_invalid(self, form):
+        return JsonResponse({"error": form.errors}, status=400)
+    
     def get_appointment(self):
         appoint_id = self.kwargs['pk']
         return get_object_or_404(Appointment, id=appoint_id)
@@ -86,9 +89,6 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
         appointment_date = form.cleaned_data['appointment_date']
         start = datetime.strptime(start_time, '%H:%M:%S').time()
         end_time = time(hour = start.hour + 1, minute=start.minute)
-        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
-            messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
-            return super().form_invalid(form)
         appoint = form.save(commit=False)
         appoint.original_request = self.get_appointment()
         appoint.user = appoint.original_request.user
@@ -197,6 +197,7 @@ class CalendarView(SuperUserRequiredMixin,ListView):
         html_cal = cal.formatmonth(withyear=True)
         context['form'] = CalendarForm(self.request.GET or None)
         context['edit_appoint_form'] = EditAppointmentForm()
+        context['edit_response_form'] = EditAppointmentResponseForm()
         context['comment_form'] = CreateCommentForm()
         context['edit_comment_form'] = EditCommentForm()
         context['appoint_form'] = TherapistCreateAppointmentForm()
@@ -484,23 +485,6 @@ class CreateCommentView(SuperUserRequiredMixin, CreateView):
 
     def form_invalid(self, form):
         return JsonResponse({"error": form.errors}, status=400)
-
-    def form_valid(self, form):
-        title = self.request.POST.get('title')
-        content= self.request.POST.get('content')
-        date_string= self.request.POST.get('date')
-        date = datetime.strptime(date_string, "%d-%m-%Y").date()
-        new_comment = Comment(title=title, content=content,date=date)
-        new_comment.save()
-        response_data = {}
-        response_data['title'] = title
-        response_data['content'] = content
-        response_data['date'] = date_string
-        response_data['id'] = new_comment.id
-        return HttpResponse(
-            json.dumps(response_data),
-            content_type="application/json"
-        )
 
 
 class EditCommentView(SuperUserRequiredMixin, UpdateView):

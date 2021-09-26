@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 from therapist.models import WorkingTime, Day, Date
 import django_filters
 
-
 class AppointmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,11 +35,20 @@ class AppointmentForm(forms.ModelForm):
 
 
     def clean_appointment_date(self):
-        appointment_date = self.cleaned_data['appointment_date']
+        data = self.cleaned_data
+        appointment_date = data['appointment_date']
+        try:
+            start_time = data['start_time']
+            start = datetime.strptime(start_time, '%H:%M:%S').time()
+            end_time = time(hour = start.hour + 1, minute=start.minute)
+        except KeyError:
+            raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
         if appointment_date <= date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-        elif appointment_date.weekday() in Day.disabled_days() or appointment_date in Date.disabled_dates():
+        elif appointment_date.weekday() in Day.disabled_days():
             raise forms.ValidationError('you cannot ask for a meeting for that day')
+        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
+            raise forms.ValidationError('no available mettings for that date and time')
         return appointment_date
 
 class UserAppointmentFilter(django_filters.FilterSet):

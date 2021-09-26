@@ -20,14 +20,15 @@ class Calendar(HTMLCalendar):
         events_per_day2 = events2.filter(appointment_date__day=day).order_by('start_time')
         comments = comments.filter(date__day=day)
         # d = ''
-        d = []
+        appointments = []
+        appointments_response = []
         y = []
         for event in events_per_day:
             # d += f'<li id="{event.id}"> {event.start_time} {event.user.user.first_name} {event.user.user.last_name} {event.user.phone_number} <a  href="{reverse_lazy("update_apt", kwargs={"pk":event.id})}">edit</a> <br> <a href="{reverse_lazy("delete_appointment", kwargs= {"pk" :event.id})}" class="confirm_delete">Cancel</a></li>'
-            d.append(event)
+            appointments.append(event)
         for event in events_per_day2:
             # d += f'<li id="{event.id}"> {event.start_time} {event.user.user.first_name} {event.user.user.last_name} {event.user.phone_number} <a href="{reverse_lazy("update_apt_res", kwargs={"pk":event.id})}">edit</a> <br><a href="{reverse_lazy("delete_appointment_response", kwargs= {"pk" :event.id})}" class="confirm_delete">Cancel</a></li>'
-            d.append(event)
+            appointments_response.append(event)
         
 
         if day:
@@ -38,7 +39,7 @@ class Calendar(HTMLCalendar):
             # link = f"<a href='{reverse_lazy('create_comment', kwargs={'year': self.year, 'month': self.month, 'day': day})}'>add comment</a>"
             if v_date in isr_holidays:
                 holi += isr_holidays.get(f'{v_date.year}-{v_date.month}-{v_date.day}')
-            if (v_date.weekday() in Day.disabled_days() or v_date in Date.disabled_dates()) and v_date > date.today():
+            if (v_date.weekday() in Day.disabled_days() or v_date in Date.disabled_dates()):
                 disabled = True
             # if v_date > date.today() and not v_date.weekday() in Day.disabled_days() and not v_date in Date.disabled_dates():
             #     create_appoint_a = f"<a href='{reverse_lazy('create_appoint', kwargs={'year': self.year, 'month': self.month, 'day': day})}'>+</a>"
@@ -46,7 +47,7 @@ class Calendar(HTMLCalendar):
                 create_appoint_a = ''
             for comment in comments:
                 y.append(comment)
-            day_dic = {'day_num': day, 'content': d, 'disabled':disabled, 'year':int(self.year), 'month':self.month, 'comments':y, 'holiday':holi}
+            day_dic = {'day_num': day, 'appointments': appointments, 'appointments_response':appointments_response, 'disabled':disabled, 'year':int(self.year), 'month':self.month, 'comments':y, 'holiday':holi}
             return day_dic
 
         

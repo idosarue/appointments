@@ -5,7 +5,7 @@
   }
   
   .calendar tr, .calendar td {
-    border: 1px solid black;
+    border: 2px solid lightblue;
   }
   
   .calendar th {
@@ -18,6 +18,7 @@
     width: 200px;
     height: 150px;
     padding: 20px 0px 0px 5px;
+    position: relative;
   }
   
   .month {
@@ -39,12 +40,23 @@
 
 
 
-
-.dis{
-  color: red;
-  width: 50px;
-  height: 50px;
+.comment-list{
+  position: absolute;
+  top: 0;
+  right: 0;
 }
+
+.calendar td span {
+  position: absolute;
+  top: 5px;
+  left: 0;
+}
+
+.appoint-list-container{
+  margin-top: 1.5em;
+}
+
+
 
 .comment{
   color: red;

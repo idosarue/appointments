@@ -70,7 +70,7 @@ class EditAppointmentResponseForm(forms.ModelForm):
         fields = ['start_time', 'appointment_date']
 
         widgets = {
-            'appointment_date': forms.DateInput(attrs={'class':'datepicker', 'placeholder':'Select a date'}),
+            'appointment_date': forms.DateInput(attrs={ 'placeholder':'Select a date'}),
         }
 
     # def clean_start_time(self):
@@ -83,14 +83,29 @@ class EditAppointmentResponseForm(forms.ModelForm):
     #     return start
 
 
+    # def clean_appointment_date(self):
+    #     appointment_date = self.cleaned_data['appointment_date']
+    #     if appointment_date <= date.today():
+    #         raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
+    #     elif appointment_date.weekday() in Day.disabled_days():
+    #         raise forms.ValidationError('you cannot ask for a meeting for that day')
+    #     return appointment_date
     def clean_appointment_date(self):
-        appointment_date = self.cleaned_data['appointment_date']
+        data = self.cleaned_data
+        appointment_date = data['appointment_date']
+        try:
+            start_time = data['start_time']
+            start = datetime.strptime(start_time, '%H:%M:%S').time()
+            end_time = time(hour = start.hour + 1, minute=start.minute)
+        except KeyError:
+            raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
         if appointment_date <= date.today():
             raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
         elif appointment_date.weekday() in Day.disabled_days():
             raise forms.ValidationError('you cannot ask for a meeting for that day')
+        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
+            raise forms.ValidationError('no available mettings for that date and time')
         return appointment_date
-    
 class EditAppointmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -101,7 +116,7 @@ class EditAppointmentForm(forms.ModelForm):
         fields = ['start_time', 'appointment_date']
 
         widgets = {
-            'appointment_date': forms.DateInput(attrs={'placeholder':'Select a date'}),
+            'appointment_date': forms.DateInput(attrs={'placeholder':"dd-mm-yyyy", 'type':'date', 'class':'date'}),
         }
 
 

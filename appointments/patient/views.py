@@ -31,9 +31,6 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
         appointment_date = form.cleaned_data['appointment_date']
         start = datetime.strptime(start_time, '%H:%M:%S').time()
         end_time = time(hour = start.hour + 1, minute=start.minute)
-        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time) or Appointment.valid_appoint(user=self.request.user.profile, appointment_date=appointment_date) or AppointmentResponse.valid_appoint(user=self.request.user.profile, appointment_date=appointment_date) or AppointmentResponse.valid_pending_appoint(user=self.request.user.profile, appointment_date=appointment_date):
-            messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
-            return super().form_invalid(form)
         appoint = form.save(commit=False)
         appoint.user = self.request.user.profile
         x = datetime(

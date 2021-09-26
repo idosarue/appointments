@@ -1,28 +1,50 @@
 
+function createValidDate(x){
+    var newDate = x.split('-').reverse()
+    if (newDate[1].length < 2){
+        newDate[1] = 0 + newDate[1]
+    }
+    if (newDate[2].length < 2){
+        newDate[2] = 0 + newDate[2] 
+    }
+
+    console.log(newDate)
+
+    return newDate.join('-')
+}
+
+// function createDefaultDate(x){
+//     var x = createValidDate(x)
+//     var dateInputs = $("input[name*='date']")
+//     for (let i = 0; i<dateInputs.length; i++){
+//         console.log(dateInputs[i])
+//         dateInputs[i].setAttribute('value', x);
+//     };
+//     return newDate.join('-')
+// }
+
+
 $(document).ready(function(){
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
     var dateInputs = $("input[name*='date']")
     for (let i = 0; i<dateInputs.length; i++){
         console.log(dateInputs[i])
-        $(dateInputs[i]).focus().datepicker({
-            changeMonth: true,
-            dateFormat: "dd-mm-yy",
-            beforeShowDay: function(d) {
-            var day = d.getDay();
-            const value = JSON.parse(document.getElementById('hello').textContent);
-            const arr = []
-            for (let i = 0; i< value.length; i++){
-                value[i] += 1
-                arr.push(value[i])
-            }
-            return [(!arr.includes(day))]
-        }
-        });
+        dateInputs[i].type = 'date'
+        dateInputs[i].setAttribute('min', today);
     };
 });
+
+
 $(document).ready(function(){
     $('.hide').hide()
     $('.hide2').hide()
 });
+
 $(document).ready(function(){
     var click = 0;
     $('td').click(function(e){
@@ -33,34 +55,83 @@ $(document).ready(function(){
         timer = setTimeout(function(){
             if (click == 1){
                 x.click();
-                var appoint_date = $('#appoint-form').children('p').children('input[name=appointment_date]');
-                appoint_date.val(id);
+                var appointDate = $('#appoint-form').children('p').children('input[name=appointment_date]');
+                console.log(appointDate)
+                appointDate.val(createValidDate(id))
             }else{
                 y.click()
-                var comment_date = $('#comment-form').children('p').children('input[name=date]');
-                comment_date.val(id);
+                var appointDate = $('#comment-form').children('p').children('input[name=date]');
+                console.log(id)
+                appointDate.val(createValidDate(id))
             }
         click =0
         }, 300)
 
     });
 });
+
 $(document).ready(function(){
-    $('.edit-appoint-btn').click(function(e){
+    $('.edit-appoint-btn').click(function(){
         var id = $(this).closest('td').attr('id')
-        var appointId = $(this).closest('li').attr('id')
+        var appointId = $(this).closest('li').attr('id')        
         var timeValue = $(this).closest('li').text().slice(0,5) + ':00'
         var appointDate = $('#edit-appoint-form').children('p').children('input[name=appointment_date]');
         $('#edit-appoint-form').attr('action',`/therapist/update_apt/${appointId}/`)
-        console.log(appointId)
-        appointDate.val(id);
+        console.log(id)
+        appointDate.val(createValidDate(id))
         $(`select option[value="${timeValue}"]`).attr("selected",true);
         var start_time = $('#edit-appoint-form').children('p').children('input[name=start_time]');
         start_time.val(timeValue)
     });
 });
 
+$(document).ready(function(){
+    $('.hide').click(function(){
+        var id = $(this).closest('td').attr('id')
+        var appointId = $(this).closest('li').attr('id')        
+        var appointDate = $('#appoint-form').children('p').children('input[name=appointment_date]');
+        $('#edit-appoint-form').attr('action',`/therapist/update_apt/${appointId}/`)
+        console.log(id)
+        appointDate.val(createValidDate(id))
+    });
+});
 
+$(document).ready(function(){
+    $('.edit-appoint-res-btn').click(function(e){
+        var id = $(this).closest('td').attr('id')
+        var appointId = $(this).closest('li').attr('id')
+        var timeValue = $(this).closest('li').text().slice(0,5) + ':00'
+        var appointDate = $('#edit-appoint-res-form').children('p').children('input[name=appointment_date]');
+        $('#edit-appoint-res-form').attr('action',`/therapist/update_apt_res/${appointId}/`)
+        console.log(appointId)
+        appointDate.val(createValidDate(id))
+        $(`select option[value="${timeValue}"]`).attr("selected",true);
+        var start_time = $('#edit-appoint-res-form').children('p').children('input[name=start_time]');
+        start_time.val(timeValue)
+    });
+});
+
+$(document).ready(function(){
+    $(".edit-comment-btn").click(function(e){
+        var button = $(e.target);
+        var li1 = button.closest('ul').children()[0];
+        var li2 = button.closest('ul').children()[1];
+        console.log(li1);
+
+        var commentForm = button.closest('.modal').next()
+        
+        console.log(button.attr('id'))
+        var form = document.getElementById('form' + button.attr('id'))
+        console.log(button)
+        var title = form.getElementsByTagName('input')[1]
+        var content = form.getElementsByTagName('textarea')[0]
+        console.log(title)
+        title.defaultValue = li1.textContent
+        content.defaultValue = li2.textContent
+        console.log(form)
+
+    });
+});
 
 // $(function date () {
 //     $("#datepicker2").datepicker({
@@ -120,17 +191,7 @@ $(document).ready(function(){
 //     });
 // });
 
-// $(document).ready(function(){
-//     $("td").mouseenter(function(e){
-//         var x = $(e.target).find(".comment-list");
-//         timer = setTimeout(function(){
-//             x.click()
-//         }, 1300)
 
-//     }).mouseleave(function(){
-//         clearTimeout(timer)
-//     })
-// });
 
 // $(document).ready(function(){
 //     $("td").click(function(e){
@@ -157,8 +218,8 @@ $(document).ready(function(){
 // $(document).ready(function(){
 //     $(".edit-comment-btn").click(function(e){
 //         var button = $(e.target);
-//         var li1 = button.closest('ul').children()[0];
-//         var li2 = button.closest('ul').children()[1];
+        // var li1 = button.closest('ul').children()[0];
+        // var li2 = button.closest('ul').children()[1];
 //         console.log(li1);
 
 //         var commentForm = button.closest('.modal').next()

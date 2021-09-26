@@ -45,8 +45,13 @@ INSTALLED_APPS = [
     'therapist',
     'phonenumber_field',
     'crispy_forms',
+    "bootstrap4",
     'bootstrap_datepicker_plus',
 ]
+
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 SITE_ID = 1
 
@@ -117,7 +122,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-DATE_INPUT_FORMATS = ['%d-%m-%Y']
+DATE_INPUT_FORMATS = ['%Y-%m-%d', '%m/%d/%Y', '%m/%d/%y']   
+     
+
 
 DATE_FORMAT = "d-m-Y"
 
