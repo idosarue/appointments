@@ -24,10 +24,13 @@ class Appointment(models.Model):
     @classmethod
     def is_vacant(cls, start_time, appointment_date, end_time):
         print()
-        appoint = cls.valid_appoint(appointment_date=appointment_date, end_time__gte=start_time, start_time__lte=end_time)
+        appoint = cls.objects.filter(appointment_date=appointment_date, end_time__gte=start_time, start_time__lte=end_time, is_approved=True, is_cancelled=False).exists()
         if not appoint and not appointment_date.weekday() in Day.disabled_days():
+            print('true')
             return True
         else:
+            print('not')
+
             return False
 
 
@@ -43,7 +46,7 @@ class Appointment(models.Model):
     def valid_appoint(cls, **kwargs):
         appoints = cls.objects.filter(is_cancelled=False, is_approved=True, **kwargs)
         print(kwargs, '44')
-        if appoints.exists():
+        if not appoints.exists():
             print('true')
             return True
         else:
@@ -69,8 +72,8 @@ class AppointmentResponse(models.Model):
     @classmethod
     def is_vacant(cls, start_time, appointment_date, end_time):
         print()
-        appoint = cls.valid_appoint(appointment_date=appointment_date, end_time__gte=start_time,start_time__lte=end_time)
-        pending_appoint = cls.valid_pending_appoint(appointment_date=appointment_date, end_time__gte=start_time, start_time__lte=end_time)
+        appoint = cls.objects.filter(appointment_date=appointment_date, end_time__gte=start_time, start_time__lte=end_time, is_approved=True, is_cancelled=False).exists()
+        pending_appoint = cls.objects.filter(appointment_date=appointment_date, end_time__gte=start_time, start_time__lte=end_time, choice='P', is_cancelled=False).exists()
         if not appoint and not pending_appoint and not appointment_date.weekday() in Day.disabled_days():
             return True
         else:
@@ -90,7 +93,7 @@ class AppointmentResponse(models.Model):
     @classmethod
     def valid_appoint(cls, **kwargs):
         appoints = cls.objects.filter(is_cancelled=False, is_approved=True, **kwargs)
-        if appoints.exists():
+        if not appoints.exists():
             return True
         else:
             return False

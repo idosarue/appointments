@@ -9,7 +9,6 @@
     {{form.as_p}}
     <input type="submit">
 </form>
-  
 
 
 <table border="0" cellpadding="0" cellspacing="0" class="calendar table table-primary">
@@ -27,7 +26,10 @@
                     {% endif %}
                     {% if day.day_num %}  
                     {{day.day_num}}     
-                    <button type="button"  class="btn btn-primary hide" data-toggle="modal" data-target="#exampleModal">
+                    {{day.holiday}}
+         
+                    
+                    <button type="button" id="{{day.day_num}}-{{day.month}}-{{day.year}}"  class="btn btn-primary hide" data-toggle="modal" data-target="#exampleModal">
                     </button>
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -42,7 +44,7 @@
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#commentModal">
                                     add comment
                                 </button>
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#appointModal">
+                                <button  type="button" class="btn btn-primary add-appoint" data-toggle="modal" data-target="#appointModal">
                                     add appointment
                                 </button>
                                   <div class="modal-footer">
@@ -62,7 +64,7 @@
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <form id="comment-form" action="{% url 'create_comment' %}" method="POST"> 
+                                <form id="comment-form" class='form' action="{% url 'create_comment' %}" method="POST"> 
                                     {% csrf_token %}
                                     {{comment_form.as_p}}
                                   </div>
@@ -94,7 +96,7 @@
                                 <li class="t">{{comment.title}}</li>
                                 <li class="c">{{comment.content}}</li>
                                 <li>
-                                  <span> <a class="comment-confirm-delete" href="{% url 'delete_comment' comment.id %}">Delete comment</a>  <button id='{{comment.id}}' type="button" class="btn btn-primary edit-comment-btn" data-toggle="modal" data-target="#EditcommentModal"> edit comment </button></span>
+                                  <span> <a class="comment-confirm-delete" href="{% url 'delete_comment' comment.id %}">Delete comment</a>  <button id='{{comment.id}}' type="button" class="btn btn-primary edit-comment-btn" data-toggle="modal" data-target="#EditcommentModal{{comment.id}}"> edit comment </button></span>
                                 </li>
                               </ul>
                               <hr>
@@ -108,7 +110,8 @@
                           </div>
                         </div>
                       </div>
-                      <div class="modal fade" id="EditcommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      {% for comment in day.comments %}
+                      <div class="modal fade" id="EditcommentModal{{comment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
@@ -118,7 +121,7 @@
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <form class="edit-comment-form" class="" action="{% url 'edit_comment' %}" method="POST"> 
+                                <form id="form{{comment.id}}" class="form" action="{% url 'edit_comment' comment.id %}" method="POST"> 
                                     {% csrf_token %}
                                     {{edit_comment_form.as_p}}
                                   </div>
@@ -132,7 +135,7 @@
                             </div>
                         </div>
                     </div>
-
+                    {% endfor %}
                     <div class="modal fade" id="appointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -143,7 +146,7 @@
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <form id="appoint-form" action="{% url 'create_appoint' %}" method="POST"> 
+                                <form id="appoint-form" class='form' action="{% url 'create_appoint' %}" method="POST"> 
                                     {% csrf_token %}
                                     {{appoint_form.as_p}}
                                   </div>
@@ -157,17 +160,26 @@
                             </div>
                         </div>
                     </div>
-
                     {% endif %}
-                    {{day.content|safe}}
+                    <ul>
+                      {% for event in day.content %}
+                      <li id="event.id">{{event.start_time}} {{event.user.user.first_name}} {{event.user.user.last_name}} {{event.user.phone_number}} <button id='{{event.id}}' type="button" class="btn btn-primary edit-appoint-btn" data-toggle="modal" data-target="#editAppointModal{{event.id}}">Edit</button></li>
 
+  
+        
+                      {% endfor %}
+
+                    </ul>
+                    <form id="appoint-form" class='form' action="{% url 'create_appoint' %}" method="POST"> 
+                      {% csrf_token %}
+                      {{appoint_form.as_p}}
+                    </form>
                 </td>
             {% endfor %}
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
 {% endblock %}
-<ul>
-  {{day.comments|safe}}
-</ul>
+

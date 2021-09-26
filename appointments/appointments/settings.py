@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'therapist',
     'phonenumber_field',
     'crispy_forms',
+    'bootstrap_datepicker_plus',
 ]
 
 SITE_ID = 1

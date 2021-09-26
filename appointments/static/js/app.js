@@ -1,129 +1,227 @@
-$(function date () {
-    $("#datepicker2").datepicker({
-        changeMonth: true,
-        changeYear: true,
-        dateFormat: "dd-mm-yy",        
-    });
-});
 
-$(function birth_picker() {
-    $("#datepicker_birth").datepicker({
-        changeYear: true,
-        yearRange: "1930:2003",
-        dateFormat: "dd-mm-yy",
-    })
-});
-
-$(function calendar_picker() {
-    $("#calendar_picker").datepicker({
-        changeMonth: true,
-        changeYear: true,
-        dateFormat: 'dd-mm-yy',
-    })
-});
-
-
-$(function() {
-    $("#datepicker").datepicker({
-        changeMonth: true,
-        dateFormat: "dd-mm-yy",
-        beforeShowDay: function(d) {
-        var day = d.getDay();
-        const value = JSON.parse(document.getElementById('hello').textContent);
-        const arr = []
-        for (let i = 0; i< value.length; i++){
-            value[i] += 1
-            arr.push(value[i])
+$(document).ready(function(){
+    var dateInputs = $("input[name*='date']")
+    for (let i = 0; i<dateInputs.length; i++){
+        console.log(dateInputs[i])
+        $(dateInputs[i]).focus().datepicker({
+            changeMonth: true,
+            dateFormat: "dd-mm-yy",
+            beforeShowDay: function(d) {
+            var day = d.getDay();
+            const value = JSON.parse(document.getElementById('hello').textContent);
+            const arr = []
+            for (let i = 0; i< value.length; i++){
+                value[i] += 1
+                arr.push(value[i])
+            }
+            return [(!arr.includes(day))]
         }
-        return [(!arr.includes(day))]
-    }
-    });
+        });
+    };
 });
-
 $(document).ready(function(){
-    $("td").mouseenter(function(e){
-        var x = $(e.target).find(".comment-list");
-        timer = setTimeout(function(){
-            x.click()
-        }, 1000)
-
-    }).mouseleave(function(){
-        clearTimeout(timer)
-    })
+    $('.hide').hide()
+    $('.hide2').hide()
 });
-
 $(document).ready(function(){
-    $("td").click(function(e){
+    var click = 0;
+    $('td').click(function(e){
         var x = $(e.target).find(".hide");
-        x.click()
+        var y = $(e.target).find(".hide2");
+        var id = $(this).attr('id')
+        click++
+        timer = setTimeout(function(){
+            if (click == 1){
+                x.click();
+                var appoint_date = $('#appoint-form').children('p').children('input[name=appointment_date]');
+                appoint_date.val(id);
+            }else{
+                y.click()
+                var comment_date = $('#comment-form').children('p').children('input[name=date]');
+                comment_date.val(id);
+            }
+        click =0
+        }, 300)
+
+    });
+});
+$(document).ready(function(){
+    $('.edit-appoint-btn').click(function(e){
+        var id = $(this).closest('td').attr('id')
+        var appointId = $(this).closest('li').attr('id')
+        var timeValue = $(this).closest('li').text().slice(0,5) + ':00'
+        var appointDate = $('#edit-appoint-form').children('p').children('input[name=appointment_date]');
+        $('#edit-appoint-form').attr('action',`/therapist/update_apt/${appointId}/`)
+        console.log(appointId)
+        appointDate.val(id);
+        $(`select option[value="${timeValue}"]`).attr("selected",true);
+        var start_time = $('#edit-appoint-form').children('p').children('input[name=start_time]');
+        start_time.val(timeValue)
     });
 });
 
-$(document).ready(function(){
-    $(".hide").hide()
-    $(".comment-list").hide()
-});
 
 
+// $(function date () {
+//     $("#datepicker2").datepicker({
+//         changeMonth: true,
+//         changeYear: true,
+//         dateFormat: "dd-mm-yy",        
+//     });
+// });
 
-document.addEventListener('click', someFunc)
+// $(function birth_picker() {
+//     $("#datepicker_birth").datepicker({
+//         changeYear: true,
+//         yearRange: "1930:2003",
+//         dateFormat: "dd-mm-yy",
+//     })
+// });
 
-function someFunc(e){
-    var td = e.target
-    var t = document.getElementById('datepicker')
-    var t2 = document.getElementById('datepicker2')
-    if(td.tagName == 'TD'){
-        t.defaultValue = td.id
-        t2.defaultValue = td.id
-    }
-}
+// $(function calendar_picker() {
+//     $("#calendar_picker").datepicker({
+//         changeMonth: true,
+//         changeYear: true,
+//         dateFormat: 'dd-mm-yy',
+//     })
+// });
 
-// function editCommentDefaultValue(e){
-//     var button = e.target;
-//     var li1 = button.closest('ul').children[0].innerText;
-//     var li2 = button.closest('ul').children[1].innerText;
-//     var commentForm = button.closest('.modal').nextElementSibling;
-//     // var title = commentForm.children[1].children[1];
-//     console.log(commentForm.find('#comment-form'))
-//     title.defaultValue = li1
-// }
-$(document).ready(function(){
-    $(".edit-comment-btn").click(function(e){
-        var button = $(e.target);
-        var li1 = button.closest('ul').children()[0];
-        var li2 = button.closest('ul').children()[1];
-        console.log(li1);
 
-        var commentForm = button.closest('.modal').next()
+// $(function() {
+//     $("#datepicker").datepicker({
+    //     changeMonth: true,
+    //     dateFormat: "dd-mm-yy",
+    //     beforeShowDay: function(d) {
+    //     var day = d.getDay();
+    //     const value = JSON.parse(document.getElementById('hello').textContent);
+    //     const arr = []
+    //     for (let i = 0; i< value.length; i++){
+    //         value[i] += 1
+    //         arr.push(value[i])
+    //     }
+    //     return [(!arr.includes(day))]
+    // }
+    // });
+// });
+// $(function() {
+//     $(".edit-datepicker").datepicker({
+//         changeMonth: true,
+//         dateFormat: "dd-mm-yy",
+//         beforeShowDay: function(d) {
+//         var day = d.getDay();
+//         const value = JSON.parse(document.getElementById('hello').textContent);
+//         const arr = []
+//         for (let i = 0; i< value.length; i++){
+//             value[i] += 1
+//             arr.push(value[i])
+//         }
+//         return [(!arr.includes(day))]
+//     }
+//     });
+// });
+
+// $(document).ready(function(){
+//     $("td").mouseenter(function(e){
+//         var x = $(e.target).find(".comment-list");
+//         timer = setTimeout(function(){
+//             x.click()
+//         }, 1300)
+
+//     }).mouseleave(function(){
+//         clearTimeout(timer)
+//     })
+// });
+
+// $(document).ready(function(){
+//     $("td").click(function(e){
+//         var x = $(e.target).find(".hide");
+//         x.click()
+//     });
+// });
+
+// $(document).ready(function(){
+//     $(".hide").hide()
+//     $(".comment-list").hide()
+// });
+// $(document).ready(function(){
+//     var x= $(".datepicker")
+//     var td = x.closest('td').attr('id')
+//     for (i =0; i<x.length; i++){
+//         x[i]
+//     }
+//     console.log(x)
+//     console.log('s')
+// });
+
+
+// $(document).ready(function(){
+//     $(".edit-comment-btn").click(function(e){
+//         var button = $(e.target);
+//         var li1 = button.closest('ul').children()[0];
+//         var li2 = button.closest('ul').children()[1];
+//         console.log(li1);
+
+//         var commentForm = button.closest('.modal').next()
         
-        // console.log(button.attr('id'))
-        // var form = document.getElementById('form' + button.attr('id'))
-        // console.log(button)
-        // var title = form.getElementsByTagName('input')[1]
-        // var content = form.getElementsByTagName('textarea')[0]
-        // title.defaultValue = li1.textContent
-        // content.defaultValue = li2.textContent
-        // console.log(form)
+//         console.log(button.attr('id'))
+//         var form = document.getElementById('form' + button.attr('id'))
+//         console.log(button)
+//         var title = form.getElementsByTagName('input')[1]
+//         var content = form.getElementsByTagName('textarea')[0]
+//         console.log(title)
+//         title.defaultValue = li1.textContent
+//         content.defaultValue = li2.textContent
+//         console.log(form)
+
+//     });
+// });
+
+// // $(document).ready(function(){
+// //     $(".hide").click(function(e){
+// //         var button = $(e.target);
+// //         var date = $('#datepicker')
+// //         var date2 = $('#datepicker2')
+// //         date.defaultValue = button.attr('id')
+// //         date2.defaultValue = button.attr('id')
+// //     });
+// // });
 
 
-        // var content = commentForm.find('.content');
-        // console.log(commentForm.closest('.text').attr('class'))
+// // $(document).ready(function(){
+// //     $(".edit-appoint-btn").click(function(e){
+// //         var button = $(e.target);
+// //         var li1 = button.closest('li')[0];
+// //         console.log(li1);
+// //         var td_date = button.closest('td')
+// //         console.log()
+// //         var time = $('select')
+// //         var date = $('#datepicker')
+// //         // date.defaultValue = button.attr('id')
+// //         time.defaultValue = li1.textContent.slice(0,5) + ':00'
+// //     });
+// // });
 
-    });
-});
 
 
-$(document).ready(function(){
-    $(".edit-comment-btn").click(function(e){
-        console.log('s')
-    });
-});
+// // $(document).ready(function(){
+// //     $(".edit-appoint-btn").click(function(e){
+// //         var button = $(e.target);
+// //         var button = $(e.target);
+// //         var li1 = button.closest('li')[0];
+// //         console.log(li1);
+// //         var td_date = button.closest('td')
+// //         console.log()
 
+// //         console.log(button.attr('id'))
+// //         var form = document.getElementById('edit-appoint-form' + button.attr('id'))
+// //         console.log(button)
+// //         var time = $('select')
+// //         var date = form.getElementsByTagName('input')[1]
+// //         console.log(title)
+// //         time.defaultValue = li1.textContent.slice(0,5) + ':00'
+// //         date.defaultValue = td_date.attr('id')
+// //         console.log(form)
 
-function getData(request){
-    console.log(request)
-    return request
-}
-function gData(){
-    console.log(getData())
-}
+// //     });
+// // });
+

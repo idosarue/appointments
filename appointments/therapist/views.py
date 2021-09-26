@@ -181,7 +181,7 @@ def get_date_f(request, year, month, day):
 
 class CalendarView(SuperUserRequiredMixin,ListView):
     model = Appointment
-    template_name = 'therapist/calendar.html'
+    template_name = 'therapist/newcal.html'
 
 
     def get_context_data(self, **kwargs):
@@ -196,6 +196,7 @@ class CalendarView(SuperUserRequiredMixin,ListView):
         cal.setfirstweekday(6)
         html_cal = cal.formatmonth(withyear=True)
         context['form'] = CalendarForm(self.request.GET or None)
+        context['edit_appoint_form'] = EditAppointmentForm()
         context['comment_form'] = CreateCommentForm()
         context['edit_comment_form'] = EditCommentForm()
         context['appoint_form'] = TherapistCreateAppointmentForm()
@@ -203,12 +204,15 @@ class CalendarView(SuperUserRequiredMixin,ListView):
 
         return context
 
-
 class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
     success_url = reverse_lazy('calendar')
     form_class = EditAppointmentForm
     template_name = 'therapist/edit_appoint.html'
     model = Appointment
+
+    def form_invalid(self, form):
+        return JsonResponse({"error": form.errors}, status=400)
+
 
     def get_appoint(self):
         appoint_id = self.kwargs['pk']
@@ -219,11 +223,7 @@ class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
         start_time = form.cleaned_data['start_time']
         appointment_date = form.cleaned_data['appointment_date']
         start = datetime.strptime(start_time, '%H:%M:%S').time()
-        end_time = time(hour = start.hour + 1, minute=start.minute)
-        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
-            messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
-            return super().form_invalid(form)
-        
+        end_time = time(hour = start.hour + 1, minute=start.minute)        
         appoint = form.save(commit=False)
         x = datetime(
             appoint.appointment_date.year,
@@ -247,6 +247,9 @@ class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
     template_name = 'therapist/edit_appoint.html'
     form_class = EditAppointmentResponseForm
     model = AppointmentResponse
+
+    def form_invalid(self, form):
+        return JsonResponse({"error": form.errors}, status=400)
 
     def get_appoint(self):
         appoint_id = self.kwargs['pk']
@@ -312,8 +315,6 @@ class TherapistCreateAppointmentView(LoginRequiredMixin, CreateView):
         appointment_date = form.cleaned_data['appointment_date']
         start = datetime.strptime(start_time, '%H:%M:%S').time()
         end_time = time(hour = start.hour + 1, minute=start.minute)
-        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
-            return super().form_invalid(form)
         response_data = {}
         appoint = form.save(commit=False)
         appoint.user = form.cleaned_data['user']
@@ -496,55 +497,25 @@ class CreateCommentView(SuperUserRequiredMixin, CreateView):
         response_data['content'] = content
         response_data['date'] = date_string
         response_data['id'] = new_comment.id
-        # response_data['edit'] = f'{reverse_lazy("edit_comment",kwargs={"pk":new_comment.id})}'
         return HttpResponse(
             json.dumps(response_data),
             content_type="application/json"
         )
 
-# def create_comment(request):
-#     if request.method == 'POST':
-#         title = request.POST.get('title')
-#         content= request.POST.get('content')
-#         date_string= request.POST.get('date')
-#         date = datetime.strptime(date_string, "%d-%m-%Y").date()
-#         new_comment = Comment(title=title, content=content,date=date)
-#         new_comment.save()
-#         response_data = {}
-#         response_data['title'] = title
-#         response_data['content'] = content
-#         response_data['date'] = date_string
-#         response_data['id'] = new_comment.id
-#         response_data['edit'] = f'{reverse_lazy("edit_comment",kwargs={"pk":new_comment.id})}'
-#         return HttpResponse(
-#             json.dumps(response_data),
-#             content_type="application/json"
-#         )
 
-    # def get_date(self):
-    #     year = self.kwargs['year']
-    #     month = self.kwargs['month']
-    #     day = self.kwargs['day']
-    #     print(year, month, day)
-    #     appoint_date = dt.date(year, month, day)
-    #     return appoint_date
-
-    # def form_valid(self, form):
-    #     comment = form.save(commit=False)
-    #     # comment.date = self.get_date()
-    #     comment.save
-    #     return super().form_valid(form)
-
-
-class EditCommentView(SuperUserRequiredMixin, FormView):
+class EditCommentView(SuperUserRequiredMixin, UpdateView):
     template_name = 'therapist/create_comment.html'
     success_url = reverse_lazy('calendar')
     form_class = EditCommentForm
 
-    def post(self, request, *args, **kwargs):
-        comment_id = self.request.POST.get('id')
-        print(comment_id)
-        return super().post(request, *args, **kwargs)
+    def form_invalid(self, form):
+        return JsonResponse({"error": form.errors}, status=400)
+
+
+    def get_object(self, queryset=None):
+        comment_id = self.kwargs['pk']
+        return get_object_or_404(Comment, id=comment_id)
+   
 
 @user_passes_test(lambda u: u.is_superuser)
 def delete_comment(request, pk):

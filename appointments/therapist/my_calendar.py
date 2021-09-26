@@ -19,13 +19,15 @@ class Calendar(HTMLCalendar):
         events_per_day = events.filter(appointment_date__day=day).order_by('start_time')
         events_per_day2 = events2.filter(appointment_date__day=day).order_by('start_time')
         comments = comments.filter(date__day=day)
-        d = ''
+        # d = ''
+        d = []
         y = []
         for event in events_per_day:
-            d += f'<li> {event.start_time} {event.user.user.first_name} {event.user.user.last_name} {event.user.phone_number} <a  href="{reverse_lazy("update_apt", kwargs={"pk":event.id})}">edit</a> <br> <a href="{reverse_lazy("delete_appointment", kwargs= {"pk" :event.id})}" class="confirm_delete">Cancel</a></li>'
-
+            # d += f'<li id="{event.id}"> {event.start_time} {event.user.user.first_name} {event.user.user.last_name} {event.user.phone_number} <a  href="{reverse_lazy("update_apt", kwargs={"pk":event.id})}">edit</a> <br> <a href="{reverse_lazy("delete_appointment", kwargs= {"pk" :event.id})}" class="confirm_delete">Cancel</a></li>'
+            d.append(event)
         for event in events_per_day2:
-            d += f'<li> {event.start_time} {event.user.user.first_name} {event.user.user.last_name} {event.user.phone_number} <a href="{reverse_lazy("update_apt_res", kwargs={"pk":event.id})}">edit</a> <br><a href="{reverse_lazy("delete_appointment_response", kwargs= {"pk" :event.id})}" class="confirm_delete">Cancel</a></li>'
+            # d += f'<li id="{event.id}"> {event.start_time} {event.user.user.first_name} {event.user.user.last_name} {event.user.phone_number} <a href="{reverse_lazy("update_apt_res", kwargs={"pk":event.id})}">edit</a> <br><a href="{reverse_lazy("delete_appointment_response", kwargs= {"pk" :event.id})}" class="confirm_delete">Cancel</a></li>'
+            d.append(event)
         
 
         if day:
@@ -44,7 +46,7 @@ class Calendar(HTMLCalendar):
                 create_appoint_a = ''
             for comment in comments:
                 y.append(comment)
-            day_dic = {'day_num': day, 'content': d, 'disabled':disabled, 'year':int(self.year), 'month':self.month, 'comments':y}
+            day_dic = {'day_num': day, 'content': d, 'disabled':disabled, 'year':int(self.year), 'month':self.month, 'comments':y, 'holiday':holi}
             return day_dic
 
         
