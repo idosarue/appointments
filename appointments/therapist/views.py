@@ -21,11 +21,12 @@ from therapist.my_calendar import Calendar
 from django.http import JsonResponse
 import json
 from django.utils.safestring import mark_safe
-from .models import Comment, Day, WorkingTime, Date
+from .models import Comment, ContactUsersMessages, Day, WorkingTime, Date
 from send_emails import (send_response_email_to_user, 
 send_success_message_email_to_user, 
 send_success_message_email_to_therapist, 
-send_success_repsponse_message_email_to_therapist)
+send_success_repsponse_message_email_to_therapist,
+send_contact_message_to_patient)
 from django.core import mail
 from .forms import(
      DisabledDatesForm, 
@@ -38,7 +39,8 @@ from .forms import(
      AppointmentFilter,
      PendingAppointmentFilter,
      CreateCommentForm,
-     EditCommentForm
+     EditCommentForm,
+     ContactFormEmailPatient
      )
 
 
@@ -70,6 +72,7 @@ class AllUsersList(SuperUserRequiredMixin, ListView):
         page_obj = pag.get_page(page_number) 
         context['user_list'] = users
         context['page_obj'] = page_obj
+        context['contact_form'] = ContactFormEmailPatient()
         return context
 
 class AppointmentListView(SuperUserRequiredMixin, ListView):
@@ -219,6 +222,7 @@ class CalendarView(SuperUserRequiredMixin,FormView):
         context['calendar'] = html_cal
 
         return context
+
 
 class AppointmentUpdateView(SuperUserRequiredMixin, UpdateView):
     success_url = reverse_lazy('calendar')
@@ -465,6 +469,7 @@ class AppointsView(SuperUserRequiredMixin,FilterView):
         # context['today'] = date.today()
         return context
 
+
 class PendingAppointsView(SuperUserRequiredMixin,FilterView):
     template_name = 'therapist/pending_apts.html'
     model = AppointmentResponse
@@ -522,3 +527,20 @@ def delete_comment(request, pk):
     comment.is_deleted = True
     comment.save()
     return redirect('calendar')
+
+@user_passes_test(lambda u: u.is_superuser)
+def delete_comment(request, pk):
+    comment = get_object_or_404(Comment, id=pk)
+    comment.is_deleted = True
+    comment.save()
+    return redirect('calendar')
+
+class CreateContactMessageToPatient(SuperUserRequiredMixin, CreateView):
+    model = ContactUsersMessages
+    form_class = ContactFormEmailPatient
+    template_name = 'therapist/all_users.html'
+    success_url = reverse_lazy('all_users')
+
+    def form_valid(self, form):
+        send_contact_message_to_patient(form.cleaned_data['email'], form.cleaned_data['subject'], form.cleaned_data['message'])
+        return super().form_valid(form)

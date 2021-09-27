@@ -19,12 +19,7 @@ class Day(models.Model):
         disabled_days_li = [disabled_day.week_day for disabled_day in cls.objects.filter(is_disabled=True)]
         return disabled_days_li
     
-    # @classmethod
-    # def week_days(cls, appo):
-    #     x =1
-    #     week_days_li = [y.name for y in cls.objects.filter(week_day=x)]
-    #     print(week_days_li)
-    #     return week_days_li
+
         
 class Date(models.Model):
     date = models.DateField(null=True)
@@ -35,18 +30,9 @@ class Date(models.Model):
         disabled_dates_li = [disabled_date.date for disabled_date in cls.objects.filter(is_disabled=True)]
         return disabled_dates_li
 
-# class NewDisabledDays(models.Model):
-#     day = models.ForeignKey(Day, on_delete=models.CASCADE)
-
-#     def __str__(self):
-#         return self.day.name
 
 class WorkingTime(models.Model):
-    # start_time = models.IntegerField(default=9)
-    # minutes = models.IntegerField(default=30)
-    # end_time = models.IntegerField(default=16)
     start_time = models.TimeField()
-    # minutes = models.IntegerField(default=30)
     end_time = models.TimeField()
     break_time = models.IntegerField(default=15)
 
@@ -75,3 +61,7 @@ class Comment(models.Model):
     date = models.DateField(null=True)
     is_deleted = models.BooleanField(default=False)
     
+class ContactUsersMessages(models.Model):
+    subject = models.CharField(max_length=255)
+    message = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255)

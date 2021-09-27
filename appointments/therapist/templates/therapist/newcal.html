@@ -6,21 +6,30 @@
 
 
 
-<div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">Choose a date</h5>
-    <form id='date-form' method="GET">
-      {% csrf_token %}
-      {{form.as_p}}
-      <input type="submit">
-    </form>
-  </div>
-</div>
+
 <table border="0" cellpadding="0" cellspacing="0" class="calendar table table-bordered border-warning">
-    {{calendar.month_name|safe}}
+    <tr>
+      <th colspan="7">
+        <div id="month-name">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">Choose a date</h5>
+              <form id='date-form' method="GET">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit">
+              </form>
+            </div>
+          </div>
+          <h3>{{calendar.month_name}}</h3>
+        </div>
+      </th>
+    </tr>
+
     {% for header in calendar.headers %}
         {{header|safe}}
     {% endfor %}
+      
     <tbody>
         {% for week in calendar.month %}
         <tr> 
@@ -135,7 +144,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
+            <h5 class="modal-title">Add An Appointment </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -160,7 +169,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
+            <h5 class="modal-title">Add A Commment</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -184,7 +193,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
+            <h5 class="modal-title">Edit Appointment</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -204,35 +213,12 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="EditappointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="edit-appoint-form" method="POST"> 
-                {% csrf_token %}
-                {{edit_appoint_form.as_p}}
-              </div>
-              <div id="edit-appoint-result">
-              </div>
-              <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">Save changes</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </form>
-          </div>
-        </div>
-    </div>
-</div>
+
 <div class="modal fade" id="EditappointResponseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
+            <h5 class="modal-title">Edit Appointment</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>

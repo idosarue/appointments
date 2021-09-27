@@ -104,6 +104,13 @@ def send_success_repsponse_message_email_to_therapist(user, start_time, appointm
             therapist_email,
             [therapist_email],
         )
+def send_contact_message_to_patient(user_email, subject, body):
+        send_mail(
+            subject,
+            body,
+            therapist_email,
+            [user_email],
+        )
 
 # def send_reminder_email(today):
 #         x = today + timedelta(days=1)

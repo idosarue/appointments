@@ -1,3 +1,4 @@
+from django.db.models.base import Model
 from accounts.models import Profile
 from django import forms
 from django.contrib.auth.models import User
@@ -8,7 +9,7 @@ from django.forms import widgets
 from django.utils.regex_helper import Choice
 from patient.models import *
 from datetime import date, time, datetime, timedelta
-from .models import Date, WorkingTime, Day, Comment
+from .models import Date, WorkingTime, Day, Comment, ContactUsersMessages
 from django.forms.widgets import NumberInput
 import django_filters
 from django.http import JsonResponse
@@ -18,9 +19,11 @@ from bootstrap_datepicker_plus import DateTimePickerInput
 class CalendarForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['year'].choices = [(x+2021,y) for x,y in enumerate(list(range(2021,2051)))]
         month_li = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        self.fields['year'].choices = [(x+2021,y) for x,y in enumerate(list(range(2021,2051)))]
         self.fields['month'].choices = [(x,y) for x,y in enumerate(month_li, 1)]
+        self.fields['year'].initial = date.today().year
+        self.fields['month'].initial = date.today().month
     year = forms.ChoiceField()
     month = forms.ChoiceField()
 
@@ -291,7 +294,7 @@ class AppointmentFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.form.fields['user'].queryset = Profile.objects.exclude(user__is_superuser=True)
-    appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'id':'datepicker2', 'placeholder':'Select a date', 'autocomplete':'off'}))
+        self.form.fields['appointment_date'].initial = date.today()
     class Meta:
         model = Appointment
         fields = ['user', 'appointment_date']
@@ -329,3 +332,12 @@ class EditCommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         exclude= ['is_deleted', 'date']
+
+class ContactFormEmailPatient(forms.ModelForm):
+    class Meta:
+        model = ContactUsersMessages
+        fields = '__all__'
+
+        widgets = {
+            'message' : forms.Textarea()
+        }

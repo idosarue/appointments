@@ -51,7 +51,7 @@
                 {{ obj.user.phone_number }}
             </td>
             <td>
-                {{ obj.user.user.email }}
+                <button type="button" class="btn btn-link send" data-toggle="modal" data-target="#ContactModal"> {{ obj.user.user.email }}</button>
             </td>
             <td>
                 {{obj.timestamp}}
@@ -65,6 +65,30 @@
         {% endfor %}
     </table>
 
+<div class="modal fade" id="ContactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">Send Email</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <form id="contact-form-therapist" class="form" action="{% url 'send_contact_email' %}" method="POST"> 
+                {% csrf_token %}
+                {{contact_form.as_p}}
+                </div>
+                <div id="contact-result">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
     {% if page_obj.has_previous %}
         <a href="?page=1">&laquo First</a>

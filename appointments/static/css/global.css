@@ -1,0 +1,14 @@
+body {
+    background-color: whitesmoke;
+}
+
+.t-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 80vh;
+}
+.t-container table{
+
+    height: 30vh;
+}

@@ -1,6 +1,12 @@
+
+.body{
+  margin: 0;
+  width: 100vw;
+}
+
 .calendar {
-    width: 98%;
-    margin: auto;
+    width: 100%;
+    margin: 0;
     font-size: 13px;
   }
   
@@ -16,14 +22,21 @@
   }
   
   .calendar td {
-    width: 200px;
-    height: 150px;
+    width: 12.5em;
+    height: 9.375em;
     padding: 20px 0px 0px 5px;
     position: relative;
   }
   
-  .month {
-    font-size: 25px;
+  #month-name {
+    display: flex;
+    justify-content: center;
+  }
+
+
+  #month-name h3{
+    align-self: center;
+    flex-grow: 4;
   }
   
   .date a {
@@ -35,10 +48,6 @@
     padding: 0px 5px 0px 20px;
   }
   
-  a {
-    color: blue;
-  }
-
 
 
 .comment-list{
@@ -57,12 +66,6 @@
   margin-top: 1.5em;
 }
 
-
-
-.comment{
-  color: red;
-}
-
 .comment:hover{
   color: #000;
 }
@@ -70,9 +73,11 @@
 
 li {
   list-style: none;
+  font-size: 1.3em;
 }
 
 .link-container{
   display: flex;
   justify-content: space-between;
 }
+

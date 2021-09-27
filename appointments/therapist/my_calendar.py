@@ -1,5 +1,5 @@
 from datetime import date, datetime, timedelta
-from calendar import HTMLCalendar
+from calendar import HTMLCalendar, month_name
 from patient.models import Appointment, AppointmentResponse
 from therapist.models import Date, Day, Comment
 from django.urls import reverse_lazy
@@ -54,7 +54,16 @@ class Calendar(HTMLCalendar):
         return '<td></td>'
 
 
-  
+    def formatmonthname(self, theyear, themonth, withyear=True):
+        """
+        Return a month name as a table row.
+        """
+        if withyear:
+            s = '%s %s' % (month_name[themonth], theyear)
+        else:
+            s = '%s' % month_name[themonth]
+        return s
+
 
     def formatweek(self, theweek, events, events2, comments):
         week = []

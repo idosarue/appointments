@@ -125,6 +125,15 @@ $(document).ready(function(){
         start_time.val(timeValue)
     });
 });
+$(document).ready(function(){
+    $('.send').click(function(e){
+        var email = $(this).text()
+        var emailField = $('#contact-form-therapist').children('p').children('input[name=email]');
+        emailField.val(email)
+    });
+
+});
+
 
 $(document).ready(function(){
     $(".edit-comment-btn").click(function(e){
@@ -147,6 +156,7 @@ $(document).ready(function(){
 
     });
 });
+
 
 
 // $(function date () {

@@ -27,4 +27,5 @@ urlpatterns = [
     path('create_comment/', views.CreateCommentView.as_view(), name='create_comment'),
     path('edit_comment/<int:pk>/', views.EditCommentView.as_view(), name='edit_comment'),
     path('delete_comment/<int:pk>/', views.delete_comment, name='delete_comment'),
+    path('send_contact_email/', views.CreateContactMessageToPatient.as_view(), name='send_contact_email'),
 ]
