@@ -7,7 +7,7 @@ $(document).ready(function(){
 
 $(document).ready(function(){
     $(".comment-confirm-delete").click(function(){
-        return confirm('Are you sure you want to cancel this comment?');
+        return confirm('Are you sure you want to delete this comment?');
     });
 });
 

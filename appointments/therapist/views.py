@@ -26,6 +26,7 @@ from send_emails import (send_response_email_to_user,
 send_success_message_email_to_user, 
 send_success_message_email_to_therapist, 
 send_success_repsponse_message_email_to_therapist)
+from django.core import mail
 from .forms import(
      DisabledDatesForm, 
      EditAppointmentForm, 
@@ -40,6 +41,15 @@ from .forms import(
      EditCommentForm
      )
 
+
+
+def error_404(request, exception):
+        data = {}
+        return render(request, 'patient/home.html', data)
+
+def error_403(request, exception):
+        data = {}
+        return render(request, 'patient/home.html', data)
 
 class SuperUserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -179,15 +189,20 @@ def get_date_f(request, year, month, day):
     print(date(year, month, day))
     return date(year, month, day)
 
-class CalendarView(SuperUserRequiredMixin,ListView):
+class CalendarView(SuperUserRequiredMixin,FormView):
     model = Appointment
     template_name = 'therapist/newcal.html'
-
+    form_class = CalendarForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        year = self.request.GET.get('year')
-        month = self.request.GET.get('month')
+        form = CalendarForm(self.request.GET)
+        if form.is_valid():
+            year = form.cleaned_data['year']
+            month = form.cleaned_data['month']
+        else:
+            year = year=datetime.now().year
+            month = datetime.now().month
         if not year and not month:
             cal = Calendar(year=datetime.now().year or year, month=datetime.now().month or month)
         else:
@@ -447,7 +462,7 @@ class AppointsView(SuperUserRequiredMixin,FilterView):
         context['page_obj'] = page_obj
         context['filter'] = filter
         context['filter2'] = filter2
-        context['today'] = date.today()
+        # context['today'] = date.today()
         return context
 
 class PendingAppointsView(SuperUserRequiredMixin,FilterView):

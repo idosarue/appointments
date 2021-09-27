@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import datetime, time, date 
 from django_filters.views import FilterView
 from itertools import chain
+from therapist.models import Day
 from django.core.paginator import Paginator
 from send_emails import (send_message_to_therapist, 
 send_message_to_user, 
@@ -42,6 +43,7 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
             )
         appoint.end_time = end_time
         appoint.date_t = x
+        appoint.week_day = Day.objects.get(week_day=appoint.appointment_date.weekday())
         appoint.save()
         send_message_to_user(self.request.user, start_time, appointment_date)
         send_message_to_therapist(self.request.user, start_time, appointment_date)

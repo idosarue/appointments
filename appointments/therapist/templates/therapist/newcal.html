@@ -4,13 +4,18 @@
 {% block content%}
 <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
 
-<form method="GET">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit">
-</form>
 
 
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Choose a date</h5>
+    <form id='date-form' method="GET">
+      {% csrf_token %}
+      {{form.as_p}}
+      <input type="submit">
+    </form>
+  </div>
+</div>
 <table border="0" cellpadding="0" cellspacing="0" class="calendar table table-bordered border-warning">
     {{calendar.month_name|safe}}
     {% for header in calendar.headers %}
@@ -29,21 +34,34 @@
                     {% if day.comments %}
                     <button  type="button" class="btn btn-link comment-list" data-toggle="modal" data-target="#commentListModal{{day.day_num}}">comments</button>
                     {% endif %}
-                    <button type="button" class="btn btn-primary hide" data-toggle="modal" data-target="#appointModal">
-                    </button>
+
                     <button type="button" class="btn btn-primary hide2" data-toggle="modal" data-target="#commentModal">
                     </button>
 
                     {% if day.day_num %}  
-                    <span>{{day.day_num}} {{day.holiday}}</span>  
-                    
+                    {% if not day.disabled  %}
+                    <button type="button" class="btn btn-primary hide" data-toggle="modal" data-target="#appointModal">
+                    </button>
+                    {% endif %}
+                    <span class="day_num">{{day.day_num}} {{day.holiday}}</span>  
+                    <hr>
                     <div class="appoint-list-container">
                         <ul>
                             {% for event in day.appointments %}
-                                <li id="{{event.id}}">{{event.start_time}} {{event.user.user.first_name}} {{event.user.user.last_name}} {{event.user.phone_number}} <button id='{{event.id}}' type="button" class="btn btn-primary edit-appoint-btn" data-toggle="modal" data-target="#EditappointModal">Edit</button></li>
+                                <li id="{{event.id}}">
+                                  <div>{{event.start_time}} {{event.user.user.first_name}} {{event.user.user.last_name}} {{event.user.phone_number}}</div>
+                                  <button id='{{event.id}}' type="button" class="btn btn-success edit-appoint-btn" data-toggle="modal" data-target="#EditappointModal">Edit</button> 
+                                  <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment' event.id %}">Cancel</a>
+                                </li>
+                                <hr>
                             {% endfor %}
                             {% for event in day.appointments_response %}
-                                <li id="{{event.id}}">{{event.start_time}} {{event.user.user.first_name}} {{event.user.user.last_name}} {{event.user.phone_number}} <button id='{{event.id}}' type="button" class="btn btn-primary edit-appoint-res-btn" data-toggle="modal" data-target="#EditappointResponseModal">Edit</button></li>
+                                <li id="{{event.id}}">
+                                  <div>{{event.start_time}} {{event.user.user.first_name}} {{event.user.user.last_name}} {{event.user.phone_number}}</div>
+                                  <button id='{{event.id}}' type="button" class="btn btn-primary edit-appoint-res-btn" data-toggle="modal" data-target="#EditappointResponseModal">Edit</button>
+                                  <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment_response' event.id %}">Cancel</a>
+                                </li>
+                                <hr>
                             {% endfor %}
                         </ul>
                     </div>
@@ -60,10 +78,12 @@
                               {% for comment in day.comments %}
                                 {% if comment %}
                                 <ul>
-                                    <li class="t">{{comment.title}}</li>
+                                    <li class="t"><h4>{{comment.title}}</h4></li>
                                     <li><textarea name="" contenteditable="false" class="c" readonly id="" cols="30" rows="10">{{comment.content}}</textarea></li>
                                     <li>
-                                    <span> <a class="comment-confirm-delete" href="{% url 'delete_comment' comment.id %}">Delete comment</a>  <button id='{{comment.id}}' type="button" class="btn btn-primary edit-comment-btn" data-toggle="modal" data-target="#EditcommentModal{{comment.id}}"> edit comment </button></span>
+                                     <div class="link-container">
+                                        <a class="comment-confirm-delete btn btn-danger" href="{% url 'delete_comment' comment.id %}">Delete comment</a>  <button id='{{comment.id}}' type="button" class="btn btn-primary edit-comment-btn" data-toggle="modal" data-target="#EditcommentModal{{comment.id}}"> edit comment </button>
+                                     </div>
                                     </li>
                                 </ul>
                                 <hr>
@@ -72,7 +92,6 @@
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary">Save changes</button>
                             </div>
                           </div>
                         </div>
@@ -83,7 +102,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <h5 class="modal-title">Modal title</h5>
+                                <h5 class="modal-title">Edit Comment</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>

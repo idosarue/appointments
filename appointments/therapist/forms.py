@@ -24,6 +24,19 @@ class CalendarForm(forms.Form):
     year = forms.ChoiceField()
     month = forms.ChoiceField()
 
+
+    def clean_year(self):
+        year = self.cleaned_data['year']
+        if int(year) not in list(range(2021,2052)):
+            raise forms.ValidationError('not valid')
+        return year
+
+    def clean_month(self):
+        month = self.cleaned_data['month']
+        if int(month) not in range(1,13):
+            raise forms.ValidationError('not valid')
+        return month
+
 class AppointmentResponseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

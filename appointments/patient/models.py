@@ -23,7 +23,6 @@ class Appointment(models.Model):
 
     @classmethod
     def is_vacant(cls, start_time, appointment_date, end_time):
-        print()
         appoint = cls.objects.filter(appointment_date=appointment_date, end_time__gte=start_time, start_time__lte=end_time, is_approved=True, is_cancelled=False).exists()
         if not appoint and not appointment_date.weekday() in Day.disabled_days():
             print('true')
@@ -46,7 +45,7 @@ class Appointment(models.Model):
     def valid_appoint(cls, **kwargs):
         appoints = cls.objects.filter(is_cancelled=False, is_approved=True, **kwargs)
         print(kwargs, '44')
-        if not appoints.exists():
+        if appoints.exists():
             print('true')
             return True
         else:
@@ -93,7 +92,7 @@ class AppointmentResponse(models.Model):
     @classmethod
     def valid_appoint(cls, **kwargs):
         appoints = cls.objects.filter(is_cancelled=False, is_approved=True, **kwargs)
-        if not appoints.exists():
+        if appoints.exists():
             return True
         else:
             return False

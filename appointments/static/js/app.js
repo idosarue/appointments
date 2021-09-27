@@ -13,15 +13,6 @@ function createValidDate(x){
     return newDate.join('-')
 }
 
-// function createDefaultDate(x){
-//     var x = createValidDate(x)
-//     var dateInputs = $("input[name*='date']")
-//     for (let i = 0; i<dateInputs.length; i++){
-//         console.log(dateInputs[i])
-//         dateInputs[i].setAttribute('value', x);
-//     };
-//     return newDate.join('-')
-// }
 
 
 $(document).ready(function(){
@@ -43,6 +34,30 @@ $(document).ready(function(){
 $(document).ready(function(){
     $('.hide').hide()
     $('.hide2').hide()
+    var inputs = document.querySelectorAll('input')
+    var selects = document.querySelectorAll('select')
+    var textareas = document.querySelectorAll('textarea')
+    var tds = $('.calendar').children().not('.table-danger')
+    var navLis = $('nav li')
+    for (i = 0; i < navLis.length; i++) {
+        navLis[i].classList.add('active')
+      }
+    for (i = 0; i < inputs.length; i++) {
+        if (inputs[i].type == 'submit'){
+            inputs[i].setAttribute('class','form-control btn btn-primary')
+        }else{
+            inputs[i].setAttribute('class','form-control')
+        }
+      }
+    for (i = 0; i < selects.length; i++) {
+        selects[i].setAttribute('class','form-control')
+      }
+    for (i = 0; i < textareas.length; i++) {
+        textareas[i].setAttribute('class','form-control')
+      }
+    for (i = 0; i < tds.length; i++) {
+        $(tds[i]).css('background-color','whitesmoke')
+      }
 });
 
 $(document).ready(function(){
@@ -132,6 +147,7 @@ $(document).ready(function(){
 
     });
 });
+
 
 // $(function date () {
 //     $("#datepicker2").datepicker({

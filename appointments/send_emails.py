@@ -4,7 +4,6 @@ from django.contrib.sites.models import Site
 from datetime import datetime, timedelta, date
 from patient.models import Appointment
 
-
 therapist_email = 'testdjangosaru@gmail.com'
 
 def send_message_to_user(user, start_time, appointment_date):

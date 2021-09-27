@@ -12,6 +12,7 @@
     padding: 10px;
     text-align: center;
     font-size: 18px;
+    background-color: whitesmoke;
   }
   
   .calendar td {
@@ -46,7 +47,7 @@
   right: 0;
 }
 
-.calendar td span {
+.day_num {
   position: absolute;
   top: 5px;
   left: 0;
@@ -66,3 +67,12 @@
   color: #000;
 }
 
+
+li {
+  list-style: none;
+}
+
+.link-container{
+  display: flex;
+  justify-content: space-between;
+}

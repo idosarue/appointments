@@ -3,12 +3,17 @@
 
 
 {% block content %}
-
-    <form method="get">
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">Choose a date</h5>
+      <form id='date-form' method="GET">
         {% csrf_token %}
         {{ filter.form.as_p }}
-        <input class="btn btn-primary" type="submit"/>
-    </form>
+        <input type="submit">
+      </form>
+    </div>
+</div>
+
     <a class="btn btn-primary" href="{% url 'appoint_list' %}?user=&appointment_date={{today}}">Today</a>
     <table class="table table-dark table-striped">
         <thead>

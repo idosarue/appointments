@@ -26,7 +26,7 @@ environ.Env.read_env()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -151,6 +151,7 @@ STATICFILES_DIRS = [
 ]
 STATIC_URL = '/static/'
 
+# custom error views
 
 
 # Default primary key field type
@@ -162,7 +163,7 @@ EMAIL_PORT = '587'
 EMAIL_HOST_USER = 'testdjangosaru@gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 try:
     from .local_settings import *
 except ImportError:
