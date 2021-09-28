@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content%}
+
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
 <div class="card" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">Choose a date</h5>
@@ -31,7 +42,7 @@
             </tr>
         </thead>
         {% for obj in page_obj %}
-        <tr>
+        <tr id='{{obj.appointment_date}}'>
             <td>
                 {{obj.start_time}}
             </td>
@@ -58,7 +69,7 @@
             </td>
             <td>
                 <a href="{% url 'apt_status' obj.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
-                <a href="{% url 'apt_status' obj.id 'update' %}" class='btn btn-primary' name='a' type="submit">Update</a>
+                <button id='{{obj.id}}' name="{{ obj.start_time }}" type="button" class="btn btn-primary update-appoint-btn" data-toggle="modal" data-target="#UpdatetAppointResponseModal">Update2</button> 
                 <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment' obj.id %}">cancel</a>
             </td>
         </tr>
@@ -86,6 +97,31 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="UpdatetAppointResponseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Appointment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="update-appoint-form" method="POST"> 
+                {% csrf_token %}
+                {{appoint_update_form.as_p}}
+              </div>
+              <div id="update-appoint-result">
+              </div>
+              <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </form>
+          </div>
         </div>
     </div>
 </div>

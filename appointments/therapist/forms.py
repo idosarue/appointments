@@ -14,7 +14,7 @@ from django.forms.widgets import NumberInput
 import django_filters
 from django.http import JsonResponse
 from bootstrap_datepicker_plus import DateTimePickerInput
-
+from django.contrib.auth.models import User
 
 class CalendarForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -44,7 +44,9 @@ class AppointmentResponseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['start_time'].choices = WorkingTime.create_time_choice()
-    start_time = forms.ChoiceField()
+        self.fields['start_time'].widget.attrs['id'] = 'mySelect'
+
+        
     start_time = forms.ChoiceField()
     class Meta:
         model = AppointmentResponse
@@ -65,47 +67,6 @@ class AppointmentResponseForm(forms.ModelForm):
     #     return start
 
 
-    def clean(self):
-        data = self.cleaned_data
-        appointment_date = data['appointment_date']
-        if appointment_date <= date.today():
-            raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-        elif appointment_date.weekday() in Day.disabled_days():
-            raise forms.ValidationError('you cannot ask for a meeting for that day')
-        return data
-    
-
-
-class EditAppointmentResponseForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['start_time'].choices = WorkingTime.create_time_choice()
-    start_time = forms.ChoiceField()
-    class Meta:
-        model = AppointmentResponse
-        fields = ['start_time', 'appointment_date']
-
-        widgets = {
-            'appointment_date': forms.DateInput(attrs={ 'placeholder':'Select a date'}),
-        }
-
-    # def clean_start_time(self):
-    #     start = self.cleaned_data['start_time']
-    #     start_time = WorkingTime.objects.first().start_time
-    #     end_time = WorkingTime.objects.first().end_time
-    #     choices = [(time(hour=x, minute=00, second=00)) for x in range(start_time, end_time +1)]
-    #     if datetime.strptime(start, '%H:%M:%S').time() not in choices:
-    #         raise forms.ValidationError('Only choose times from choices')
-    #     return start
-
-
-    # def clean_appointment_date(self):
-    #     appointment_date = self.cleaned_data['appointment_date']
-    #     if appointment_date <= date.today():
-    #         raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-    #     elif appointment_date.weekday() in Day.disabled_days():
-    #         raise forms.ValidationError('you cannot ask for a meeting for that day')
-    #     return appointment_date
     def clean_appointment_date(self):
         data = self.cleaned_data
         appointment_date = data['appointment_date']
@@ -122,10 +83,47 @@ class EditAppointmentResponseForm(forms.ModelForm):
         if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
             raise forms.ValidationError('no available mettings for that date and time')
         return appointment_date
+
+
+class EditAppointmentResponseForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['start_time'].choices = WorkingTime.create_time_choice()
+        self.fields['start_time'].widget.attrs['id'] = 'mySelect2'
+
+    start_time = forms.ChoiceField()
+    class Meta:
+        model = AppointmentResponse
+        fields = ['start_time', 'appointment_date']
+
+        widgets = {
+            'appointment_date': forms.DateInput(attrs={ 'placeholder':'Select a date'}),
+        }
+
+
+    def clean_appointment_date(self):
+        data = self.cleaned_data
+        appointment_date = data['appointment_date']
+        try:
+            start_time = data['start_time']
+            start = datetime.strptime(start_time, '%H:%M:%S').time()
+            end_time = time(hour = start.hour + 1, minute=start.minute)
+        except KeyError:
+            raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
+        if appointment_date <= date.today():
+            raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
+        elif appointment_date.weekday() in Day.disabled_days():
+            raise forms.ValidationError('you cannot ask for a meeting for that day')
+        if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
+            raise forms.ValidationError('no available mettings for that date and time')
+        return appointment_date
+
+
 class EditAppointmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['start_time'].choices = WorkingTime.create_time_choice()
+        self.fields['start_time'].widget.attrs['id'] = 'mySelect'
     start_time = forms.ChoiceField()
     class Meta:
         model = Appointment
@@ -136,23 +134,6 @@ class EditAppointmentForm(forms.ModelForm):
         }
 
 
-    # def clean_start_time(self):
-    #     start = self.cleaned_data['start_time']
-    #     start_time = WorkingTime.objects.first().start_time
-    #     end_time = WorkingTime.objects.first().end_time
-    #     choices = [(time(hour=x, minute=00, second=00)) for x in range(start_time, end_time +1)]
-    #     if datetime.strptime(start, '%H:%M:%S').time() not in choices:
-    #         raise forms.ValidationError('Only choose times from choices')
-    #     return start
-
-
-    # def clean_appointment_date(self):
-    #     appointment_date = self.cleaned_data['appointment_date']
-    #     if appointment_date <= date.today():
-    #         raise forms.ValidationError('you cannot ask for a meeting for today or a past date')
-    #     elif appointment_date.weekday() in Day.disabled_days():
-    #         raise forms.ValidationError('you cannot ask for a meeting for that day')
-    #     return appointment_date
     def clean_appointment_date(self):
         data = self.cleaned_data
         appointment_date = data['appointment_date']
@@ -169,6 +150,8 @@ class EditAppointmentForm(forms.ModelForm):
         if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
             raise forms.ValidationError('no available mettings for that date and time')
         return appointment_date
+
+
 
 class TherapistCreateAppointmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -341,3 +324,9 @@ class ContactFormEmailPatient(forms.ModelForm):
         widgets = {
             'message' : forms.Textarea()
         }
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError('invalid email address')
+        return email

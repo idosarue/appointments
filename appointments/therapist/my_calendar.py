@@ -61,8 +61,8 @@ class Calendar(HTMLCalendar):
         if withyear:
             s = '%s %s' % (month_name[themonth], theyear)
         else:
-            s = '%s' % month_name[themonth]
-        return s
+            s = '%s' % month_name[themonth]     
+        return {'name':s, 'year':theyear, 'month_num':themonth}
 
 
     def formatweek(self, theweek, events, events2, comments):
@@ -75,6 +75,33 @@ class Calendar(HTMLCalendar):
         s = [self.formatweekday(i) for i in self.iterweekdays()]
         return s
 
+    def previous_month(self):
+        month_num = self.month
+        new_month = month_num
+        new_year = self.year
+        if new_year > 2021:
+            if new_month == 1:
+                new_month = 13
+                new_year-= 1
+        if 1 < new_month <= 12:
+            new_month -=1
+        else:
+            new_month = 12
+
+        return new_month, new_year
+
+    def next_month(self):
+        month_num = self.month
+        new_month = month_num
+        new_year = self.year
+        if month_num <= 11:
+            new_month +=1
+        else:
+            new_month -= new_month
+            new_month +=1
+            new_year += 1
+        return new_month, new_year
+
     def formatmonth(self, withyear = True):
         events = Appointment.display(appointment_date__year=self.year, appointment_date__month=self.month)
         events2 = AppointmentResponse.display(appointment_date__year=self.year, appointment_date__month=self.month)
@@ -82,10 +109,22 @@ class Calendar(HTMLCalendar):
         new_cal = {}
         cal = []
         new_cal.update({'headers':self.formatweekheader()})
-        new_cal.update({'month_name':self.formatmonthname(self.year, self.month, withyear=withyear)})
+        new_cal.update({'month_name':self.formatmonthname(self.year, self.month, withyear=withyear)['name']})
         for week in self.monthdays2calendar(self.year, self.month):
             cal.append(self.formatweek(week, events, events2, comments))
         new_cal.update({'month':cal})
-
+        new_cal.update({'year_num':self.year})
+        new_cal.update({'month_num':self.month})
+        ## generate next month
+        # if self.formatmonthname(self.year, self.month, withyear=withyear)['month_num'] <= 11:
+        #     new_cal.update({'next_month_num':month_num +1})
+        # else:
+        #     month_num -= month_num
+        #     new_cal.update({'next_month_num':month_num + 1})
+        #     new_cal['year_num'] += 1
+        ## generate next month
+            
+        new_cal.update({'pre_month' : {'pre_month_num':self.previous_month()[0],'year_num':self.previous_month()[1] }})
+        new_cal.update({'next_month' : {'next_month_num':self.next_month()[0],'year_num':self.next_month()[1] }})
         return new_cal
 

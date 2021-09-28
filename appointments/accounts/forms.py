@@ -28,7 +28,7 @@ class ProfileForm(forms.ModelForm):
         exclude = ['user']
 
         widgets = {
-            'date_of_birth': forms.DateInput(attrs={'id':'datepicker_birth', 'placeholder':'Select a date'}),
+            'date_of_birth': forms.DateInput(attrs={'type':'date', 'placeholder':'Select a date'}),
         }
     
     def clean_date_of_birth(self):
@@ -57,10 +57,15 @@ class EditProfileForm(forms.ModelForm):
         fields = ['phone_number', 'date_of_birth']
 
         widgets = {
-            'date_of_birth': forms.DateInput(attrs={'id':'datepicker_birth', 'placeholder':'Select a date'}),
+            'date_of_birth': forms.DateInput(attrs={'type':'date', 'placeholder':'Select a date'}),
         }
 
-            
+    def clean_date_of_birth(self):
+        date_of_birth = self.cleaned_data['date_of_birth']
+        if not calculateAge(date_of_birth):
+            raise forms.ValidationError('you cannot sign up if you are younger than 18')
+        return date_of_birth
+        
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
         if Profile.objects.filter(phone_number=phone_number).exists():

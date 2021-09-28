@@ -20,10 +20,12 @@
     </div>
 </div>
 
-<form method="POST">
+<form id="update-appoint-form" method="POST">
     {% csrf_token %} 
     <small>Office hours are 9am to 6pm</small>
     {{form.as_p}} 
     <button class='btn btn-success' type="submit">Save</button> 
+    <div id="update-appoint-result">
+    </div>
 </form>
 {% endblock %}

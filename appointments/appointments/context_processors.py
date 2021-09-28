@@ -1,5 +1,5 @@
 from therapist.models import Day
-from therapist.forms import ContactFormEmailPatient
+from therapist.forms import ContactFormEmailPatient, EditAppointmentForm, EditAppointmentResponseForm
 def day_processor(request):
     days = Day.disabled_days()          
     return {'day': days}
@@ -7,7 +7,9 @@ def day_processor(request):
 
 def form_proccesor(request):
     contact_form = ContactFormEmailPatient()
-    return {'contact_form': contact_form}
+    edit_appoint_form = EditAppointmentForm()
+    edit_response_form = EditAppointmentResponseForm()
+    return {'contact_form': contact_form, 'edit_appoint_form':edit_appoint_form,'edit_response_form':edit_response_form}
 
 def modal_proccesor(request):
     therapist_contact_patient_modal = '''

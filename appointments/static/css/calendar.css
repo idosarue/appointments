@@ -81,3 +81,7 @@ li {
   justify-content: space-between;
 }
 
+#next-pre-c{
+  display: flex;
+  justify-content: space-between;
+}

@@ -7,10 +7,8 @@ function createValidDate(x){
     if (newDate[2].length < 2){
         newDate[2] = 0 + newDate[2] 
     }
-
-    console.log(newDate)
-
     return newDate.join('-')
+
 }
 
 
@@ -18,16 +16,19 @@ function createValidDate(x){
 $(document).ready(function(){
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
     var yyyy = today.getFullYear();
 
     today = yyyy + '-' + mm + '-' + dd;
-    var dateInputs = $("input[name*='date']")
+    var dateInputs = $("input[name='appointment_date']")
     for (let i = 0; i<dateInputs.length; i++){
         console.log(dateInputs[i])
         dateInputs[i].type = 'date'
         dateInputs[i].setAttribute('min', today);
+
     };
+
+
 });
 
 
@@ -66,6 +67,7 @@ $(document).ready(function(){
         var x = $(e.target).find(".hide");
         var y = $(e.target).find(".hide2");
         var id = $(this).attr('id')
+        console.log(id)
         click++
         timer = setTimeout(function(){
             if (click == 1){
@@ -85,53 +87,53 @@ $(document).ready(function(){
     });
 });
 
+
+
+function createDefault(button, form, id, select){
+    var appointId = button.attr('id')
+    var appointDate = form.children('p').children('input[name=appointment_date]');
+    var timeValue = button.attr('name') + ':00'
+    console.log(timeValue)
+    for (let i =0; i<select.children.length; i++){
+        if (select[i].value == timeValue){
+            console.log(i)
+            select.selectedIndex = i
+
+        }
+    }
+    $('#edit-appoint-form').attr('action',`/therapist/update_apt/${appointId}/`)
+    $('#edit-appoint-res-form').attr('action',`/therapist/update_apt_res/${appointId}/`)
+    $('#update-appoint-form').attr('action',`/therapist/appointment_response/${appointId}/`)
+    appointDate.val(createValidDate(id))
+}
+
 $(document).ready(function(){
-    $('.edit-appoint-btn').click(function(){
-        var id = $(this).closest('td').attr('id')
-        var appointId = $(this).closest('li').attr('id')        
-        var timeValue = $(this).closest('li').text().slice(0,5) + ':00'
-        var appointDate = $('#edit-appoint-form').children('p').children('input[name=appointment_date]');
-        $('#edit-appoint-form').attr('action',`/therapist/update_apt/${appointId}/`)
-        console.log(id)
-        appointDate.val(createValidDate(id))
-        $(`select option[value="${timeValue}"]`).attr("selected",true);
-        var start_time = $('#edit-appoint-form').children('p').children('input[name=start_time]');
-        start_time.val(timeValue)
+    $(':button').click(function(e){
+        var mySelect = document.getElementById('mySelect')
+        var mySelect2 = document.getElementById('mySelect2')
+        if ($(this).attr('class') == 'btn btn-success edit-appoint-btn-a'){
+            createDefault($(this), $('#edit-appoint-form'), $(this).closest('tr').attr('id'), mySelect)
+        }else if ($(this).attr('class') == 'btn btn-success edit-appoint-res-btn-a'){
+            createDefault($(this), $('#edit-appoint-res-form'), $(this).closest('tr').attr('id'), mySelect2)
+        }else if ($(this).attr('class') == 'btn btn-success edit-appoint-btn'){
+            createDefault($(this), $('#edit-appoint-form'), $(this).closest('td').attr('id'), mySelect)
+        }else if ($(this).attr('class') == 'btn btn-success edit-appoint-res-btn'){
+            createDefault($(this), $('#edit-appoint-res-form'), $(this).closest('td').attr('id'), mySelect2)
+        }else if ($(this).attr('class') == "btn btn-primary update-appoint-btn"){
+            createDefault($(this), $('#update-appoint-form'), $(this).closest('tr').attr('id'), mySelect)
+        }
     });
 });
 
-$(document).ready(function(){
-    $('.hide').click(function(){
-        var id = $(this).closest('td').attr('id')
-        var appointId = $(this).closest('li').attr('id')        
-        var appointDate = $('#appoint-form').children('p').children('input[name=appointment_date]');
-        $('#edit-appoint-form').attr('action',`/therapist/update_apt/${appointId}/`)
-        console.log(id)
-        appointDate.val(createValidDate(id))
-    });
-});
 
-$(document).ready(function(){
-    $('.edit-appoint-res-btn').click(function(e){
-        var id = $(this).closest('td').attr('id')
-        var appointId = $(this).closest('li').attr('id')
-        var timeValue = $(this).closest('li').text().slice(0,5) + ':00'
-        var appointDate = $('#edit-appoint-res-form').children('p').children('input[name=appointment_date]');
-        $('#edit-appoint-res-form').attr('action',`/therapist/update_apt_res/${appointId}/`)
-        console.log(appointId)
-        appointDate.val(createValidDate(id))
-        $(`select option[value="${timeValue}"]`).attr("selected",true);
-        var start_time = $('#edit-appoint-res-form').children('p').children('input[name=start_time]');
-        start_time.val(timeValue)
-    });
-});
+
+
 $(document).ready(function(){
     $('.send').click(function(e){
         var email = $(this).text()
         var emailField = $('#contact-form-therapist').children('p').children('input[name=email]');
         emailField.val(email)
     });
-
 });
 
 

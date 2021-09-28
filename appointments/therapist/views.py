@@ -95,6 +95,7 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
     
     def get_appointment(self):
         appoint_id = self.kwargs['pk']
+        print(appoint_id)
         return get_object_or_404(Appointment, id=appoint_id)
 
     def form_valid(self, form):
@@ -188,14 +189,21 @@ class UserAppointments(SuperUserRequiredMixin, ListView):
         return context
 
 
-def get_date_f(request, year, month, day):
-    print(date(year, month, day))
-    return date(year, month, day)
+
+# def next_month(request, year, month):
+#         if 1 < month <= 12:
+#             month -=1
+#             if year > 2021:
+#                 year-= 1
+#         else:
+#             new_month = 12
+#         return new_month, year
 
 class CalendarView(SuperUserRequiredMixin,FormView):
     model = Appointment
     template_name = 'therapist/newcal.html'
     form_class = CalendarForm
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -496,6 +504,7 @@ class AppointsRequestsView(SuperUserRequiredMixin,FilterView):
         context = super().get_context_data(**kwargs)
         context['page_obj'] = page_obj
         context['filter'] = filter
+        context['appoint_update_form'] = AppointmentResponseForm()
         return context
 
 class CreateCommentView(SuperUserRequiredMixin, CreateView):
@@ -541,6 +550,10 @@ class CreateContactMessageToPatient(SuperUserRequiredMixin, CreateView):
     template_name = 'therapist/all_users.html'
     success_url = reverse_lazy('all_users')
 
+    def form_invalid(self, form):
+        return JsonResponse({"error": form.errors}, status=400)
+
+
     def form_valid(self, form):
-        send_contact_message_to_patient(form.cleaned_data['email'], form.cleaned_data['subject'], form.cleaned_data['message'])
+        messages.success(self.request, 'sent email')
         return super().form_valid(form)

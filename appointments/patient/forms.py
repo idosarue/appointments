@@ -19,9 +19,7 @@ class AppointmentForm(forms.ModelForm):
         model = Appointment
         fields = ['start_time', 'appointment_date']
 
-        widgets = {
-            'appointment_date': forms.DateInput(attrs={'id':'datepicker', 'placeholder':'Select a date'}),
-        }
+ 
     
     # def clean_start_time(self):
     #     start = self.cleaned_data['start_time']
