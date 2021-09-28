@@ -20,7 +20,7 @@ $(document).ready(function(){
     var yyyy = today.getFullYear();
 
     today = yyyy + '-' + mm + '-' + dd;
-    var dateInputs = $("input[name='appointment_date']")
+    var dateInputs = $("input[name='appointment_date']").not('#filter')
     for (let i = 0; i<dateInputs.length; i++){
         console.log(dateInputs[i])
         dateInputs[i].type = 'date'
