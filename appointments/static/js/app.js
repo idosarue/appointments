@@ -57,7 +57,7 @@ $(document).ready(function(){
         textareas[i].setAttribute('class','form-control')
       }
     for (i = 0; i < tds.length; i++) {
-        $(tds[i]).css('background-color','whitesmoke')
+        $(tds[i]).css('background-color','white')
       }
 });
 

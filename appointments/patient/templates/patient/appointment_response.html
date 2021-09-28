@@ -3,29 +3,32 @@
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-        {{ message }}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %} >
+        <div class="alert alert-danger" role="alert">{{ message }}</div>
     </li>
     {% endfor %}
 </ul>
 {% endif %}
-
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h3 class="card-title">Original request</h3>
-        <h5 class="card-title">Patient: {{appointment.user.user.first_name}} {{appointment.user.user.last_name}}</h5>
-        <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
-        <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
+<div >
+    <div class="container d-flex justify-content-center">
+        <div class="card" style="width: 50vw;">
+            <div class="card-body">
+                <h3 class="card-title">Original request</h3>
+                <h5 class="card-title">Patient: {{appointment.user.user.first_name}} {{appointment.user.user.last_name}}</h5>
+                <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
+                <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
+                <form id="update-appoint-form" method="POST">
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <button class='btn btn-success form-control' type="submit">Save</button>
+                    <div id="update-appoint-result">
+                    </div>
+            </form>
+            </div>
+        </div>
     </div>
+    
 </div>
 
-<form id="update-appoint-form" method="POST">
-    {% csrf_token %} 
-    <small>Office hours are 9am to 6pm</small>
-    {{form.as_p}} 
-    <button class='btn btn-success' type="submit">Save</button> 
-    <div id="update-appoint-result">
-    </div>
-</form>
+
 {% endblock %}

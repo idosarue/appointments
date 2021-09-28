@@ -21,49 +21,67 @@
       </form>
     </div>
   </div>
-    <table class="table table-dark table-striped">
-        <thead>
-            <tr>
-                <th>start time</th>
-                <th>appointment date</th>
-                <th>day</th>
-                <th>First name</th>
-                <th>Last name</th>
-                <th>patient phone</th>
-                <th>patient email</th>
-                <th>status</th>
-            </tr>
-        </thead>
-   
-        {% for obj in page_obj %}
+
+  <div class="next-l">
+    <div class="nav-c">
+        {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo First</a>
+        <a href="?page={{page_obj.previous_page_number}}">&laquo Previous</a>
+        {% endif %}
+        Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+        {% if page_obj.has_next %}
+        <a href="?page={{page_obj.next_page_number}}">Next &raquo</a>
+        <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo</a>
+        {% endif %}
+    </div>
+</div>
+
+<table class="table table-dark table-striped">
+    <thead>
         <tr>
-            <td>
-                {{ obj.start_time }} 
-            </td> 
-            <td>
-                {{ obj.appointment_date }}
-            </td> 
-            <td>
-                {{obj.week_day}}
-            </td>
-            <td>
-                {{ obj.user.user.first_name }} 
-            </td>
-            <td>
-                {{ obj.user.user.last_name }} 
-            </td>
-            <td>
-                {{ obj.user.phone_number }} 
-            </td>
-            <td>
-                <button type="button" class="btn btn-link send" data-toggle="modal" data-target="#ContactModal"> {{ obj.user.user.email }}</button> 
-            </td>
-            <td>
-                <a class="btn btn-warning" href="#">Pending</a>
-            </td>
+            <th>start time</th>
+            <th>appointment date</th>
+            <th>day</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>patient phone</th>
+            <th>patient email</th>
+            <th>status</th>
         </tr>
-        {% endfor %}
-    </table>
+    </thead>
+
+    {% for obj in page_obj %}
+    <tr>
+        <td>
+            {{ obj.start_time }} 
+        </td> 
+        <td>
+            {{ obj.appointment_date }}
+        </td> 
+        <td>
+            {{obj.week_day}}
+        </td>
+        <td>
+            {{ obj.user.user.first_name }} 
+        </td>
+        <td>
+            {{ obj.user.user.last_name }} 
+        </td>
+        <td>
+            {{ obj.user.phone_number }} 
+        </td>
+        <td>
+            <button type="button" class="btn btn-link send" data-toggle="modal" data-target="#ContactModal"> {{ obj.user.user.email }}</button> 
+        </td>
+        <td>
+            <a class="btn btn-warning" href="#">Pending</a>
+            {% if not obj.is_past_due %}
+                <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment_response' obj.id %}">cancel</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 
 <div class="modal fade" id="ContactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -89,17 +107,7 @@
         </div>
     </div>
 </div>
-    {% if page_obj.has_previous %}
-        <a href="?page=1">&laquo First</a>
-        <a href="?page={{page_obj.previous_page_number}}">Previous</a>
-    {% endif %}
 
-    Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
-
-    {% if page_obj.has_next %}
-        <a href="?page={{page_obj.next_page_number}}">&raquo Next</a>
-        <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo</a>
-    {% endif %}
 {% endblock %}
 
 

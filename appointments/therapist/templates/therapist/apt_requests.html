@@ -24,7 +24,20 @@
   </div>
 <a class="btn btn-primary" href="{% url 'apt_requests' %}">Reset</a>
 
-<hr>
+<div class="next-l">
+    <div class="nav-c">
+        {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo First</a>
+        <a href="?page={{page_obj.previous_page_number}}">&laquo Previous</a>
+        {% endif %}
+        Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+        {% if page_obj.has_next %}
+        <a href="?page={{page_obj.next_page_number}}">Next &raquo</a>
+        <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo</a>
+        {% endif %}
+    </div>
+</div>
+
 
     <table class="table table-dark table-striped">
         <thead>
@@ -69,7 +82,7 @@
             </td>
             <td>
                 <a href="{% url 'apt_status' obj.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
-                <button id='{{obj.id}}' name="{{ obj.start_time }}" type="button" class="btn btn-primary update-appoint-btn" data-toggle="modal" data-target="#UpdatetAppointResponseModal">Update2</button> 
+                <button id='{{obj.id}}' name="{{ obj.start_time }}" type="button" class="btn btn-primary update-appoint-btn" data-toggle="modal" data-target="#UpdatetAppointResponseModal">Update</button> 
                 <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment' obj.id %}">cancel</a>
             </td>
         </tr>
@@ -126,17 +139,6 @@
     </div>
 </div>
 
-    {% if page_obj.has_previous %}
-        <a href="?page=1">&laquo First</a>
-        <a href="?page={{page_obj.previous_page_number}}">Previous</a>
-    {% endif %}
-
-    Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
-
-    {% if page_obj.has_next %}
-        <a href="?page={{page_obj.next_page_number}}">&raquo Next</a>
-        <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo</a>
-    {% endif %}
 
 
 

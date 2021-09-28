@@ -14,7 +14,6 @@
           Dropdown
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
           {% if user.is_superuser %}
           <a class="dropdown-item" href="{% url 'preferences' %}">preferences</a>
           {% endif %}

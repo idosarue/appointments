@@ -40,6 +40,8 @@ class CalendarForm(forms.Form):
             raise forms.ValidationError('not valid')
         return month
 
+######## appointment forms
+
 class AppointmentResponseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -186,6 +188,7 @@ class TherapistCreateAppointmentForm(forms.ModelForm):
             raise forms.ValidationError('no available mettings for that date and time')
         return appointment_date
 
+######## preferences forms
 
     
 class DisabledDatesForm(forms.ModelForm):
@@ -197,7 +200,7 @@ class DisabledDatesForm(forms.ModelForm):
         model = Date
         fields = ['date']
         widgets = {
-            'date': forms.DateInput(attrs={'class':'datepicker','placeholder':'Select a date', 'autocomplete':'off'}),
+            'date': forms.DateInput(attrs={'type':'date','placeholder':'Select a date', 'autocomplete':'off'}),
         }
 
     def clean_date(self):
@@ -272,6 +275,9 @@ class WorkingTimeForm(forms.ModelForm):
 
             
         return data
+
+######## filter forms
+
 
 class AppointmentFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):

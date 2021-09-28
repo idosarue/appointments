@@ -24,7 +24,20 @@
     </div>
 </div>
 
-    <a class="btn btn-primary" href="{% url 'appoint_list' %}?user=&appointment_date={{today}}">Today</a>
+    <div class="next-l">
+        <div class="nav-c">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo First</a>
+            <a href="?page={{page_obj.previous_page_number}}">&laquo Previous</a>
+            {% endif %}
+            Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+            {% if page_obj.has_next %}
+            <a href="?page={{page_obj.next_page_number}}">Next &raquo</a>
+            <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo</a>
+            {% endif %}
+        </div>
+    </div>
+
     <table class="table table-dark table-striped">
         <thead>
             <tr>
@@ -151,16 +164,6 @@
         </div>
     </div>
 </div>
-    {% if page_obj.has_previous %}
-        <a href="?page=1">&laquo First</a>
-        <a href="?page={{page_obj.previous_page_number}}">Previous</a>
-    {% endif %}
 
-    Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
-
-    {% if page_obj.has_next %}
-        <a href="?page={{page_obj.next_page_number}}">&raquo Next</a>
-        <a href="?page={{page_obj.paginator.num_pages}}">Last &raquo</a>
-    {% endif %}
 {% endblock %}
 

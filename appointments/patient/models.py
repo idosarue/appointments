@@ -1,5 +1,5 @@
 from django.db import models
-import datetime
+from datetime import date
 from django.db.models.deletion import CASCADE
 from django.utils.regex_helper import Choice
 from therapist.models import Day
@@ -67,6 +67,10 @@ class AppointmentResponse(models.Model):
     is_approved = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
     week_day = models.ForeignKey('therapist.Day', on_delete=models.CASCADE, null=True)
+    
+    @property
+    def is_past_due(self):
+        return date.today() < self.appointment_date
 
     @classmethod
     def is_vacant(cls, start_time, appointment_date, end_time):

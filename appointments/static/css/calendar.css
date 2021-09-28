@@ -60,6 +60,7 @@
   position: absolute;
   top: 5px;
   left: 0;
+  font-size: 15px;
 }
 
 .appoint-list-container{
@@ -71,7 +72,7 @@
 }
 
 
-li {
+.calendar li {
   list-style: none;
   font-size: 1.3em;
 }

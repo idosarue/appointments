@@ -9,6 +9,30 @@ body {
     height: 80vh;
 }
 .t-container table{
-
     height: 30vh;
 }
+
+.c {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.f-c{
+    margin-top: 20vh;
+}
+
+.next-l,.nav-c{
+    display: flex;
+    justify-content: center;
+}
+
+.nav-c{
+    display: flex;
+    justify-content: space-between;
+}
+
+.next-l{
+    width: 100%;
+}
+

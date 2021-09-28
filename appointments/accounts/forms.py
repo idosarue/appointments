@@ -50,6 +50,12 @@ class EditUserForm(forms.ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email']
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        print(email)
+        if User.objects.filter(email=email).exclude(username=self.instance).exists():
+            raise forms.ValidationError("Email Already exists")
+        return email
 
 class EditProfileForm(forms.ModelForm):
     class Meta:
@@ -65,17 +71,14 @@ class EditProfileForm(forms.ModelForm):
         if not calculateAge(date_of_birth):
             raise forms.ValidationError('you cannot sign up if you are younger than 18')
         return date_of_birth
-        
+
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
-        if Profile.objects.filter(phone_number=phone_number).exists():
+        print(phone_number)
+        if Profile.objects.filter(phone_number=phone_number).exclude(user=self.instance.user).exists():
             raise forms.ValidationError('phone exists')
         return phone_number
 
-    def clean_email(self):
-       email = self.cleaned_data['email']
-       if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Email exists")
-       return email
+
 
     

@@ -10,22 +10,19 @@
     {% endfor %}
 </ul>
 {% endif %}
-
-<div style="margin-top: 3vh;">
-    <div class="container d-flex justify-content-center">
+<div class="f-c">
+    <div class="container d-flex justify-content-center f-c">
         <div class="card" style="width: 50vw;">
             <div class="card-body c">
-              <h5 class="card-title">Sign Up</h5>
-              <div>
-                <form method="POST">
-                    {% csrf_token %} 
-                    {{form.as_p}}
-                    {{profile_form.as_p}}
-                    <button class='btn btn-success form-control' type="submit">Sign Up</button>
+              <h1 class="card-title">Profile for {{user.username}}</h1>
+              <h2 class="card-title">Email {{user.email}}</h2>
+              <form method="POST">
+                {% csrf_token %}
+                {{user_form.as_p}} 
+                <button class='btn btn-success form-control' type="submit">Save</button>
                 </form>
-              </div>
             </div>
-        </div>        
+          </div>
     </div>
 </div>
-{% endblock %}
+    {% endblock %}

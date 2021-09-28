@@ -128,6 +128,7 @@ class AppointmentResponseView(SuperUserRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['appointment'] = self.get_appointment()
+        context['form'] = AppointmentResponseForm(instance=self.get_appointment())
         return context
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -403,6 +404,9 @@ class WorkingTimeView(SuperUserRequiredMixin,UpdateView):
     success_url = reverse_lazy('preferences')
     model = WorkingTime
 
+    def form_invalid(self, form):
+        return JsonResponse({"error": form.errors}, status=400)
+
     def get_object(self, queryset=None):
         a = WorkingTime.objects.first()
         return a
@@ -433,6 +437,9 @@ class DisableDatesView(SuperUserRequiredMixin,CreateView):
     form_class = DisabledDatesForm
     template_name = 'therapist/preferences/disable_dates.html'
     success_url = reverse_lazy('preferences')
+
+    def form_invalid(self, form):
+        return JsonResponse({"error": form.errors}, status=400)
 
     def form_valid(self, form):
         date = form.save(commit=False)
