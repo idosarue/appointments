@@ -1,0 +1,96 @@
+
+
+header {
+    background-image: url('/static/images/mental-health-2313428.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 90vh;
+    width: 100%;
+    display: flex;
+    color: black;
+    text-align: center;
+}
+
+
+#overlay {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    opacity: 0.1;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: black;
+  }
+
+
+.contact-contact{
+    height: 10vh;
+}
+
+/* .card-home{
+    max-width: 40vw;
+} */
+
+.container{
+    height: 60vh;
+    display: flex;
+}
+
+
+.row {
+    margin: auto;
+    margin-top: 10vh;
+
+}
+
+
+.container .card {
+    min-width: 50vw; 
+    max-height: 50vh;
+}
+
+p {
+    font-size: 1.2vw;
+    line-height: 2;
+}
+
+.card img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+    .card-text {
+        font-size: 3vw;
+        min-height: 18vh;
+
+    }
+}
+
+@media only screen and (min-width: 800px) {
+    .card-text {
+        min-height: 40vh;
+    }
+}
+
+@keyframes mymove {
+    50% {transform: rotate(180deg);}
+  }
+
+#animation {
+    transition: 3s;
+}
+
+#animation:hover {
+    transition: 3s;
+    animation: mymove 3s;
+}

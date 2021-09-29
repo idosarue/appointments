@@ -149,13 +149,10 @@ $(document).ready(function(){
         
         console.log(button.attr('id'))
         var form = document.getElementById('form' + button.attr('id'))
-        console.log(button)
         var title = form.getElementsByTagName('input')[1]
         var content = form.getElementsByTagName('textarea')[0]
-        console.log(title)
         title.defaultValue = li1.textContent
         content.defaultValue = li2.textContent
-        console.log(form)
 
     });
 });

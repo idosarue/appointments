@@ -19,7 +19,9 @@
 
     <title>Document</title>
 
-    
+    {% block style %}
+
+    {% endblock %}
 </head>
 <body>
     {% include 'partials/navbar.html' %}
@@ -28,7 +30,7 @@
 
     {% endblock %}
     {{day|json_script:'hello'}}
-
+    
     <script src="{% static 'js/app.js' %}"></script>
     <script src="{% static 'js/new.js' %}"></script>
     <script src="{% static 'js/form.js' %}"></script>
