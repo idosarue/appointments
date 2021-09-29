@@ -4,6 +4,9 @@ from .models import Profile
 from django import forms
 from appointments.settings import DATE_INPUT_FORMATS
 from datetime import date
+from django.contrib.auth.forms import AuthenticationForm
+
+
 
 def calculateAge(birth_date):
     today = date.today()
@@ -81,4 +84,18 @@ class EditProfileForm(forms.ModelForm):
 
 
 
-    
+
+
+
+class UserLoginForm(AuthenticationForm):
+
+
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'username', 'autocomplete': 'off'}))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': '*********',
+            'id': 'hi',
+        }
+))

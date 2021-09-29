@@ -1,11 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
-from patient.models import Appointment, AppointmentResponse
+from patient.models import Appointment, AppointmentResponse,ContactUsersMessagesToTherapist
 from accounts.models import Profile
 from django.db import models
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse_lazy
-from .forms import AppointmentForm, UserAppointmentFilter
+from .forms import AppointmentForm, UserAppointmentFilter, ContactFormEmailPatient
 from django.views.generic import CreateView, ListView, UpdateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,11 +16,21 @@ from therapist.models import Day
 from django.core.paginator import Paginator
 from send_emails import (send_message_to_therapist, 
 send_message_to_user, 
-send_message_to_therapist_after_update)
+send_message_to_therapist_after_update, send_contact_message_to_therapist)
 
 # Create your views here.
 def home(request):
     return render(request, 'patient/home.html')
+
+class CreateContactMessageToTherapist(CreateView):
+    model = ContactUsersMessagesToTherapist
+    form_class = ContactFormEmailPatient
+    template_name = 'patient/home.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        send_contact_message_to_therapist(form.cleaned_data['email'], form.cleaned_data['subject'], form.cleaned_data['message'])
+        return super().form_valid(form)
 
 class CreateAppointmentView(LoginRequiredMixin, CreateView):
     form_class = AppointmentForm

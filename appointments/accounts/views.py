@@ -2,7 +2,7 @@ from .models import Profile
 from django.db import models
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
-from .forms import ProfileForm, SignupForm, EditUserForm, EditProfileForm
+from .forms import ProfileForm, SignupForm, EditUserForm, EditProfileForm, UserLoginForm
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth import login, authenticate
@@ -47,6 +47,7 @@ class ProfileDetailView(LoginRequiredMixin,DetailView):
 
 class MyLoginView(LoginView):
     template_name = 'accounts/login.html'
+    form_class = UserLoginForm
 
     def get_success_url(self) :
         if self.request.user.is_superuser:

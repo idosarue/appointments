@@ -3,7 +3,7 @@ import datetime
 from datetime import datetime
 from django import forms
 from django.db import models
-from .models import Appointment, AppointmentResponse
+from .models import Appointment, AppointmentResponse, ContactUsersMessagesToTherapist
 from datetime import time, date
 from django.contrib.auth.models import User
 from therapist.models import WorkingTime, Day, Date
@@ -58,3 +58,13 @@ class UserAppointmentFilter(django_filters.FilterSet):
     class Meta:
         model = Appointment
         fields = ['appointment_date']
+
+
+class ContactFormEmailPatient(forms.ModelForm):
+    class Meta:
+        model = ContactUsersMessagesToTherapist
+        fields = '__all__'
+
+        widgets = {
+            'message' : forms.Textarea()
+        }

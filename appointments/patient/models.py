@@ -117,3 +117,7 @@ class AppointmentResponse(models.Model):
 
 
     
+class ContactUsersMessagesToTherapist(models.Model):
+    subject = models.CharField(max_length=255)
+    message = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255)

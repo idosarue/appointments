@@ -16,7 +16,7 @@
 <div class="card" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">Choose a date</h5>
-      <form id='date-form' method="GET">
+      <form  method="GET">
         {% csrf_token %}
         {{ filter.form.as_p }}
         <input type="submit">

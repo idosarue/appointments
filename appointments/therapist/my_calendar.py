@@ -7,13 +7,13 @@ import holidays
 from therapist.forms import CreateCommentForm
 from django.template.loader import render_to_string
 from django.template.context_processors import csrf
+from itertools import chain
 
 class Calendar(HTMLCalendar):
     def __init__(self, year, month):
         self.year = year
         self.month = month
         super(Calendar).__init__()
-
 
     def formatday(self, day, events, events2, comments):
         events_per_day = events.filter(appointment_date__day=day).order_by('start_time')
@@ -23,6 +23,7 @@ class Calendar(HTMLCalendar):
         appointments = []
         appointments_response = []
         y = []
+
         for event in events_per_day:
             # d += f'<li id="{event.id}"> {event.start_time} {event.user.user.first_name} {event.user.user.last_name} {event.user.phone_number} <a  href="{reverse_lazy("update_apt", kwargs={"pk":event.id})}">edit</a> <br> <a href="{reverse_lazy("delete_appointment", kwargs= {"pk" :event.id})}" class="confirm_delete">Cancel</a></li>'
             appointments.append(event)
@@ -30,6 +31,8 @@ class Calendar(HTMLCalendar):
             # d += f'<li id="{event.id}"> {event.start_time} {event.user.user.first_name} {event.user.user.last_name} {event.user.phone_number} <a href="{reverse_lazy("update_apt_res", kwargs={"pk":event.id})}">edit</a> <br><a href="{reverse_lazy("delete_appointment_response", kwargs= {"pk" :event.id})}" class="confirm_delete">Cancel</a></li>'
             appointments_response.append(event)
         
+        x = sorted(list(chain(appointments, appointments_response)), key=lambda x: x.start_time)
+        print(x)
 
         if day:
             disabled = False
@@ -47,7 +50,7 @@ class Calendar(HTMLCalendar):
                 create_appoint_a = ''
             for comment in comments:
                 y.append(comment)
-            day_dic = {'day_num': day, 'appointments': appointments, 'appointments_response':appointments_response, 'disabled':disabled, 'year':int(self.year), 'month':self.month, 'comments':y, 'holiday':holi}
+            day_dic = {'day_num': day,'sorted_appoints':x ,'appointments': appointments, 'appointments_response':appointments_response, 'disabled':disabled, 'year':int(self.year), 'month':self.month, 'comments':y, 'holiday':holi}
             return day_dic
 
         
@@ -115,15 +118,7 @@ class Calendar(HTMLCalendar):
         new_cal.update({'month':cal})
         new_cal.update({'year_num':self.year})
         new_cal.update({'month_num':self.month})
-        ## generate next month
-        # if self.formatmonthname(self.year, self.month, withyear=withyear)['month_num'] <= 11:
-        #     new_cal.update({'next_month_num':month_num +1})
-        # else:
-        #     month_num -= month_num
-        #     new_cal.update({'next_month_num':month_num + 1})
-        #     new_cal['year_num'] += 1
-        ## generate next month
-            
+
         new_cal.update({'pre_month' : {'pre_month_num':self.previous_month()[0],'year_num':self.previous_month()[1] }})
         new_cal.update({'next_month' : {'next_month_num':self.next_month()[0],'year_num':self.next_month()[1] }})
         return new_cal

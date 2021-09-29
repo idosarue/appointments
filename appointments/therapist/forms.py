@@ -336,3 +336,4 @@ class ContactFormEmailPatient(forms.ModelForm):
         if not User.objects.filter(email=email).exists():
             raise forms.ValidationError('invalid email address')
         return email
+

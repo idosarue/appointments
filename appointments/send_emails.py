@@ -1,4 +1,4 @@
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
 from datetime import datetime, timedelta, date
@@ -111,6 +111,18 @@ def send_contact_message_to_patient(user_email, subject, body):
             therapist_email,
             [user_email],
         )
+
+def send_contact_message_to_therapist(user_email, subject, body):
+        subject_send = f'{user_email} sent you a contact message:{subject}'
+        email = EmailMessage(
+        subject_send,
+        body,
+        therapist_email,
+        [therapist_email],
+        reply_to=[user_email],
+        )
+
+        email.send()
 
 # def send_reminder_email(today):
 #         x = today + timedelta(days=1)
