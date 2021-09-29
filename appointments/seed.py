@@ -21,7 +21,7 @@ import holidays
 from therapist.forms import CreateCommentForm
 from django.template.loader import render_to_string
 from django.template.context_processors import csrf
-
+from mailjet_rest import Client
 # import pandas as pd
 def edit_site():
     site = Site.objects.get(id=1)

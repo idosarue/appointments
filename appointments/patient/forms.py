@@ -35,6 +35,7 @@ class AppointmentForm(forms.ModelForm):
     def clean_appointment_date(self):
         data = self.cleaned_data
         appointment_date = data['appointment_date']
+
         try:
             start_time = data['start_time']
             start = datetime.strptime(start_time, '%H:%M:%S').time()

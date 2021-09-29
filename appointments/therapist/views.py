@@ -562,5 +562,6 @@ class CreateContactMessageToPatient(SuperUserRequiredMixin, CreateView):
 
 
     def form_valid(self, form):
+        send_contact_message_to_patient(form.cleaned_data['email'], form.cleaned_data['subject'], form.cleaned_data['message'])
         messages.success(self.request, 'sent email')
         return super().form_valid(form)

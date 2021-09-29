@@ -38,6 +38,12 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('profile')
 
     def form_valid(self, form):
+        appoint = Appointment.valid_appoint(user=self.request.user.profile, appointment_date=form.cleaned_data['appointment_date'])
+        appoint_response = AppointmentResponse.valid_appoint(user=self.request.user.profile, appointment_date=form.cleaned_data['appointment_date'])
+        appoint_response_pend = AppointmentResponse.valid_pending_appoint(user=self.request.user.profile, appointment_date=form.cleaned_data['appointment_date'])
+        if appoint or appoint_response or appoint_response_pend:
+            messages.error(self.request, 'no available appointments for that day')
+            return super().form_invalid(form)
         start_time = form.cleaned_data['start_time']
         appointment_date = form.cleaned_data['appointment_date']
         start = datetime.strptime(start_time, '%H:%M:%S').time()

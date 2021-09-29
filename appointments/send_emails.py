@@ -3,6 +3,19 @@ from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
 from datetime import datetime, timedelta, date
 from patient.models import Appointment
+from mailjet_rest import Client
+import os
+import os
+import environ
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+env = environ.Env()
+environ.Env.read_env()
+
+API_KEY = env('API_KEY')
+API_SECRET = env('API_KEY')
+
+mailjet = Client(auth=(API_KEY, API_SECRET), version='v3.1')
 
 therapist_email = 'testdjangosaru@gmail.com'
 
