@@ -24,14 +24,14 @@
     <header>
         
         <div id="overlay">
-
+          <h1>Biofeedback</h1>
         </div>
         <div class="justify-content-center contact-home" style="position: absolute; right: 20vw;">
             <div class="card card-contact">
                 <article class="card-body">
                     <h4 class="card-title text-center mb-4 mt-1">Contact</h4>
                     <hr>
-                    <form method="POST">
+                    <form id="contact-form-home" method="POST">
                     {% csrf_token %}
                     {% for field in form %}
                     <div class="form-group">
@@ -53,7 +53,7 @@
                             {{field}}
                     </div>
                     {% endfor %}
-                    <button class="btn btn-primary form-control" type="submit">Send</button>
+                    <button id="send-btn" class="btn btn-primary form-control" type="submit">Send</button>
                     </form>
                 </article>
                 </div> <!-- card.// -->

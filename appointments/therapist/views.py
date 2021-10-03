@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from datetime import date, datetime, time, timedelta
+import time as t
 import datetime as dt
 import numpy as np
 from itertools import chain
@@ -559,9 +560,12 @@ class CreateContactMessageToPatient(SuperUserRequiredMixin, CreateView):
 
     def form_invalid(self, form):
         return JsonResponse({"error": form.errors}, status=400)
-
+# 1.322326898574829 yagmail
 
     def form_valid(self, form):
+        start = t.time()
         send_contact_message_to_patient(form.cleaned_data['email'], form.cleaned_data['subject'], form.cleaned_data['message'])
+        end = t.time()
+        print(end - start, 'sendgrid')
         messages.success(self.request, 'sent email')
         return super().form_valid(form)

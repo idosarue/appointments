@@ -92,28 +92,28 @@
 <div class="modal fade" id="ContactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title">Send Email</h5>
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Send email</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
             </button>
-            </div>
-            <div class="modal-body">
+        </div>
+        <div class="modal-body">
             <form id="contact-form-therapist" class="form" action="{% url 'send_contact_email' %}" method="POST"> 
-                {% csrf_token %}
-                {{contact_form.as_p}}
-                </div>
-                <div id="contact-result">
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </form>
+            {% csrf_token %}
+            {{contact_form.as_p}}
+            <div id="contact-result">
+            </div>            
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
+            </form>
+        </div>
         </div>
     </div>
 </div>
-
+    
 <div class="modal fade" id="UpdatetAppointResponseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -127,19 +127,17 @@
             <form id="update-appoint-form" method="POST"> 
                 {% csrf_token %}
                 {{appoint_update_form.as_p}}
-              </div>
-              <div id="update-appoint-result">
-              </div>
-              <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">Save changes</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </form>
-          </div>
+                <div id="update-appoint-result">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
         </div>
     </div>
 </div>
-
-
 
 
 {% endblock %}

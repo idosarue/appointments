@@ -51,7 +51,7 @@ class MyLoginView(LoginView):
 
     def get_success_url(self) :
         if self.request.user.is_superuser:
-            return reverse_lazy('calendar') 
+            return reverse_lazy('apt_requests') 
         else:
             return super().get_success_url()
 

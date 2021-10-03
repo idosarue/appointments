@@ -304,12 +304,13 @@ class CreateCommentForm(forms.ModelForm):
         self.fields['title'].widget = forms.TextInput(attrs={'id':'title'})
         self.fields['content'].widget = forms.Textarea(attrs={'id':'content'})
 
+
     class Meta:
         model = Comment
         exclude= ['is_deleted']
 
         widgets = {
-            'date': forms.DateInput(attrs={'placeholder':'Select a date', 'autocomplete':'off'}),
+            'date': forms.DateInput(attrs={'placeholder':'Select a date', 'autocomplete':'off', 'type':'date'}),
         }
 
 class EditCommentForm(forms.ModelForm):
@@ -321,6 +322,11 @@ class EditCommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         exclude= ['is_deleted', 'date']
+
+        widgets = {
+            'date': forms.DateInput(attrs={'placeholder':'Select a date', 'autocomplete':'off', 'type':'date'}),
+        }
+
 
 class ContactFormEmailPatient(forms.ModelForm):
     class Meta:

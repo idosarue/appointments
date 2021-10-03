@@ -161,14 +161,14 @@
             <form id="appoint-form" class='form' action="{% url 'create_appoint' %}" method="POST"> 
                 {% csrf_token %}
                 {{appoint_form.as_p}}
-              </div>
-              <div id="appoint-result">
-              </div>
-              <div class="modal-footer">
+                <div id="appoint-result">
+                </div>
+                <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">Save changes</button>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
               </form>
-          </div>
+            </div>
         </div>
     </div>
 </div>
@@ -186,14 +186,14 @@
             <form id="comment-form" class='form' action="{% url 'create_comment' %}" method="POST"> 
                 {% csrf_token %}
                 {{comment_form.as_p}}
-              </div>
-              <div id="comment-result">
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <div id="comment-result">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
               </form>
-          </div>
+            </div>
         </div>
     </div>
 </div>
@@ -210,14 +210,14 @@
             <form id="edit-appoint-form" method="POST"> 
                 {% csrf_token %}
                 {{edit_appoint_form.as_p}}
-              </div>
-              <div id="edit-appoint-result">
-              </div>
-              <div class="modal-footer">
+                <div id="edit-appoint-result">
+                </div>
+                <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">Save changes</button>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
               </form>
-          </div>
+            </div>
         </div>
     </div>
 </div>
@@ -235,14 +235,14 @@
             <form id="edit-appoint-res-form" method="POST"> 
                 {% csrf_token %}
                 {{edit_response_form.as_p}}
-              </div>
-              <div id="edit-appoint-res-result">
-              </div>
-              <div class="modal-footer">
+                <div id="edit-appoint-res-result">
+                </div>
+                <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">Save changes</button>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
               </form>
-          </div>
+            </div>
         </div>
     </div>
 </div>
