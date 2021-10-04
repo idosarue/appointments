@@ -10,14 +10,24 @@ header {
     align-items: center;
     flex-direction: column;
     position: relative;
+    background-color: #00FFFF;
 }
 
 .ani-con {
     height: 30vh;
     display: flex;
-    flex-direction: column;
-    justify-content: end;
+    justify-content: space-between;
     margin-bottom: 3vh;
+    width: 100%;
+}
+
+.tree {
+    width: 20%;
+}
+
+.cloud {
+    height: 5vh;
+    margin-top: 1vh;
 }
 
 #walk-container {
@@ -59,32 +69,72 @@ header {
 
 .stand {
     height: 4em;
-    background-color: black;
+    background-color: white;
     width: 20%;
 }
 
 .stand-bottom {
     height: 1em;
-    background-color: black;
+    background-color: white;
     width: 40%;
 }
+.stand, .stand-bottom, #myVideoCon {
+    box-shadow: 5px 10px 50px #888888;
+}
 
-
-video {
+#myVideoCon {
     border: 2em solid;
     border-radius: 1em;
     width: 80%;
+    position: relative;
+    z-index: 1;
+}
+#myVideoCon::after  {
+    content: 'ביופידבק';
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    font-size: 2em;
+    color: #000;
+}
+#myVideoCon::before  {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 2em;
+    color: #000;
+    background-color: black;
+    z-index: -1;
+}
+
+#myVideoCon.show::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: #000;
+    background-color: black;
+}
+video {
+    width: 100%;
 }
 
 @media screen and (max-width: 600px) {
-    .stand, .stand-bottom {
-        display: none;
-    }
-    video {
+
+    #myVideoCon {
         border: 1em solid;
         border-radius: 1em;
         width: 80%;
     }
+
+ 
+
   }
 /* #overlay {
     position: relative;
@@ -169,3 +219,5 @@ p {
     transition: 3s;
     animation: mymove 3s;
 }
+
+

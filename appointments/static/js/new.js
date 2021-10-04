@@ -80,3 +80,28 @@ function myMoveLeft() {
 }
 
 
+var video = document.getElementById("myVideo");
+var stopButton = document.getElementById("stopButton");
+stopButton.addEventListener('click', play)
+
+
+
+function stopVideo(){
+    $("#stopButton").toggleClass("btn-success")
+    $("#stopButton").toggleClass("btn-danger")
+    $("#myVideoCon").toggleClass("show");
+}
+function startVideo(){
+  $("#myVideoCon").toggleClass("show");
+  $("#stopButton").toggleClass("btn-success")
+  $("#stopButton").toggleClass("btn-danger")
+}
+
+function play(){
+  if (stopButton.className == 'btn btn-danger'){
+    stopVideo()
+  }else{
+    startVideo()
+  }
+}
+

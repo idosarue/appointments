@@ -22,18 +22,24 @@
 
   <header>
     <div class="ani-con">
+      <img class="tree" src="{% static 'images/tree.png' %}" alt="">
+      <img class="cloud" src="{% static 'images/cloud.png' %}" alt="">
       <div id="walk-container">
       <button class="btn btn-primary" id="click">walk</button>
         <div id="man"></div>
       </div>
+      <img class="tree" src="{% static 'images/tree.png' %}" alt="">
+
     </div>
 
-    <video autoplay muted loop>
-      
-      <source src="{% static 'images/video.mp4' %}" type="video/mp4">
+    <div id="myVideoCon">
+      <video  id="myVideo" src="{% static 'images/video.mp4' %}" type="video/mp4" autoplay muted loop>
+      </video>
+    </div>
 
-    </video>
-    <div class="stand"></div>
+    <div class="stand">
+      <i class='fas fa-chevron-circle-down' style='font-size:36px; display: block;'></i>      <button id='stopButton' class="btn btn-danger">   </button>
+    </div>
     <div class="stand-bottom"></div>
 
   </header>
