@@ -60,9 +60,13 @@ a {
     justify-content: space-between;
 }
 
-.f-c{
-    margin-top: 20vh;
+.link-container a{
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 10px;
 }
+
 
 .next-l,.nav-c{
     display: flex;
@@ -77,4 +81,13 @@ a {
 .next-l{
     width: 100%;
 }
+.f-c{
+    margin-top: 5vh;
+}
 
+@media only screen and (min-width: 700px) {
+    .login {
+        width: 30rem;
+    }
+
+}

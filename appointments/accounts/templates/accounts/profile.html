@@ -15,14 +15,17 @@
 
 <div class="f-c">
     <div class="container d-flex justify-content-center f-c">
-        <div class="card" style="width: 50vw; height: 40vh;">
+        <div class="card login">
             <div class="card-body c">
               <h1 class="card-title">Profile for {{user.username}}</h1>
               <h2 class="card-title">Email {{user.email}}</h2>
               <hr>
-              <a class="btn btn-success" href="{% url 'edit_profile' %}">Edit Personal Details</a>
-              <a class="btn btn-success" href="{% url 'edit_user' %}">Edit Email and Name</a>
-              <a class="btn btn-success"href="{% url 'password' %}">Change password</a>
+            <div class="link-container">
+                
+                <a class="btn btn-success" href="{% url 'edit_profile' %}">Edit Personal Details</a>
+                <a class="btn btn-success" href="{% url 'edit_user' %}">Edit Email and Name</a>
+                <a class="btn btn-success"href="{% url 'password' %}">Change password</a>
+            </div>
             </div>
           </div>
     </div>

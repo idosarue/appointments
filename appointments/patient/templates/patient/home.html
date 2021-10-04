@@ -104,18 +104,59 @@
                 <div class="card-body">
                   <h5 class="card-title">My clinic</h5>
                   <hr>
-                  <p class="card-text">
                     At My clinic, I use biofeedback to treat problems related to:
-                    headaches-migraines, Irritable bowel syndrome, 
-                    Asthma Breathing difficulties, Skin diseases, 
-                    Stress and Anxiety Attention Deficit Hyperactivity Disorder.                  
-                </p>
+                    <ul class="list-group">
+                      <li class="list-group-item">headaches-migraines</li>
+                      <li class="list-group-item">Irritable bowel syndrome</li>
+                      <li class="list-group-item">Asthma Breathing difficulties</li>
+                      <li class="list-group-item">Skin diseases</li>
+                      <li class="list-group-item">Stress and Anxiety</li>
+                      <li class="list-group-item">Attention Deficit Hyperactivity Disorder</li>
+                    </ul>
+                   
+                
                 </div>
               </div>
             </div>
         </div>
     </main>
-
+    <div class="justify-content-center contact-home">
+      <div class="card card-contact">
+          <article class="card-body">
+              <h4 class="card-title text-center mb-4 mt-1">Contact</h4>
+              <hr>
+              <form id="contact-form-home" method="POST">
+              {% csrf_token %}
+              {% for field in form %}
+              <div class="form-group">
+                  {{field.label}}
+              <div class="input-group">
+                  {% if field.name == 'subject' %}
+                  <div class="input-group-prepend">
+                      <span class="input-group-text"> <i class="fa fa-pencil-alt"></i> </span>
+                      </div>
+                  {% elif field.name == 'email' %}
+                  <div class="input-group-prepend">
+                      <span class="input-group-text"> <i class="fa fa-envelope-square"></i> </span>
+                      </div>
+                  {% elif field.name == 'message' %}
+                  <div class="input-group-prepend">
+                      <span class="input-group-text"> <i class="far fa-comments"></i> </span>
+                      </div>
+                  {% endif %}
+                      {{field}}
+              </div>
+              {% endfor %}
+              <button id="send-btn" class="btn btn-primary form-control" type="submit">Send</button>
+              </form>
+          </article>
+          </div> <!-- card.// -->
+          
+              </aside> <!-- col.// -->
+          </div> <!-- row.// -->
+          
+          </div> 
+    </div>
 {% endblock %}
 
 <header>    
@@ -127,40 +168,3 @@
   </div>
 </header>
 
-<div class="justify-content-center contact-home" style="position: absolute; right: 20vw;">
-  <div class="card card-contact">
-      <article class="card-body">
-          <h4 class="card-title text-center mb-4 mt-1">Contact</h4>
-          <hr>
-          <form id="contact-form-home" method="POST">
-          {% csrf_token %}
-          {% for field in form %}
-          <div class="form-group">
-              {{field.label}}
-          <div class="input-group">
-              {% if field.name == 'subject' %}
-              <div class="input-group-prepend">
-                  <span class="input-group-text"> <i class="fa fa-pencil-alt"></i> </span>
-                  </div>
-              {% elif field.name == 'email' %}
-              <div class="input-group-prepend">
-                  <span class="input-group-text"> <i class="fa fa-envelope-square"></i> </span>
-                  </div>
-              {% elif field.name == 'message' %}
-              <div class="input-group-prepend">
-                  <span class="input-group-text"> <i class="far fa-comments"></i> </span>
-                  </div>
-              {% endif %}
-                  {{field}}
-          </div>
-          {% endfor %}
-          <button id="send-btn" class="btn btn-primary form-control" type="submit">Send</button>
-          </form>
-      </article>
-      </div> <!-- card.// -->
-      
-          </aside> <!-- col.// -->
-      </div> <!-- row.// -->
-      
-      </div> 
-</div>
