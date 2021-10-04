@@ -6,7 +6,10 @@
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% if message.tags == 'success' %}
+    <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% endif %}
+
     {% endfor %}
 </ul>
 {% endif %}
@@ -81,7 +84,7 @@
                 {{obj.timestamp}}
             </td>
             <td>
-                <a href="{% url 'apt_status' obj.id 'accept' %}" class='btn btn-success' name='a' type="submit">Accept</a>
+                <a href="{% url 'apt_status' obj.id 'accept' %}" class='btn btn-success' name='accept' type="submit">Accept</a>
                 <button id='{{obj.id}}' name="{{ obj.start_time }}" type="button" class="btn btn-primary update-appoint-btn" data-toggle="modal" data-target="#UpdatetAppointResponseModal">Update</button> 
                 <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment' obj.id %}">cancel</a>
             </td>

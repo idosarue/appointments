@@ -143,6 +143,7 @@ def update_appointment_status(request, pk, status):
             appointment.choice = 'A'
             appointment.is_approved = True
             appointment.save()
+            messages.success(request, f'approved an appointment for {appointment.user.user} at {appointment.start_time} {appointment.appointment_date}')
             send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
             send_success_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date)
         else:
@@ -150,7 +151,7 @@ def update_appointment_status(request, pk, status):
             return redirect('appointment_response', pk)
     else:
         return redirect('appointment_response', pk)
-    return redirect('home')
+    return redirect('apt_requests')
 
 @login_required
 def update_appointment_response_status(request, pk, status):

@@ -290,37 +290,8 @@ $("#contact-form-home").submit(function (e) {
 
 });
 
-$("#query-appoint-form").submit(function (e) {
-    // preventing from page reload and default actions
-    e.preventDefault();
-
-    var button = $('#query-btn')
-    validButton(button, true)
-    // serialize the data for sending the form data.
-    var serializedData = $(this).serialize();
-    // make POST ajax call
-    $.ajax({
-        type: 'POST',
-        url: $(this).attr('action'),
-        data: serializedData,
-        success: function (response) {
-            // on successfull creating object
-            // 1. clear the form.
-            
-            $(this).trigger('reset');
-            alert('appointment request sent')
-            // 2. focus to nickname input 
-            // display the newly friend to table.
-            // alert('sent email')
-            location.reload(true)
-        },
-        error: function (response) {
-            // alert the error if any error occured
-            validButton(button, false)
-            var x = Object.values(response.responseJSON.error)[0][0]
-            $('#date-form-result').html(`<div class="alert alert-danger" role="alert"> ${x} </div>`);
-
-        }
-    })
-
+$('a[name="accept"]').on('click',function(){
+    $(this).hide()
 });
+
+

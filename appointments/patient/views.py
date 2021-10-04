@@ -14,6 +14,8 @@ from django_filters.views import FilterView
 from itertools import chain
 from therapist.models import Day
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+
 from send_emails import (send_message_to_therapist, 
 send_message_to_user, 
 send_message_to_therapist_after_update, send_contact_message_to_therapist)
@@ -36,6 +38,10 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
     form_class = AppointmentForm
     template_name = 'patient/query_appointment.html'
     success_url = reverse_lazy('profile')
+
+    # def form_invalid(self, form):
+    #     return JsonResponse({"error": form.errors}, status=400)
+
 
     def form_valid(self, form):
         appoint = Appointment.valid_appoint(user=self.request.user.profile, appointment_date=form.cleaned_data['appointment_date'])

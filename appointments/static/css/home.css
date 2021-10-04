@@ -1,19 +1,92 @@
 
-
-header {
-    background-image: url('/static/images/mental-health-2313428.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    height: 90vh;
-    width: 100%;
-    display: flex;
-    color: black;
+body, html {
+    max-width: 100vw;
     text-align: center;
 }
 
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+}
 
-#overlay {
+.ani-con {
+    height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    margin-bottom: 3vh;
+}
+
+#walk-container {
+    margin-top: 0;
+    position: absolute;
+    height: 200px;
+    width: 10em;
+    left: 0;
+    animation: stroll 30s linear infinite;
+    /* z-index: 1; */
+
+}
+#walk-container > div {
+    width: 100%;
+    height: 200px;
+    background-image: url('/static/images/walk-sequence.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#walk-container > div {
+    background-size: 800%;
+}
+
+.walk {
+    animation: walkanim 1.0s infinite steps(7);
+}
+
+@keyframes walkanim {
+    to { background-position: 100% 0; }
+}
+
+/* @keyframes stroll {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(500%); }
+  } */
+
+
+
+.stand {
+    height: 4em;
+    background-color: black;
+    width: 20%;
+}
+
+.stand-bottom {
+    height: 1em;
+    background-color: black;
+    width: 40%;
+}
+
+
+video {
+    border: 2em solid;
+    border-radius: 1em;
+    width: 80%;
+}
+
+@media screen and (max-width: 600px) {
+    .stand, .stand-bottom {
+        display: none;
+    }
+    video {
+        border: 1em solid;
+        border-radius: 1em;
+        width: 80%;
+    }
+  }
+/* #overlay {
     position: relative;
     width: 100%;
     height: 100%;
@@ -26,7 +99,7 @@ header {
     cursor: pointer;
 
     color: black;
-  }
+  } */
 
 #overlay h1 {
     position: absolute;
