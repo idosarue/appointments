@@ -1,39 +1,19 @@
-
-
-:root{
-    --clr-primary-200: #082032;;
-    --clr-primary-400: #823936;
-    --clr-light: #EEEEEE;
-    --clr-nuetral-100: #FFF;
-    --clr-neutral-900: #1c1f1e;
-   
-    --ff-primary: 'Roboto', sans-serif;
-    --ff-accent: 'Playfair Display', sans-serif;
-}
-
-
 body {
     background-color: whitesmoke;
     scroll-behavior: smooth;
     margin: 0;
+    font-family: 'Roboto', sans-serif;
 }
-
-
 
 p {
 font-family: 'Poppins', sans-serif;
 
 }
 
-
-
 .f {
     width: 50%;
     margin: auto;
 }
-
-
-
 
 a {
     color: black;
@@ -63,24 +43,25 @@ a {
 .link-container a{
     display: flex;
     flex-direction: column;
-
     margin-top: 10px;
 }
 
 
 .next-l,.nav-c{
     display: flex;
-    justify-content: center;
 }
 
 .nav-c{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    width: 40%;
 }
 
 .next-l{
     width: 100%;
+    justify-content: center;
 }
+
 .f-c{
     margin-top: 5vh;
 }

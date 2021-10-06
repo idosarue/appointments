@@ -1,5 +1,5 @@
 from datetime import date, datetime, timedelta
-from calendar import HTMLCalendar, month_name
+from calendar import HTMLCalendar, month_name, day_abbr
 from patient.models import Appointment, AppointmentResponse
 from therapist.models import Date, Day, Comment
 from django.urls import reverse_lazy
@@ -74,6 +74,13 @@ class Calendar(HTMLCalendar):
             week.append(self.formatday(d, events, events2, comments))
         return week
          
+    def formatweekday(self, day):
+        """
+        Return a weekday name as a table header.
+        """
+        return day_abbr[day]
+            
+
     def formatweekheader(self):
         s = [self.formatweekday(i) for i in self.iterweekdays()]
         return s

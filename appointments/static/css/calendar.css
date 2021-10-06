@@ -1,66 +1,84 @@
-
-.body{
+.calendar {
+  width: 100%;
   margin: 0;
-  width: 100vw;
+  font-size: 13px;
 }
 
-.calendar {
-    width: 100%;
-    margin: 0;
-    font-size: 13px;
-  }
-  
-  .calendar tr, .calendar td {
-    border: 2px solid lightblue;
-  }
-  
-  .calendar th {
-    padding: 10px;
-    text-align: center;
-    font-size: 18px;
-    background-color: whitesmoke;
-  }
-  
-  .calendar td {
-    width: 12.5em;
-    height: 9.375em;
-    padding: 20px 0px 0px 5px;
-    position: relative;
-  }
-  
-  #month-name {
-    display: flex;
-    justify-content: center;
-  }
+.calendar tr, .calendar td {
+  border: 2px solid lightblue;
+}
+
+.top-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  height: 1em;
+}
+
+.top-container button {
+  padding: 0;
+}
+
+.calendar th {
+  padding: 10px;
+  min-width: 120px;
+  text-align: center;
+  font-size: 18px;
+  background-color: whitesmoke;
+}
 
 
-  #month-name h3{
-    align-self: center;
-    flex-grow: 4;
-  }
-  
-  .date a {
-    font-size: 1rem;
-  }
-  
-  ul {
-    height: 100%;
-    padding: 0px 5px 0px 20px;
-  }
-  
+.calendar td {
+  width: 12.5em;
+  height: 9.375em;
+  position: relative;
+}
+
+.first-hr {
+  border: 1px solid gray;
+  border-radius: 2px;
+
+}
+
+#month-name {
+  display: flex;
+  justify-content: center;
+}
+
+
+#month-name h3{
+  align-self: center;
+  flex-grow: 4;
+}
+
+.date a {
+  font-size: 1rem;
+}
+
+.events {
+  height: 100%;
+  padding: 0px 5px 0px 20px;
+  background-color: lightblue;
+  border-radius: 3px;
+}
+
 
 
 .comment-list{
-  position: absolute;
   top: 0;
   right: 0;
 }
 
 .day_num {
-  position: absolute;
   top: 5px;
   left: 0;
   font-size: 15px;
+  border-radius: 50%;
+  background-color: midnightblue;
+  width: 20px;
+  display: flex;
+  color: white;
+  justify-content: center;
 }
 
 .appoint-list-container{
@@ -86,3 +104,5 @@
   display: flex;
   justify-content: space-between;
 }
+
+

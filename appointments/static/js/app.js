@@ -30,6 +30,17 @@ $(document).ready(function(){
 
 
 });
+$(document).ready(function(){
+    var screen = $(window).width()
+    if (screen <= 800){
+        tables = $('table')
+        for (let i = 0; i<tables.length; i++){
+            tables[i].classList.add('table-responsive')
+        }
+    }
+
+
+});
 
 
 $(document).ready(function(){
