@@ -144,7 +144,7 @@ TIME_FORMAT = 'H:i'
 
 DATETIME_FORMAT = 'd-m-Y H:i'
 
-TIME_ZONE = 'ISRAEL'
+TIME_ZONE = 'IL'
 
 USE_I18N = True
 
