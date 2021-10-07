@@ -24,7 +24,6 @@ from django.utils.translation import gettext_lazy as _
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = ['appointmentsd', 'herokuapp']
 
