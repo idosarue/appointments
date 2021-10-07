@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% load static %}
 
+
 {% block style %}
-    <link rel="stylesheet" href="{% static '/css/home.css' %}">
+<link rel="stylesheet" href="{% static '/css/home.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -19,13 +21,13 @@
     {% endfor %}
 </ul>
 {% endif %}
-
   <header>
+
     <div class="ani-con">
       <img class="tree" src="{% static 'images/tree.png' %}" alt="">
       <img class="cloud" src="{% static 'images/cloud.png' %}" alt="">
       <div id="walk-container">
-      <button class="btn btn-primary" id="click">walk</button>
+      <button class="btn btn-primary" id="click">{% trans 'walk' %}</button>
         <div id="man"></div>
       </div>
       <img class="tree" src="{% static 'images/tree.png' %}" alt="">
@@ -35,6 +37,9 @@
     <div id="myVideoCon">
       <video  id="myVideo" src="{% static 'images/video.mp4' %}" type="video/mp4" autoplay muted loop>
       </video>
+      <div id="overlay">
+        <h3>{% trans 'Biofeedback' %}</h3>
+      </div>
     </div>
 
     <div class="stand">
@@ -51,10 +56,10 @@
             <div class="col-sm-6">
               <div class="card">
                 <div class="card-body" >
-                  <h5 class="card-title">Interactive computer programs</h5>
+                  <h5 class="card-title">{% trans 'Interactive computer programs' %}</h5>
                   <hr>
                   <p class="card-text">
-                   The devices I use measure physiological changes in your body, such as your heart rate activity and skin changes, by using one or more sensors attached to your fingers or your ear. The sensors plug into your computer.
+                    {% trans 'The devices I use measure physiological changes in your body, such as your heart rate activity and skin changes, by using one or more sensors attached to your fingers or your ear. The sensors plug into your computer.' %}
                   </p>
                 </div>
               </div>
@@ -71,13 +76,10 @@
             <div class="col-sm-6">
               <div class="card">
                 <div class="card-body" >
-                  <h5 class="card-title">What is biofeedback?</h5>
+                  <h5 class="card-title">{% trans 'What is biofeedback?' %}</h5>
                   <hr>
                   <p class="card-text">
-                    Biofeedback is a technique you can use to learn to control some of your body's functions,
-                    such as your heart rate. During biofeedback, you're connected to electrical sensors that help you receive information about your body.
-                    This feedback helps you make subtle changes in your body, such as relaxing certain muscles, to achieve the results you want, such as reducing pain.
-                    In essence, biofeedback gives you the ability to practice new ways to control your body, often to improve a health condition or physical performance.
+                    {% trans "Biofeedback is a technique you can use to learn to control some of your body's functions, such as your heart rate. During biofeedback, you're connected to electrical sensors that help you receive information about your body. This feedback helps you make subtle changes in your body, such as relaxing certain muscles, to achieve the results you want, such as reducing pain. In essence, biofeedback gives you the ability to practice new ways to control your body, often to improve a health condition or physical performance." %}
                   </p>
                 </div>
               </div>
@@ -102,16 +104,16 @@
             <div class="col-sm-6">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">My clinic</h5>
+                  <h5 class="card-title">{% trans 'My clinic' %}</h5>
                   <hr>
-                    At My clinic, I use biofeedback to treat problems related to:
+                    {% trans 'At My clinic, I use biofeedback to treat problems related to:' %}
                     <ul class="list-group">
-                      <li class="list-group-item">headaches-migraines</li>
-                      <li class="list-group-item">Irritable bowel syndrome</li>
-                      <li class="list-group-item">Asthma Breathing difficulties</li>
-                      <li class="list-group-item">Skin diseases</li>
-                      <li class="list-group-item">Stress and Anxiety</li>
-                      <li class="list-group-item">Attention Deficit Hyperactivity Disorder</li>
+                      <li class="list-group-item">{% trans 'headaches-migraines' %}</li>
+                      <li class="list-group-item">{% trans 'Irritable bowel syndrome' %}</li>
+                      <li class="list-group-item">{% trans 'Asthma Breathing difficulties' %}</li>
+                      <li class="list-group-item">{% trans 'Skin diseases' %}</li>
+                      <li class="list-group-item">{% trans 'Stress and Anxiety' %}</li>
+                      <li class="list-group-item">{% trans 'Attention Deficit Hyperactivity Disorder' %}</li>
                     </ul>
                    
                 
@@ -123,13 +125,13 @@
     <div class="justify-content-center contact-home">
       <div class="card card-contact">
           <article class="card-body">
-              <h4 class="card-title text-center mb-4 mt-1">Contact</h4>
+              <h4 class="card-title text-center mb-4 mt-1">{% trans 'Contact' %}</h4>
               <hr>
               <form id="contact-form-home" method="POST">
               {% csrf_token %}
               {% for field in form %}
               <div class="form-group">
-                  {{field.label}}
+                {{field.label}}
               <div class="input-group">
                   {% if field.name == 'subject' %}
                   <div class="input-group-prepend">
@@ -147,7 +149,7 @@
                       {{field}}
               </div>
               {% endfor %}
-              <button id="send-btn" class="btn btn-primary form-control" type="submit">Send</button>
+              <button id="send-btn" class="btn btn-primary form-control" type="submit">{% trans 'Send' %}</button>
               </form>
           </article>
           </div> <!-- card.// -->

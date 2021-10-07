@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.utils.translation import gettext_lazy as _
 from django.template.loader import render_to_string
 from datetime import date, datetime, time, timedelta
 import time as t
@@ -143,11 +144,11 @@ def update_appointment_status(request, pk, status):
             appointment.choice = 'A'
             appointment.is_approved = True
             appointment.save()
-            messages.success(request, f'approved an appointment for {appointment.user.user} at {appointment.start_time} {appointment.appointment_date}')
+            messages.success(request, _(f'approved an appointment for {appointment.user.user} at {appointment.start_time} {appointment.appointment_date}'))
             send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
             send_success_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date)
         else:
-            messages.error(request, 'you cannot have meetings on the same time, or set meetings for times pending, send the user an update request')
+            messages.error(request, _('you cannot have meetings on the same time, or set meetings for times pending, send the user an update request'))
             return redirect('appointment_response', pk)
     else:
         return redirect('appointment_response', pk)
@@ -164,43 +165,12 @@ def update_appointment_response_status(request, pk, status):
             appointment.save()
             send_success_message_email_to_user(appointment.user.user, appointment.start_time, appointment.appointment_date)
             send_success_repsponse_message_email_to_therapist(appointment.user.user, appointment.start_time, appointment.appointment_date)
-            messages.success(request, 'appointment approved')
+            messages.success(request, _('appointment approved'))
         else:
             return redirect('query_appointment_update', pk)
     return redirect('profile')
 
 
-
-class UserAppointments(SuperUserRequiredMixin, ListView):
-    model = Profile
-    template_name = 'therapist/user_appointments.html'
-
-    def get_profile(self):
-        profile_id = self.kwargs['pk']
-        return get_object_or_404(Profile, id=profile_id)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        past_appointments = Appointment.display(user=self.get_profile(), date_t__lt=datetime.today())
-        future_appointments = Appointment.display(user=self.get_profile(), date_t__gt=datetime.today())
-        past_appointments_response =  AppointmentResponse.display(user=self.get_profile(), date_t__lt=datetime.today())
-        future_appointments_response = AppointmentResponse.display(user=self.get_profile(), date_t__gt=datetime.today())
-        context['past_appointments'] = past_appointments
-        context['future_appointments'] = future_appointments
-        context['past_appointments_response'] = past_appointments_response
-        context['future_appointments_response'] = future_appointments_response
-        return context
-
-
-
-# def next_month(request, year, month):
-#         if 1 < month <= 12:
-#             month -=1
-#             if year > 2021:
-#                 year-= 1
-#         else:
-#             new_month = 12
-#         return new_month, year
 
 class CalendarView(SuperUserRequiredMixin,FormView):
     model = Appointment
@@ -293,7 +263,7 @@ class AppointmentResponseUpdateView(SuperUserRequiredMixin, UpdateView):
         start = datetime.strptime(start_time, '%H:%M:%S').time()
         end_time = time(hour = start.hour + 1, minute=start.minute)
         if not Appointment.is_vacant(start_time, appointment_date, end_time) or not AppointmentResponse.is_vacant(start_time, appointment_date, end_time):
-            messages.error(self.request, 'no available meetings for that date or time, please choose another date or time')
+            messages.error(self.request, _('no available meetings for that date or time, please choose another date or time'))
             return super().form_invalid(form)
         appoint = form.save(commit=False)
         x = datetime(
@@ -385,7 +355,7 @@ def disable_day(request, pk):
     day = get_object_or_404(Day, id=pk)
     print(day.week_day)
     if not Appointment.can_disable(day.week_day) or not AppointmentResponse.can_disable(day.week_day):
-        messages.error(request, 'you have meetings or pending meetings on that day please make sure that weekday is clear before disabling')
+        messages.error(request, _('you have meetings or pending meetings on that day please make sure that weekday is clear before disabling'))
         return redirect('preferences')
     else:
         day.is_disabled = True
@@ -426,7 +396,7 @@ class PreferencesView(SuperUserRequiredMixin, ListView):
         last_appoint_time = WorkingTime.create_time_choice()[-1][0]
         c = datetime.combine(date.today(), time(hour = last_appoint_time.hour, minute=last_appoint_time.minute)) + timedelta(hours=1)
         y = c.time()
-        message = f'based on time specified your last appointment will end at {y}'
+        message = _('based on time specified your last appointment will end at') + f'{y}'
         context['start_time'] = start_time
         context['end_time'] = y
         context['message'] = message
@@ -464,10 +434,6 @@ class AppointsView(SuperUserRequiredMixin,FilterView):
     model = Appointment
 
     def get_multiple(self):
-        # if not 'appointment_date' in self.request.GET:
-        #     self.request.GET.update({'appointment_date':date.today()})
-        #     # filter = AppointmentFilter(self.request.GET, queryset=Appointment.display(appointment_date=date.today()))
-        #     # filter2 = AppointmentFilter(self.request.GET, queryset=AppointmentResponse.display(appointment_date=date.today()))
         filter = AppointmentFilter(self.request.GET, queryset=Appointment.display())
         filter2 = AppointmentFilter(self.request.GET, queryset=AppointmentResponse.display())
         return {'filter':filter, 'filter2':filter2}
@@ -483,7 +449,6 @@ class AppointsView(SuperUserRequiredMixin,FilterView):
         context['page_obj'] = page_obj
         context['filter'] = filter
         context['filter2'] = filter2
-        # context['today'] = date.today()
         return context
 
 
@@ -560,13 +525,12 @@ class CreateContactMessageToPatient(SuperUserRequiredMixin, CreateView):
     success_url = reverse_lazy('all_users')
 
     def form_invalid(self, form):
-        return JsonResponse({"error": form.errors}, status=400)
-# 1.322326898574829 yagmail
+        return JsonResponse({"error": _(form.errors)}, status=400)
 
     def form_valid(self, form):
         start = t.time()
         send_contact_message_to_patient(form.cleaned_data['email'], form.cleaned_data['subject'], form.cleaned_data['message'])
         end = t.time()
         print(end - start, 'sendgrid')
-        messages.success(self.request, 'sent email')
+        messages.success(self.request, _('sent email'))
         return super().form_valid(form)

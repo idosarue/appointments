@@ -22,16 +22,26 @@ var currentPosition;
 var manButton = document.getElementById('man')
 
 function startStop(){
-  if (button.innerText == 'walk'){
+  if (button.innerText == 'walk' || button.innerText == 'marche' || button.innerText == 'לך'){
     myMove()
+    if(button.innerText == 'walk'){
+      button.innerText = 'stop'
+    }else if (button.innerText == 'marche'){
+      button.innerText = 'arrêter'
+    }else if (button.innerText == 'לך'){
+      button.innerText = 'עצור'
+    }
     manButton.classList.toggle('walk')
-    button.innerText = 'stop'
   }else{
     manButton.classList.toggle('walk')
-
-  clearInterval(id);
-
-    button.innerText = 'walk'
+    clearInterval(id);
+    if(button.innerText == 'stop'){
+      button.innerText = 'walk'
+    }else if (button.innerText == 'arrêter'){
+      button.innerText = 'marche'
+    }else if (button.innerText == 'עצור'){
+      button.innerText = 'לך'
+    }
 
   }
 }

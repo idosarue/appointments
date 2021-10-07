@@ -13,6 +13,12 @@ header {
     background-color: #00FFFF;
 }
 
+#overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 .ani-con {
     height: 30vh;
     display: flex;
@@ -89,7 +95,7 @@ header {
     position: relative;
     z-index: 1;
 }
-#myVideoCon::after  {
+/* #myVideoCon::after  {
     content: 'ביופידבק';
     position: absolute;
     top: 0;
@@ -97,7 +103,7 @@ header {
 
     font-size: 2em;
     color: #000;
-}
+} */
 #myVideoCon::before  {
     content: '';
     position: absolute;

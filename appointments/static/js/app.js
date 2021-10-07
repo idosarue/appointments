@@ -12,6 +12,21 @@ function createValidDate(x){
 }
 
 
+$(document).ready(function(){
+    var uls = $('.list-group')
+    var cards = $('.card')
+    if (lang.text == '"he"'){
+        for (let i =0; i<uls.length; i++){
+            $(uls[i]).css('text-align', 'right')            
+        }
+        for (let i =0; i<cards.length; i++){
+            $(cards[i]).css('text-align', 'right')            
+        }
+    }else{
+        console.log('asdasd')
+    }
+
+});
 
 $(document).ready(function(){
     var today = new Date();

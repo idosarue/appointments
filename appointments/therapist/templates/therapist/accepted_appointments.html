@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
 
@@ -15,11 +16,11 @@
 
 <div class="card" style="width: 18rem;">
     <div class="card-body">
-      <h5 class="card-title">Choose a date</h5>
+      <h5 class="card-title">{% trans 'Choose a date' %}</h5>
       <form  method="GET">
         {% csrf_token %}
         {{ filter.form.as_p }}
-        <input type="submit">
+        <button class='btn btn-primary form-control' type="submit">{% trans 'Search' %}</button>
       </form>
     </div>
 </div>
@@ -41,53 +42,37 @@
     <table class="table table-dark table-striped">
         <thead>
             <tr>
-                <th>start time</th>
-                <th>appointment date</th>
-                <th>day</th>
-                <th>First name</th>
-                <th>Last name</th>
-                <th>patient phone</th>
-                <th>patient email</th>
-                <th>options</th>
+                <th>{{start_time}}</th>
+                <th>{{appointment_date}}</th>
+                <th>{{week_day}}</th>
+                <th>{{first_name}}</th>
+                <th>{{last_name}}</th>
+                <th>{{patient_phone}}</th>
+                <th>{{patient_email}}</th>
+                <th>{{requested_on}}</th>
+                <th>{{options}}</th>
             </tr>
         </thead>
-   
-        {% for obj in page_obj %}
-        <tr id='{{obj.appointment_date}}'>
-            <td>
-                {{ obj.start_time }} 
-            </td> 
-            <td>
-                {{ obj.appointment_date }}
-            </td>
-            <td>
-                {{obj.week_day}}
-            </td>
-            <td>
-                {{ obj.user.user.first_name }}  
-            </td>
-            <td>
-                {{ obj.user.user.last_name }}  
-            </td>
-            <td>
-                {{ obj.user.phone_number }} 
-            </td>
-            <td>
-                <button type="button" class="btn btn-link send" data-toggle="modal" data-target="#ContactModal"> {{ obj.user.user.email }}</button>
-            </td>
-         
-            <td>
+            {% for obj in page_obj %}
+            <tr id='{{obj.appointment_date}}'>
+                <td>{{ obj.start_time }}</td>
+                <td>{{ obj.appointment_date }}</td>
+                <td>{{obj.week_day}}</td>
+                <td>{{ obj.user.user.first_name }}</td>
+                <td>{{ obj.user.user.last_name }}</td>
+                <td>{{ obj.user.phone_number }}</td>
+                <td><button type="button" class="btn btn-link send" data-toggle="modal" data-target="#ContactModal"> {{ obj.user.user.email }}</button></td>
+                <td>{{ obj.timestamp }}</td>
+                <td>
                 {% if obj in filter2.qs %}
-                <button id='{{obj.id}}' name="{{ obj.start_time }}" type="button" class="btn btn-success edit-appoint-res-btn-a" data-toggle="modal" data-target="#EditappointResponseModal">Edit</button>
-
-                <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment_response' obj.id %}">cancel</a>
+                <button id='{{obj.id}}' name="{{ obj.start_time }}" type="button" class="btn btn-success edit-appoint-res-btn-a" data-toggle="modal" data-target="#EditappointResponseModal">{% trans 'Edit' %}</button>
+                <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment_response' obj.id %}">{% trans 'cancel' %}</a>
                 {% elif obj in filter.qs %}
-                <button id='{{obj.id}}' name="{{ obj.start_time }}" type="button" class="btn btn-success edit-appoint-btn-a" data-toggle="modal" data-target="#EditappointModal">Edit</button> 
-
-                <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment' obj.id %}">cancel</a>
+                <button id='{{obj.id}}' name="{{ obj.start_time }}" type="button" class="btn btn-success edit-appoint-btn-a" data-toggle="modal" data-target="#EditappointModal">{% trans 'Edit' %}</button>
+                <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment' obj.id %}">{% trans 'cancel' %}</a>
                 {% endif %}
-            </td>
-        </tr>
+                </td>
+            </tr>
         {% endfor %}
     </table>
 
@@ -96,7 +81,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Send email</h5>
+            <h5 class="modal-title" id="exampleModalLabel">{% trans 'Send email' %}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -108,8 +93,8 @@
             <div id="contact-result">
             </div>            
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
             </div>
             </form>
         </div>
@@ -122,7 +107,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Edit Appointment</h5>
+            <h5 class="modal-title">{% trans 'Edit Appointment' %}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -134,8 +119,8 @@
                 <div id="edit-appoint-result">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">{% trans 'Save changes' %}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
                 </div>
             </form>
         </div>
@@ -147,7 +132,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Edit Appointment</h5>
+            <h5 class="modal-title">{% trans 'Edit Appointment' %}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -159,8 +144,8 @@
                 <div id="edit-appoint-result">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">{% trans 'Save changes' %}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
                 </div>
             </form>
         </div>

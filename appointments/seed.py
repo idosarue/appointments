@@ -6,22 +6,14 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'appointments.settings')
 django.setup()
 
 from django.contrib.sites.models import Site
-from therapist.models import WorkingTime, Day, Comment
-from datetime import date, datetime, time, timedelta
+from therapist.models import WorkingTime, Day
+from datetime import datetime
 from patient.models import Appointment, AppointmentResponse
-import pandas as pd
-from functools import reduce
-from accounts.models import Profile
-from datetime import date, datetime, timedelta
-from calendar import HTMLCalendar
+from datetime import datetime
 from patient.models import Appointment, AppointmentResponse
-from therapist.models import Date, Day, Comment
-from django.urls import reverse_lazy
-import holidays
-from therapist.forms import CreateCommentForm
-from django.template.loader import render_to_string
-from django.template.context_processors import csrf
-from mailjet_rest import Client
+from therapist.models import Day, Comment
+from django.utils.translation import gettext_lazy as _
+
 # import pandas as pd
 def edit_site():
     site = Site.objects.get(id=1)

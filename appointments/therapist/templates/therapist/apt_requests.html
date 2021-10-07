@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content%}
 
@@ -17,15 +18,14 @@
 
 <div class="card" style="width: 18rem;">
     <div class="card-body">
-      <h5 class="card-title">Choose a date</h5>
+    <h5 class="card-title">{% trans 'Choose a date' %}</h5>
       <form  method="GET">
         {% csrf_token %}
         {{ filter.form.as_p }}
-        <input type="submit">
+        <button class='btn btn-primary form-control' type="submit">{% trans 'Search' %}</button>
       </form>
     </div>
   </div>
-<a class="btn btn-primary" href="{% url 'apt_requests' %}">Reset</a>
 
 <div class="next-l">
     <div class="nav-c">
@@ -45,16 +45,15 @@
     <table class="table table-dark table-striped">
         <thead>
             <tr>
-                <th>start time</th>
-                <th>appointment date</th>
-                <th>day</th>
-                <th>first name</th>
-                <th>last name</th>
-                <th>patient phone</th>
-                <th>patient email</th>
-                <th>Requested on</th>
-
-                <th>options</th>
+                <th>{{start_time}}</th>
+                <th>{{appointment_date}}</th>
+                <th>{{week_day}}</th>
+                <th>{{first_name}}</th>
+                <th>{{last_name}}</th>
+                <th>{{patient_phone}}</th>
+                <th>{{patient_email}}</th>
+                <th>{{requested_on}}</th>
+                <th>{{options}}</th>
             </tr>
         </thead>
         {% for obj in page_obj %}
@@ -84,9 +83,9 @@
                 {{obj.timestamp}}
             </td>
             <td>
-                <a href="{% url 'apt_status' obj.id 'accept' %}" class='btn btn-success' name='accept' type="submit">Accept</a>
-                <button id='{{obj.id}}' name="{{ obj.start_time }}" type="button" class="btn btn-primary update-appoint-btn" data-toggle="modal" data-target="#UpdatetAppointResponseModal">Update</button> 
-                <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment' obj.id %}">cancel</a>
+                <a href="{% url 'apt_status' obj.id 'accept' %}" class='btn btn-success' name='accept' type="submit">{% trans 'Accept' %}</a>
+                <button id='{{obj.id}}' name="{{ obj.start_time }}" type="button" class="btn btn-primary update-appoint-btn" data-toggle="modal" data-target="#UpdatetAppointResponseModal">{% trans 'Update' %}</button> 
+                <a class="btn btn-danger confirm_delete" href="{% url 'delete_appointment' obj.id %}">{% trans 'cancel' %}</a>
             </td>
         </tr>
         {% endfor %}
@@ -96,7 +95,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Send email</h5>
+            <h5 class="modal-title" id="exampleModalLabel">{% trans 'Send' %} {% trans 'Email' %}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -108,8 +107,8 @@
             <div id="contact-result">
             </div>            
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
             </div>
             </form>
         </div>
@@ -121,7 +120,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Edit Appointment</h5>
+            <h5 class="modal-title">{% trans 'Edit Appointment' %}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -133,8 +132,8 @@
                 <div id="update-appoint-result">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">{% trans 'Save changes' %}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
                 </div>
             </form>
         </div>

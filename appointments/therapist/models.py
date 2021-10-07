@@ -2,6 +2,7 @@ from calendar import week
 from datetime import date, timedelta
 from django.db import models
 from datetime import datetime, time, timedelta
+from django.utils.translation import gettext_lazy as _
 
 from django.db.models.deletion import CASCADE
 # Create your models here.
@@ -12,7 +13,7 @@ class Day(models.Model):
     is_disabled = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return f'{_(self.name)}'
 
     @classmethod
     def disabled_days(cls):

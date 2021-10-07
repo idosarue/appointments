@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +11,11 @@
 <body>
     
     <h1>{{user}}</h1>
-    <p>your request for an appointment at: {{appointment.original_request.start_time}} , {{appointment.original_request.appointment_date}} is not available,<br>
-        are you free at {{appointment.start_time}}, {{appointment.appointment_date}} ?
+    <p>{% trans 'your request for an appointment at' %}: {{appointment.original_request.start_time}} , {{appointment.original_request.appointment_date}} {% trans 'is not available' %},<br>
+        {% trans 'are you free at' %} {{appointment.start_time}}, {{appointment.appointment_date}} ?
     </p>
     
-    <a href="{{protocol}}://{{domain}}{% url 'apt_status_res' appointment.id 'accept' %}">Accept</a>
-    <a href="{{protocol}}://{{domain}}{% url 'apt_status_res' appointment.id 'reject' %}">Ask For A Different Date</a>
+    <a href="{{protocol}}://{{domain}}{% url 'apt_status_res' appointment.id 'accept' %}">{% trans 'Accept' %}</a>
+    <a href="{{protocol}}://{{domain}}{% url 'apt_status_res' appointment.id 'reject' %}">{% trans 'Ask For A Different Date' %}</a>
 </body>
 </html>

@@ -55,6 +55,7 @@ a {
     display: flex;
     justify-content: space-evenly;
     width: 40%;
+    direction: ltr;
 }
 
 .next-l{

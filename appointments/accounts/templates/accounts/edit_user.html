@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 {% if messages %}
 <ul class="messages">
@@ -14,12 +15,13 @@
     <div class="container d-flex justify-content-center f-c">
         <div class="card login">
             <div class="card-body c">
-              <h1 class="card-title">Profile for {{user.username}}</h1>
-              <h2 class="card-title">Email {{user.email}}</h2>
+              <h1 class="card-title">{% trans 'Profile for' %} {{user.username}}</h1>
+              <h2 class="card-title">{% trans 'Email' %}</h2>
+              <h2 class="card-title">{{user.email}}</h2>
               <form method="POST">
                 {% csrf_token %}
                 {{user_form.as_p}} 
-                <button class='btn btn-success form-control' type="submit">Save</button>
+                <button class='btn btn-success form-control' type="submit">{% trans 'Save' %}</button>
                 </form>
             </div>
           </div>

@@ -1,5 +1,9 @@
+{% load i18n %}
+
 <!DOCTYPE html>
-<html lang="en">
+
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_CODE == 'he' %} dir="rtl" {% endif %}>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,13 +29,14 @@
     {% endblock %}
 </head>
 <body>
+
     {% include 'partials/navbar.html' %}
     {% block content %}
 
 
     {% endblock %}
     {{day|json_script:'hello'}}
-    
+    {{LANGUAGE_CODE|json_script:'lang'}}
     <script src="{% static 'js/app.js' %}"></script>
     <script src="{% static 'js/new.js' %}"></script>
     <script src="{% static 'js/form.js' %}"></script>

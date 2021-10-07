@@ -1,8 +1,10 @@
 from therapist.models import Day
 from therapist.forms import ContactFormEmailPatient, EditAppointmentForm, EditAppointmentResponseForm
+from django.utils.translation import gettext_lazy as _
+
 def day_processor(request):
     days = Day.disabled_days()          
-    return {'day': days}
+    return {'days': days}
 
 
 def form_proccesor(request):
@@ -11,31 +13,24 @@ def form_proccesor(request):
     edit_response_form = EditAppointmentResponseForm()
     return {'contact_form': contact_form, 'edit_appoint_form':edit_appoint_form,'edit_response_form':edit_response_form}
 
-def modal_proccesor(request):
-    therapist_contact_patient_modal = '''
-        <div class="modal fade" id="ContactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title">Send Email</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                <div class="modal-body">
-                <form id="contact-form-therapist" class="form" action="{% url 'send_contact_email' %}" method="POST"> 
-                    {% csrf_token %}
-                    {{contact_form.as_p}}
-                    </div>
-                    <div id="contact-result">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>        
-    '''
-    return {'therapist_contact_patient_modal': therapist_contact_patient_modal}
+def tabel_headers_proccesor(request):
+    start_time = _('start time')
+    appointment_date = _('appointment date')
+    week_day = _('week day')
+    first_name = _('first name')
+    last_name = _('last name')
+    patient_phone = _('patient phone')
+    patient_email = _('patient email')
+    requested_on = _('requested on')
+    options = _('options')
+
+    return {'start_time': start_time, 
+    'appointment_date':appointment_date,
+    'week_day':week_day,
+    'first_name':first_name, 
+    'last_name': last_name, 
+    'patient_phone':patient_phone, 
+    'patient_email': patient_email,
+    'requested_on':requested_on,
+    'options':options}
+

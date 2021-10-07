@@ -8,6 +8,7 @@ from datetime import time, date
 from django.contrib.auth.models import User
 from therapist.models import WorkingTime, Day, Date
 import django_filters
+from django.utils.translation import ugettext_lazy as _
 
 class AppointmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -54,6 +55,7 @@ class UserAppointmentFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.form.fields['appointment_date'].widget.attrs['id'] = 'filter'
+        self.form.fields['appointment_date'].label = _('appointment date')
 
     appointment_date = django_filters.DateFilter(widget=forms.DateInput(attrs={'type':'date', 'placeholder':'Select a date', 'autocomplete':'off'}))
     class Meta:
@@ -68,4 +70,10 @@ class ContactFormEmailPatient(forms.ModelForm):
 
         widgets = {
             'message' : forms.Textarea()
+        }
+
+        labels = {
+            'subject' : _('Subject'),
+            'message' : _('Message'),
+            'email' : _('Email'),
         }

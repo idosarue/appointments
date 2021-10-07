@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 
@@ -8,9 +9,9 @@
   <div class="container d-flex justify-content-center">
       <div class="card" style="width: 50vw;">
           <div class="card-body c">
-            <h1 class="card-title">Preferences</h1>
+            <h1 class="card-title">{% trans 'Preferences' %}</h1>
             <hr>
-            <h3 class="card-title">Working Days</h3>
+            <h3 class="card-title">{% trans 'Working Days' %}</h3>
             {% if messages %}
               <ul class="messages">
                 {% for message in messages %}
@@ -25,31 +26,31 @@
                 <ul class="list-group">
                   {% for day in days %}
                       {% if day.is_disabled %}
-                      <li class="list-group-item d-flex justify-content-between align-items-center"><strong>{{day.name}}</strong><a class="btn btn-success" href="{% url 'enable_day' day.id %}">Enable</a></li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center"><strong>{{day}}</strong><a class="btn btn-success" href="{% url 'enable_day' day.id %}">{% trans 'Enable' %}</a></li>
                       {% else %}
-                      <li class="list-group-item d-flex justify-content-between align-items-center"><strong>{{day.name}}</strong><a class="btn btn-danger" href="{% url 'disable_day' day.id %}">Disable</a></li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center"><strong>{{day}}</strong><a class="btn btn-danger" href="{% url 'disable_day' day.id %}">{% trans 'Disable' %}</a></li>
                       {% endif %}
                   {% endfor %}
               </ul>
               </div>
               <hr>
-              <h3 class="card-title">Working time</h3>
+              <h3 class="card-title">{% trans 'Working time' %}</h3>
               <p class="card-text">{{message}}.</p>
-              <h5 class="card-title">Start time: {{start_time}}</h5>
-              <h5 class="card-title">End time: {{end_time}}</h5>
+              <h5 class="card-title">{% trans 'Start time' %}: {{start_time}}</h5>
+              <h5 class="card-title">{% trans 'End time' %}: {{end_time}}</h5>
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                  Edit Working time
+                  {%trans "Edit" %} {% trans 'Working time' %}
                 </button>
                 <hr>
-                <h5 class="card-title">Disabled Dates</h5>
+                <h5 class="card-title">{% trans 'Disabled Dates' %}</h5>
                 <div>
                   <ul class="list-group ">
                     {% for date in disabled_dates %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center"><strong>{{date.date}}</strong><a class="btn btn-success" href="{% url 'enable_date' date.id %}">Enable</a></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center"><strong>{{date.date}}</strong><a class="btn btn-success" href="{% url 'enable_date' date.id %}">{% trans 'Enable' %}</a></li>
                     {% endfor %}
                 </ul>                
                   <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target="#datesModal">
-                    Disable Date
+                    {% trans 'Disable Date' %}
                   </button>
                 </div>
           </div>
@@ -58,31 +59,11 @@
 </div>
 
 
-<div class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div id="exampleModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Modal title</h5>
+          <h5 class="modal-title">{% trans 'Working time' %}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -95,8 +76,8 @@
                 
               </div>
               <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">{% trans 'Save changes' %}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
               </form>
             </div>
           </div>
@@ -108,7 +89,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Modal title</h5>
+          <h5 class="modal-title">{% trans 'Disable Date' %}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -121,8 +102,8 @@
             <div id="date-form-result">
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">{% trans 'Save changes' %}</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
             </form>
         </div>
       </div>

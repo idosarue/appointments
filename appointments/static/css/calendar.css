@@ -2,6 +2,8 @@
   width: 100%;
   margin: 0;
   font-size: 13px;
+  direction: ltr;
+
 }
 
 .calendar tr, .calendar td {

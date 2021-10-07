@@ -1,4 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+{% load i18n %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" dir="ltr">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -6,16 +8,30 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
-      </li>
 
+        <a class="nav-link" href="{% url 'home' %}">{% trans 'Home' %} <span class="sr-only">(current)</span></a>
+      </li>
+      <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group ">
+            <select class="form-select" name="language" onchange="this.form.submit()">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% for lang in LANGUAGES %}
+                    <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                        {{ lang.1 }} ({{ lang.0 }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
+        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          dropdown |||
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           {% if user.is_superuser %}
-          <a class="dropdown-item" href="{% url 'preferences' %}">preferences</a>
+          <a class="dropdown-item" href="{% url 'preferences' %}">{% trans 'preferences' %}</a>
           {% endif %}
           <div class="dropdown-divider"></div>
         </div>
@@ -24,43 +40,44 @@
       </li>
     </ul>
     <ul class="navbar-nav mr-0">
+
       {% if user.is_authenticated %}
       <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">Logout {{user.username}}</a>
+          <a class="nav-link" href="{% url 'logout' %}">{% trans 'Logout' %} {{user.username}}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+        <a class="nav-link" href="{% url 'profile' %}">{% trans 'Profile' %}</a>
       </li>
         {% if user.is_superuser %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'apt_requests' %}">Appointment requests</a>
+          <a class="nav-link" href="{% url 'apt_requests' %}">{% trans 'Appointment requests' %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'appoint_list'  %}">Accepted Appointments</a>
+          <a class="nav-link" href="{% url 'appoint_list'  %}">{% trans 'Accepted Appointments' %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'pending_apts' %}">Pending Appointments</a>
+          <a class="nav-link" href="{% url 'pending_apts' %}">{% trans 'Pending Appointments' %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'all_users' %}">Patients</a>
+          <a class="nav-link" href="{% url 'all_users' %}">{% trans 'Patients' %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'calendar' %}">Calendar</a>
+          <a class="nav-link" href="{% url 'calendar' %}">{% trans 'Calendar' %}</a>
         </li>
         {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'query_appointment' %}">Ask For Appointment</a>
+            <a class="nav-link" href="{% url 'query_appointment' %}">{% trans 'Ask For An Appointment' %}</a>
           </li>
           <li>
-            <a class="nav-link" href="{% url 'appointments' %}">Your Appointments</a>
+            <a class="nav-link" href="{% url 'appointments' %}">{% trans 'Your Appointments' %}</a>
           </li>
         {% endif %}
       {% else %}
       <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}">Login</a>
+          <a class="nav-link" href="{% url 'login' %}">{% trans 'Login' %}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+        <a class="nav-link" href="{% url 'signup' %}">{% trans 'Sign Up' %}</a>
       </li>
       {% endif %}
     </ul>

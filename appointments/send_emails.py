@@ -8,22 +8,21 @@ import sendgrid
 from sendgrid.helpers.mail import Content, Email, Mail
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 
 
 
-therapist_email = 'testdjangosaru@gmail.com'
+therapist_email = User.objects.get(is_superuser=True).email
 therapist_email_reciever = 'djangoreciever@gmail.com'
 
 sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
 
-def send_message_to_user(user, start_time, appointment_date):
-    print(user.email, 'user emai;l')
-    email_message_user = f'''
-    Hello {user.username}, your request for an appointment for: {start_time} , {appointment_date}
-    is being reviewed, we will get back to you soon.
-    '''
+def send_message_to_user(user, start_time, appointment_date):    
     # message = Mail(
     # from_email=therapist_email,
     # to_emails=user.email,
@@ -32,11 +31,18 @@ def send_message_to_user(user, start_time, appointment_date):
     # sg.send(message)
 
     send_mail(
-    'Appointment Request',
-    email_message_user,
+    _('Appointment Request'),
+    '',
     therapist_email,
     [user.email],
-    )
+    html_message=render_to_string(
+    'therapist/emails/email_to_patient.html', 
+    {'user': user, 'domain' : Site.objects.get_current().domain,
+    'protocol' : 'http',
+    'start_time' : start_time,
+    'appointment_date' : appointment_date,
+    }))
+
 
 def send_message_to_therapist(user, start_time, appointment_date):
     # message = Mail(
@@ -54,7 +60,7 @@ def send_message_to_therapist(user, start_time, appointment_date):
     # sg.send(message)
 
     send_mail(
-    'Appointment Request',
+    _('Appointment Request'),
     '',
     therapist_email,
     [therapist_email],
@@ -131,7 +137,7 @@ def send_success_message_email_to_user(user, start_time, appointment_date):
         '''
         email = EmailMessage(
         'Appointment Approved',
-        email_message_user,
+        _(email_message_user),
         therapist_email,
         [user.email],
         )
@@ -151,7 +157,7 @@ def send_success_message_email_to_therapist(user, start_time, appointment_date):
 
         email = EmailMessage(
         'Appointment Approved',
-        email_message_therapist,
+        _(email_message_therapist),
         therapist_email,
         [therapist_email],
         )
@@ -173,7 +179,7 @@ def send_success_repsponse_message_email_to_therapist(user, start_time, appointm
             '''
         email = EmailMessage(
         'Appointment Approved',
-        email_message_therapist,
+        _(email_message_therapist),
         therapist_email,
         [therapist_email],
         )

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 {% if messages %}
 <ul class="messages">
@@ -13,14 +14,14 @@
     <div class="container d-flex justify-content-center">
         <div class="card" style="width: 50vw;">
             <div class="card-body">
-                <h3 class="card-title">Original request</h3>
-                <h5 class="card-title">Patient: {{appointment.user.user.first_name}} {{appointment.user.user.last_name}}</h5>
-                <h5 class="card-title">Start time: {{appointment.start_time}}</h5>
-                <h5 class="card-title">Date: {{appointment.appointment_date}}</h5>
+                <h3 class="card-title">{% trans 'Original request' %}</h3>
+                <h5 class="card-title">{% trans 'Patient' %}: {{appointment.user.user.first_name}} {{appointment.user.user.last_name}}</h5>
+                <h5 class="card-title">{{start_time}}: {{appointment.start_time}}</h5>
+                <h5 class="card-title">{{appointment_date}}: {{appointment.appointment_date}}</h5>
                 <form id="update-appoint-form" method="POST">
                         {% csrf_token %}
                         {{form.as_p}}
-                        <button class='btn btn-success form-control' type="submit">Save</button>
+                        <button class='btn btn-success form-control' type="submit">{% trans 'Save' %}</button>
                     <div id="update-appoint-result">
                     </div>
             </form>

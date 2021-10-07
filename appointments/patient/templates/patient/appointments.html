@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
 
@@ -6,11 +7,11 @@
 
 <div class="card" style="width: 18rem;">
     <div class="card-body">
-      <h5 class="card-title">Choose a date</h5>
+      <h5 class="card-title">{% trans 'Choose a date' %}</h5>
       <form method="GET">
         {% csrf_token %}
         {{ filter.form.as_p }}
-        <input type="submit">
+        <button class='btn btn-primary form-control' type="submit">{% trans 'Search' %}</button>
       </form>
     </div>
 </div>
@@ -31,10 +32,11 @@
     <table class="table table-dark table-striped">
         <thead>
             <tr>
-                <th>start time</th>
-                <th>appointment date</th>
-                <th>First name</th>
-                <th>Last name</th>
+                <th>{{start_time}}</th>
+                <th>{{appointment_date}}</th>
+                <th>{% trans '{{week_day}}' %}</th>
+                <th>{{first_name}}</th>
+                <th>{{last_name}}</th>
             </tr>
         </thead>
    
@@ -45,6 +47,9 @@
             </td> 
             <td>
                 {{ obj.appointment_date }}
+            </td> 
+            <td>
+                {{ obj.week_day }}
             </td> 
             <td>
                 {{ obj.user.user.first_name }}  

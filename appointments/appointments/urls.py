@@ -19,11 +19,13 @@ from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
 from django.conf import settings
 
+
 handler404 = 'therapist.views.error_404'
 handler403 = 'therapist.views.error_403'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('i18n', include('django.conf.urls.i18n')),
     path('accounts/', include('accounts.urls')),
     path('therapist/', include('therapist.urls')),
     path('patient/', include('patient.urls')),

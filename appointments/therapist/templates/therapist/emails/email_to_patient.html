@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,12 +9,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>{{user}}</h1>
-
-    <form action="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit">
-    </form>
+    <p>"{% trans 'Hello' %} {{user.first_name}} {{user.last_name}}, {% trans 'your request for an appointment at' %}: {{start_time}} , {{appointment_date}} {% trans 'is being reviewed' %}</p>
 </body>
 </html>

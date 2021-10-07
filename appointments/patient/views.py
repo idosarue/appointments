@@ -1,12 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.http.response import HttpResponse
 from patient.models import Appointment, AppointmentResponse,ContactUsersMessagesToTherapist
-from accounts.models import Profile
-from django.db import models
 from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse_lazy
 from .forms import AppointmentForm, UserAppointmentFilter, ContactFormEmailPatient
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import datetime, time, date 
@@ -14,21 +11,23 @@ from django_filters.views import FilterView
 from itertools import chain
 from therapist.models import Day
 from django.core.paginator import Paginator
-from django.http import JsonResponse
-
 from send_emails import (send_message_to_therapist, 
 send_message_to_user, 
 send_message_to_therapist_after_update, send_contact_message_to_therapist)
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language, activate, gettext
 
-# Create your views here.
-def home(request):
-    return render(request, 'patient/home.html')
 
 class CreateContactMessageToTherapist(CreateView):
     model = ContactUsersMessagesToTherapist
     form_class = ContactFormEmailPatient
     template_name = 'patient/home.html'
     success_url = reverse_lazy('home')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['trans'] = _('hello')
+        return context
 
     def form_valid(self, form):
         send_contact_message_to_therapist(form.cleaned_data['email'], form.cleaned_data['subject'], form.cleaned_data['message'])
@@ -48,7 +47,8 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
         appoint_response = AppointmentResponse.valid_appoint(user=self.request.user.profile, appointment_date=form.cleaned_data['appointment_date'])
         appoint_response_pend = AppointmentResponse.valid_pending_appoint(user=self.request.user.profile, appointment_date=form.cleaned_data['appointment_date'])
         if appoint or appoint_response or appoint_response_pend:
-            messages.error(self.request, 'no available appointments for that day')
+            messages.error(self.request, _("no available meetings for that date or time, please choose another date or time"))
+
             return super().form_invalid(form)
         start_time = form.cleaned_data['start_time']
         appointment_date = form.cleaned_data['appointment_date']
