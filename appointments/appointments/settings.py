@@ -144,7 +144,7 @@ TIME_FORMAT = 'H:i'
 
 DATETIME_FORMAT = 'd-m-Y H:i'
 
-TIME_ZONE = 'IL'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
