@@ -33,8 +33,8 @@ class Date(models.Model):
 
 
 class WorkingTime(models.Model):
-    start_time = models.TimeField(default="08:30")
-    end_time = models.TimeField(default="16:30")
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     break_time = models.IntegerField(default=15)
 
 
