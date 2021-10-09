@@ -35,7 +35,7 @@ class CalendarForm(forms.Form):
 
 ######## appointment forms
 
-class AppointmentForm(forms.ModelForm):
+class AppointmentForm(forms.Form):
     start_time = forms.ChoiceField()
     appointment_date = forms.DateInput(attrs={'class':'datepicker', 'placeholder':_('Select a date')})
 
