@@ -4,3 +4,5 @@ appointments/appointments/__pycache__
 appointments/appointments/local_settings.py
 db2.sqlite3
 .env
+__pycache__/
+**/__pycache__/
