@@ -7,9 +7,8 @@ django.setup()
 
 from django.contrib.sites.models import Site
 from therapist.models import WorkingTime, Day
-from datetime import datetime
 from patient.models import Appointment, AppointmentResponse
-from datetime import datetime
+from datetime import datetime, time
 from patient.models import Appointment, AppointmentResponse
 from therapist.models import Day, Comment
 from django.utils.translation import gettext_lazy as _
@@ -32,7 +31,7 @@ def create_day_choice():
 create_day_choice()
 
 def create_working_time():
-    WorkingTime.objects.create()
+    WorkingTime.objects.create(start_time=time(hour=8, minute=30), end_time=time(hour=16, minute=30))
 
 create_working_time()
 
