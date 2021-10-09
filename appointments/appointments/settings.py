@@ -179,9 +179,10 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
-django_heroku.settings(locals())
 
 try:
     from .local_settings import *
 except ImportError:
     pass
+
+django_heroku.settings(locals())
