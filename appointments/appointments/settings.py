@@ -25,6 +25,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
+DEBUG = False
 ALLOWED_HOSTS = ['appointmentsd', 'herokuapp']
 
 # Application definition
@@ -162,6 +163,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Default primary key field type
