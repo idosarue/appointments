@@ -32,7 +32,7 @@ def create_day_choice():
 create_day_choice()
 
 def create_working_time():
-    WorkingTime.objects.create(start_time=time(hour=6, minute=30, tzinfo=timezone.utc), end_time=time(hour=16, minute=30, tzinfo=timezone.utc))
+    NewWorkingTime.objects.create(start_time=time(hour=6, minute=30, tzinfo=timezone.utc), end_time=time(hour=16, minute=30, tzinfo=timezone.utc))
 
 create_working_time()
 
