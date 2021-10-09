@@ -1,1 +1,1 @@
-web: gunicorn appointment.wsgi
+web: gunicorn appointments.wsgi
