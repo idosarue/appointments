@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'appointments.settings')
 django.setup()
 
 from django.contrib.sites.models import Site
-from therapist.models import WorkingTime, Day, NewWorkingTime
+from therapist.models import WorkingTime, Day
 from patient.models import Appointment, AppointmentResponse
 from datetime import datetime, time
 from patient.models import Appointment, AppointmentResponse
@@ -32,9 +32,9 @@ def create_day_choice():
 create_day_choice()
 
 def create_working_time():
-    NewWorkingTime.objects.create(start_time=time(hour=6, minute=30, tzinfo=timezone.utc), end_time=time(hour=16, minute=30, tzinfo=timezone.utc))
+    WorkingTime.objects.create(start_time=time(hour=6, minute=30, tzinfo=timezone.utc), end_time=time(hour=16, minute=30, tzinfo=timezone.utc))
 
-create_working_time()
+# create_working_time()
 
 def create_date_t():
   

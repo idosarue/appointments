@@ -7,11 +7,6 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models.deletion import CASCADE
 # Create your models here.
 
-class NewWorkingTime(models.Model):
-    start_time = models.TimeField(auto_now=False, auto_now_add=False)
-    end_time = models.TimeField(auto_now=False, auto_now_add=False)
-    break_time = models.IntegerField(default=15)
-
 
 
 class Day(models.Model):
@@ -45,23 +40,23 @@ class WorkingTime(models.Model):
     break_time = models.IntegerField(default=15)
 
 
-    @classmethod 
-    def create_time_choice(cls):
-        c = 0
-        li = []
-        start_time = cls.objects.first().start_time
-        end_time = cls.objects.first().end_time
-        break_time = WorkingTime.objects.first().break_time
+    # @classmethod 
+    # def create_time_choice(cls):
+    #     c = 0
+    #     li = []
+    #     start_time = cls.objects.first().start_time
+    #     end_time = cls.objects.first().end_time
+    #     break_time = WorkingTime.objects.first().break_time
 
-        for x in range(start_time.hour , end_time.hour +1):
-            y = datetime.combine(date.today(),time(hour=x, minute=start_time.minute))+timedelta(minutes=c)
-            b = y + timedelta(hours=1)
-            if b < datetime.combine(date.today(),end_time):
-                time_display = datetime.strftime(y,"%H:%M")
-                li.append((y.time(), time_display))
-                c+=break_time
+    #     for x in range(start_time.hour , end_time.hour +1):
+    #         y = datetime.combine(date.today(),time(hour=x, minute=start_time.minute))+timedelta(minutes=c)
+    #         b = y + timedelta(hours=1)
+    #         if b < datetime.combine(date.today(),end_time):
+    #             time_display = datetime.strftime(y,"%H:%M")
+    #             li.append((y.time(), time_display))
+    #             c+=break_time
 
-        return li
+    #     return li
 
 class Comment(models.Model):
     title = models.CharField(max_length=50)
