@@ -17,7 +17,6 @@ from django.template.loader import render_to_string
 from datetime import date, datetime, time, timedelta
 import time as t
 import datetime as dt
-import numpy as np
 from itertools import chain
 from therapist.my_calendar import Calendar
 from django.http import JsonResponse
