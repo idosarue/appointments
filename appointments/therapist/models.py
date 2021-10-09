@@ -7,6 +7,13 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models.deletion import CASCADE
 # Create your models here.
 
+class NewWorkingTime(models.Model):
+    start_time = models.TimeField(auto_now=False, auto_now_add=False)
+    end_time = models.TimeField(auto_now=False, auto_now_add=False)
+    break_time = models.IntegerField(default=15)
+
+
+
 class Day(models.Model):
     name = models.CharField(max_length=200)
     week_day = models.IntegerField(default=0) 
@@ -33,8 +40,8 @@ class Date(models.Model):
 
 
 class WorkingTime(models.Model):
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    start_time = models.TimeField(auto_now=False, auto_now_add=False)
+    end_time = models.TimeField(auto_now=False, auto_now_add=False)
     break_time = models.IntegerField(default=15)
 
 

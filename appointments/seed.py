@@ -11,6 +11,7 @@ from patient.models import Appointment, AppointmentResponse
 from datetime import datetime, time
 from patient.models import Appointment, AppointmentResponse
 from therapist.models import Day, Comment
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 # import pandas as pd
@@ -31,7 +32,7 @@ def create_day_choice():
 create_day_choice()
 
 def create_working_time():
-    WorkingTime.objects.create(start_time=time(hour=8, minute=30), end_time=time(hour=16, minute=30))
+    WorkingTime.objects.create(start_time=time(hour=6, minute=30, tzinfo=timezone.utc), end_time=time(hour=16, minute=30, tzinfo=timezone.utc))
 
 create_working_time()
 

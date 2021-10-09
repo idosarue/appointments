@@ -5,4 +5,4 @@ appointments/appointments/local_settings.py
 db2.sqlite3
 .env
 patient/__pycache__
-**/__pycache__/
+**__pycache__/
