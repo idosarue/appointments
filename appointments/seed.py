@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'appointments.settings')
 django.setup()
 
 from django.contrib.sites.models import Site
-from therapist.models import WorkingTime, Day
+from therapist.models import WorkingTime, Day, NewWorkingTime
 from patient.models import Appointment, AppointmentResponse
 from datetime import datetime, time
 from patient.models import Appointment, AppointmentResponse
