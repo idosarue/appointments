@@ -29,12 +29,12 @@ def create_day_choice():
     x = [(index, value) for index, value in enumerate(day_li)]
     for item in x:
         Day.objects.create(week_day=item[0], name=item[1])
-# create_day_choice()
+create_day_choice()
 
 def create_working_time():
     WorkingTime.objects.create()
 
-# create_working_time()
+create_working_time()
 
 def create_date_t():
   
