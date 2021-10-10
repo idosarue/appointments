@@ -38,7 +38,7 @@ def send_message_to_user(user, start_time, appointment_date):
     html_message=render_to_string(
     'therapist/emails/email_to_patient.html', 
     {'user': user, 'domain' : Site.objects.get_current().domain,
-    'protocol' : 'http',
+    'protocol' : 'https',
     'start_time' : start_time,
     'appointment_date' : appointment_date,
     }))
@@ -67,7 +67,7 @@ def send_message_to_therapist(user, start_time, appointment_date):
     html_message=render_to_string(
     'therapist/emails/email_to_therapist.html', 
     {'user': user, 'domain' : Site.objects.get_current().domain,
-    'protocol' : 'http',
+    'protocol' : 'https',
     'start_time' : start_time,
     'appointment_date' : appointment_date,
     }))
@@ -97,7 +97,7 @@ def send_message_to_therapist_after_update(original_appointment,user, appointmen
     html_message=render_to_string(
     'therapist/emails/email_therapist_after_update.html', 
     {'user': user, 'domain' : Site.objects.get_current().domain,
-    'protocol' : 'http',
+    'protocol' : 'https',
     'appointment' : appointment,
     'original_appointment' : original_appointment
     }))
@@ -126,7 +126,7 @@ def send_response_email_to_user(user, appointment):
             'therapist/emails/email.html', 
             {'appointment': appointment,
                 'user': user, 'domain' : Site.objects.get_current().domain,
-                'protocol' : 'http',
+                'protocol' : 'https',
             })
         )
 
@@ -213,7 +213,7 @@ def send_contact_message_to_therapist(user_email, subject, body):
         subject_send,
         body,
         therapist_email,
-        [therapist_email_reciever],
+        [therapist_email],
         reply_to=[user_email],
         )
         print(subject_send)

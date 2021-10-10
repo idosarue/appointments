@@ -260,14 +260,17 @@ $("#contact-form-home").submit(function (e) {
 
     
     var button = $('#send-btn')
-    validButton(button, true)
+    // validButton(button, true)
     // serialize the data for sending the form data.
     var serializedData = $(this).serialize();
     // make POST ajax call
+    console.log($(this).attr('action'),)
+
     $.ajax({
         type: 'POST',
         url: $(this).attr('action'),
         data: serializedData,
+
         success: function (response) {
             // on successfull creating object
             // 1. clear the form.
@@ -282,8 +285,11 @@ $("#contact-form-home").submit(function (e) {
         error: function (response) {
             // alert the error if any error occured
             validButton(button, false)
-            var x = Object.values(response.responseJSON.error)[0][0]
-            $('#date-form-result').html(`<div class="alert alert-danger" role="alert"> ${x} </div>`);
+            
+            alert('error')
+            // console.log(response)
+            // var x = Object.values(response)
+            // $('#date-form-result').html(`<div class="alert alert-danger" role="alert"> ${x} </div>`);
 
         }
     })

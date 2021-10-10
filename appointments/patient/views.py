@@ -16,7 +16,10 @@ send_message_to_user,
 send_message_to_therapist_after_update, send_contact_message_to_therapist)
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language, activate, gettext
-
+from django.http import JsonResponse
+from django.utils import timezone
+def home(request):
+    return render(request, 'patient/home.html')
 
 class CreateContactMessageToTherapist(CreateView):
     model = ContactUsersMessagesToTherapist
@@ -24,6 +27,12 @@ class CreateContactMessageToTherapist(CreateView):
     template_name = 'patient/home.html'
     success_url = reverse_lazy('home')
     
+    
+    def form_invalid(self, form):
+        print(JsonResponse({"error": form.errors}, status=400))
+        return JsonResponse({"error": form.errors}, status=400)
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['trans'] = _('hello')
@@ -43,6 +52,7 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
 
 
     def form_valid(self, form):
+        print('bbbbb')
         appoint = Appointment.valid_appoint(user=self.request.user.profile, appointment_date=form.cleaned_data['appointment_date'])
         appoint_response = AppointmentResponse.valid_appoint(user=self.request.user.profile, appointment_date=form.cleaned_data['appointment_date'])
         appoint_response_pend = AppointmentResponse.valid_pending_appoint(user=self.request.user.profile, appointment_date=form.cleaned_data['appointment_date'])
@@ -62,7 +72,7 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
             appoint.appointment_date.day,
             appoint.start_time.hour,
             appoint.start_time.minute,
-            )
+            tzinfo=timezone.utc)
         appoint.end_time = end_time
         appoint.date_t = x
         appoint.week_day = Day.objects.get(week_day=appoint.appointment_date.weekday())

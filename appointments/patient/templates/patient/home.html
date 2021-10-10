@@ -5,7 +5,7 @@
 
 
 {% block style %}
-<link rel="stylesheet" href="{% static '/css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -59,7 +59,7 @@
                   <h5 class="card-title">{% trans 'Interactive computer programs' %}</h5>
                   <hr>
                   <p class="card-text">
-                    {% trans 'The devices I use measure physiological changes in your body, such as your heart rate activity and skin changes, by using one or more sensors attached to your fingers or your ear. The sensors plug into your computer.' %}
+                    {% trans 'The devices I use measure physiological changes in your body, such as your heart rate activity and skin changes, by using one or more sensors attached to your fingers. The sensors plug into your computer.' %}
                   </p>
                 </div>
               </div>
@@ -127,7 +127,7 @@
           <article class="card-body">
               <h4 class="card-title text-center mb-4 mt-1">{% trans 'Contact' %}</h4>
               <hr>
-              <form id="contact-form-home" method="POST">
+              <form id="contact-form-home" method="POST" action="{% url 'home' %}">
               {% csrf_token %}
               {% for field in form %}
               <div class="form-group">
@@ -161,12 +161,4 @@
     </div>
 {% endblock %}
 
-<header>    
-  <div id="overlay">
-    <h1>Biofeedback</h1>
-    <img class="computerBorder" src="{% static 'images/computer.png' %}" alt="">
-    <!-- video -->
-    <video src="{% static 'images/video.mp4' %}" muted loop autoplay></video>
-  </div>
-</header>
 

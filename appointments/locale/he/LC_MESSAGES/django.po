@@ -211,10 +211,10 @@ msgstr "תוכנות מחשב אינטראקטיביות"
 msgid ""
 "The devices I use measure physiological changes in your body, such as your "
 "heart rate activity and skin changes, by using one or more sensors attached "
-"to your fingers or your ear. The sensors plug into your computer."
+"to your fingers. The sensors plug into your computer."
 msgstr ""
 ".המכשירים שבהם אני משתמש מודדים שינויים פיזיולוגיים בגופך, כגון פעילות קצב "
-"הלב ושינויים בעור, על ידי שימוש בחיישן אחד או יותר המחוברים לאצבעות או לאוזן "
+"הלב ושינויים בעור, על ידי שימוש בחיישן אחד או יותר המחוברים לאצבעות "
 "שלך. החיישנים מתחברים למחשב שלך"
 
 #: .\patient\templates\patient\home.html:79

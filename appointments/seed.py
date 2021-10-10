@@ -17,8 +17,8 @@ from django.utils.translation import gettext_lazy as _
 # import pandas as pd
 def edit_site():
     site = Site.objects.get(id=1)
-    site.domain = '127.0.0.1:8000'
-    site.name= 'my_site.com'
+    site.domain = 'appointmentsd.herokuapp.com'
+    site.name= 'herokuapp.com'
     site.save()
 
 # edit_site()
@@ -29,12 +29,12 @@ def create_day_choice():
     x = [(index, value) for index, value in enumerate(day_li)]
     for item in x:
         Day.objects.create(week_day=item[0], name=item[1])
-create_day_choice()
-
+# create_day_choice()
+#create
 def create_working_time():
     WorkingTime.objects.create(start_time=time(hour=6, minute=30, tzinfo=timezone.utc), end_time=time(hour=16, minute=30, tzinfo=timezone.utc))
 
-create_working_time()
+# create_working_time()
 
 def create_date_t():
   
