@@ -35,7 +35,13 @@ class CalendarForm(forms.Form):
 
 ######## appointment forms
 
-class AppointmentForm(forms.Form):
+class AppointmentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['start_time'].choices = WorkingTime.create_time_choice()
+        self.fields['start_time'].widget.attrs['id'] = 'mySelect'
+        self.fields['start_time'].label = _('start time')
+        self.fields['appointment_date'].label = _('appointment date')
     start_time = forms.ChoiceField()
     appointment_date = forms.DateInput(attrs={'class':'datepicker', 'placeholder':_('Select a date')})
 
@@ -57,12 +63,7 @@ class AppointmentForm(forms.Form):
         return appointment_date
 
 class AppointmentResponseForm(AppointmentForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['start_time'].choices = WorkingTime.create_time_choice()
-        self.fields['start_time'].widget.attrs['id'] = 'mySelect'
-        self.fields['start_time'].label = _('start time')
-        self.fields['appointment_date'].label = _('appointment date')
+
     class Meta:
         model = AppointmentResponse
         fields = ['start_time', 'appointment_date']
@@ -70,12 +71,12 @@ class AppointmentResponseForm(AppointmentForm):
 
 
 class EditAppointmentResponseForm(AppointmentForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['start_time'].choices = WorkingTime.create_time_choice()
-        self.fields['start_time'].widget.attrs['id'] = 'mySelect'
-        self.fields['start_time'].label = _('start time')
-        self.fields['appointment_date'].label = _('appointment date')
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['start_time'].choices = WorkingTime.create_time_choice()
+    #     self.fields['start_time'].widget.attrs['id'] = 'mySelect'
+    #     self.fields['start_time'].label = _('start time')
+    #     self.fields['appointment_date'].label = _('appointment date')
     class Meta:
         model = AppointmentResponse
         fields = ['start_time', 'appointment_date']
@@ -83,24 +84,24 @@ class EditAppointmentResponseForm(AppointmentForm):
 
 
 class EditAppointmentForm(AppointmentForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['start_time'].choices = WorkingTime.create_time_choice()
-        self.fields['start_time'].widget.attrs['id'] = 'mySelect'
-        self.fields['start_time'].label = _('start time')
-        self.fields['appointment_date'].label = _('appointment date')
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['start_time'].choices = WorkingTime.create_time_choice()
+    #     self.fields['start_time'].widget.attrs['id'] = 'mySelect'
+    #     self.fields['start_time'].label = _('start time')
+    #     self.fields['appointment_date'].label = _('appointment date')
     class Meta:
         model = Appointment
         fields = ['start_time', 'appointment_date']
 
 
 class TherapistCreateAppointmentForm(AppointmentForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['start_time'].choices = WorkingTime.create_time_choice()
-        self.fields['start_time'].widget.attrs['id'] = 'mySelect'
-        self.fields['start_time'].label = _('start time')
-        self.fields['appointment_date'].label = _('appointment date')
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['start_time'].choices = WorkingTime.create_time_choice()
+    #     self.fields['start_time'].widget.attrs['id'] = 'mySelect'
+    #     self.fields['start_time'].label = _('start time')
+    #     self.fields['appointment_date'].label = _('appointment date')
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['user'].queryset = Profile.objects.exclude(user__is_superuser=True)
