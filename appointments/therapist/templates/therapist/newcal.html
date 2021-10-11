@@ -3,6 +3,12 @@
 
 {% load static %}
 
+{% block title %}
+  <link rel="icon" type="image/png" href="{% static 'images/calendar.png' %}"/>
+  <title>{% trans 'Calendar' %}</title>
+{% endblock %}
+
+
 {% block content%}
 <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
 
@@ -74,11 +80,11 @@
                             <div class="events">
                             <div><span>{{event.start_time}}</span> {{event.user.user.first_name}} {{event.user.user.last_name}} {{event.user.phone_number}}</div>
                             {% if event in day.appointments %}
-                            <button id='{{event.id}}' name="{{ event.start_time }}" type="button" class="btn btn-success edit-appoint-btn" data-toggle="modal" data-target="#EditappointModal">Edit</button> 
-                            <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment' event.id %}">Cancel</a>
+                            <button id='{{event.id}}' name="{{ event.start_time }}" type="button" class="btn btn-success edit-appoint-btn" data-toggle="modal" data-target="#EditappointModal">{% trans 'Edit' %}</button> 
+                            <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment' event.id %}">{% trans 'cancel' %}</a>
                             {% else %}
-                            <button id='{{event.id}}' name="{{ event.start_time }}" type="button" class="btn btn-success edit-appoint-res-btn" data-toggle="modal" data-target="#EditappointResponseModal">Edit</button>
-                            <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment_response' event.id %}">Cancel</a>
+                            <button id='{{event.id}}' name="{{ event.start_time }}" type="button" class="btn btn-success edit-appoint-res-btn" data-toggle="modal" data-target="#EditappointResponseModal">{% trans 'Edit' %}</button>
+                            <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment_response' event.id %}">{% trans 'cancel' %}</a>
                             {% endif %}
                             </li>
                           </div>
@@ -103,7 +109,7 @@
                                   <li><textarea name="" contenteditable="false" class="c" readonly id="" cols="30" rows="10">{{comment.content}}</textarea></li>
                                   <li>
                                     <div class="link-container">
-                                      <a class="comment-confirm-delete btn btn-danger" href="{% url 'delete_comment' comment.id %}">Delete comment</a>  <button id='{{comment.id}}' type="button" class="btn btn-primary edit-comment-btn" data-toggle="modal" data-target="#EditcommentModal{{comment.id}}"> edit comment </button>
+                                      <a class="comment-confirm-delete btn btn-danger" href="{% url 'delete_comment' comment.id %}">Delete comment</a>  <button id='{{comment.id}}' type="button" class="btn btn-primary edit-comment-btn" data-toggle="modal" data-target="#EditcommentModal{{comment.id}}"> {% trans 'Edit' %} </button>
                                     </div>
                                   </li>
                               </ul>

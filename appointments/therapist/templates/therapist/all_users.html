@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% load static %}
-<link href="{% static 'css/global.css' %}"></link>
+
+{% block title %}
+  <link rel="icon" type="image/png" href="{% static 'images/login.png' %}"/>
+  <title>{% trans 'Patients' %}</title>
+{% endblock %}
 
 {% block content%}
 

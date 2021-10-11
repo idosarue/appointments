@@ -210,11 +210,12 @@ video {
     background-color: white;
     border: 3px solid darkblue;
     font-weight: bold;
+
 }
 
 .contact-home{
     margin-top: 10vh;
-
+    text-align: center!important;
 }
 
 input[type=text], input[type=email], textarea[name=message] {

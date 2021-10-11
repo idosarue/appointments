@@ -19,7 +19,7 @@ a {
     color: black;
 }
 
-.t-container, .c, .link-container a, .next-l,.nav-c {
+.t-container, .c, .link-container a {
     display: flex;
     flex-direction: column;
 }
@@ -52,6 +52,7 @@ a {
 .next-l{
     width: 100%;
     justify-content: center;
+    display: flex;
 }
 
 .f-c{

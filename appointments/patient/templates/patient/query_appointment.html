@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
+
+{% block title %}
+  <link rel="icon" type="image/png" href="{% static 'images/calendar.png' %}"/>
+  <title>{% trans 'Ask For An Appointment' %}</title>
+{% endblock %}
+
 {% block content %}
 
-{% load static %}
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}

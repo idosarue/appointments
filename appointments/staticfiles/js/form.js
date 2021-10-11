@@ -2,6 +2,32 @@ function validButton(button, disabled){
     button.attr("disabled", disabled);
 }
 
+var createAlert;
+var createComment;
+var editAppoint;
+var emailSent;
+var updateEmailSent;
+var gratitudeEmail;
+
+var lang = document.getElementById('lang')
+if (lang.text == '"he"'){
+    createAlert = 'פגישה נוצרה'
+    createComment = 'תגובה נוצרה'
+    editAppoint = 'השינויים נשמרו בהצלחה'
+    emailSent = 'מייל נשלח'
+    updateEmailSent = 'נשלחה הודעת עדכון למשתמש'
+    gratitudeEmail = 'תודה שיצרת קשר נשוב עליך בהקדם האפשרי'
+}else{
+    createAlert = 'created an appointment.'
+    createComment = 'created a comment.'
+    editAppoint = 'appointment edited successfully.'
+    emailSent = 'email sent'
+    updateEmailSent = 'update email sent'
+    gratitudeEmail = 'thank you for sending an email, we will get back to you as soon as possible'
+
+    
+}
+
 
 $("#appoint-form").submit(function (e) {
     // preventing from page reload and default actions
@@ -22,7 +48,7 @@ $("#appoint-form").submit(function (e) {
 
             $("#appoint-form").trigger('reset');
             // 2. focus to nickname input 
-            alert('created an appointment.')
+            alert(createAlert)
 
             location.reload(true);
             // display the newly friend to table.
@@ -50,7 +76,7 @@ $("#comment-form").submit(function (e) {
         success: function (response) {
             // on successfull creating object
             // 1. clear the form.
-            alert('created comment.')
+            alert(createComment)
 
             location.reload(true)
             $("#comment-form").trigger('reset');
@@ -82,7 +108,7 @@ $("#edit-appoint-form").submit(function (e) {
             // 1. clear the form.
             $(this).trigger('reset');
             // 2. focus to nickname input 
-            alert('appointment edited successfully.')
+            alert(editAppoint)
             location.reload(true)
             // display the newly friend to table.
         },
@@ -114,7 +140,7 @@ $("#edit-appoint-res-form").submit(function (e) {
             
             $(this).trigger('reset');
             // 2. focus to nickname input 
-            alert('appointment edited successfully.')
+            alert(editAppoint)
 
             location.reload(true);
             // display the newly friend to table.
@@ -144,7 +170,7 @@ $("#contact-form-therapist").submit(function (e) {
         url: $(this).attr('action'),
         data: serializedData,
         success: function (response) {
-            alert('email sent')
+            alert(emailSent)
             location.reload(true)
         },
         error: function (response) {
@@ -179,7 +205,7 @@ $("#update-appoint-form").submit(function (e) {
             // 2. focus to nickname input 
             // display the newly friend to table.
             // alert('sent email')
-            alert('update email sent')
+            alert(updateEmailSent)
 
             location.reload(true)
         },
@@ -276,7 +302,7 @@ $("#contact-form-home").submit(function (e) {
             // 1. clear the form.
             
             $(this).trigger('reset');
-            alert('thank you for sending an email, we will get back to you as soon as possible')
+            alert(gratitudeEmail)
             // 2. focus to nickname input 
             // display the newly friend to table.
             // alert('sent email')

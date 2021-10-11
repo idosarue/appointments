@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
+{% load static %}
+
+{% block title %}
+  <link rel="icon" type="image/png" href="{% static 'images/calendar.png' %}"/>
+  <title>{% trans 'Appointment requests' %}</title>
+{% endblock %}
+
 {% block content%}
 
 

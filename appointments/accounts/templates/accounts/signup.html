@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 {% load i18n %}
+
+{% load static %}
+
+{% block title %}
+  <link rel="icon" type="image/png" href="{% static 'images/login.png' %}"/>
+  <title>{% trans 'Sign Up' %}</title>
+{% endblock %}
+
 {% block content %}
 {% if messages %}
 <ul class="messages">

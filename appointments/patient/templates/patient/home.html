@@ -2,7 +2,10 @@
 {% load i18n %}
 
 {% load static %}
-
+{% block title %}
+  <link rel="icon" type="image/png" href="{% static 'images/home.png' %}"/>
+  <title>{% trans 'Home' %}</title>
+{% endblock %}
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">

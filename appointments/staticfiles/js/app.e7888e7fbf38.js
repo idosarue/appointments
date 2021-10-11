@@ -15,15 +15,17 @@ function createValidDate(x){
 $(document).ready(function(){
     var uls = $('.list-group')
     var cards = $('.card')
+    var lang = document.getElementById('lang')
     if (lang.text == '"he"'){
         for (let i =0; i<uls.length; i++){
             $(uls[i]).css('text-align', 'right')            
         }
         for (let i =0; i<cards.length; i++){
-            $(cards[i]).css('text-align', 'right')            
+            if (!cards[i].classList.contains('card-contact')){
+                console.log(cards[i].classList)
+                $(cards[i]).css('text-align', 'right')            
+            }
         }
-    }else{
-        console.log('asdasd')
     }
 
 });
