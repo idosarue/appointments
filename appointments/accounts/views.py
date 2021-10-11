@@ -18,8 +18,10 @@ class SignupView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
+        print(form)
         profile_form = ProfileForm(self.request.POST, instance=user.profile)
         if profile_form.is_valid():
+            profile_form.save()
             user = authenticate(self.request, username=form.cleaned_data['username'], first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'], email=form.cleaned_data['email'], password=form.cleaned_data['password1'] )   
             if user:
                 login(self.request, user)

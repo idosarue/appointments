@@ -1,30 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+
 
 body, html {
     max-width: 100vw;
     text-align: center;
 }
 
-header {
+header, #ani-con, #header-container, #walk-container {
     display: flex;
-    justify-content: center;
+}
+
+header, #header-container, #header-con, #walk-container {
     align-items: center;
+}
+
+header, #header-container, #walk-container, #header-con {
     flex-direction: column;
+}
+
+header, #hand-container>div, #truck-container, #con, 
+#myVideoCon {
     position: relative;
+}
+
+header {
     background-color: #00FFFF;
 }
 
-#overlay {
+#overlay, #walk-container, #hand-container, #hand, #myVideoCon::before, #myVideoCon.show::after {
     position: absolute;
+
+}
+
+#overlay {
     top: 0;
     right: 0;
 }
 
-.ani-con {
-    height: 30vh;
-    display: flex;
+#walk-container, #ani-con {
     justify-content: space-between;
+
+}
+
+#ani-con {
     margin-bottom: 3vh;
     width: 100%;
+}
+
+
+#ani-con h3 {
+    align-self: center;
+    color: black;
+    font-size: 3em;
+    font-family: 'Architects Daughter', cursive;
+}
+
+#ani-con h3>span {
+    color: blue;
+    text-decoration: underline;
 }
 
 .tree {
@@ -38,40 +71,55 @@ header {
 
 #walk-container {
     margin-top: 0;
-    position: absolute;
-    height: 200px;
     width: 10em;
     left: 0;
-    animation: stroll 30s linear infinite;
-    /* z-index: 1; */
-
+    bottom: 0;
+    
+    height: 100%;
 }
-#walk-container > div {
+
+
+#hand-container{
+    font-size: 2em;
+    color: darkblue;
+    top: 50px;
+    text-align: left;
+    width: 288px;
+    height: 25vh;
+}
+
+#hand-container>div{
+    height: 100%;
+}
+
+@keyframes up-and-down {
+    0%{top: 0;}
+    50%{top: 50%;}
+    100%{top: 0;}
+}
+
+#hand {
+    font-size: 4em;
+    left: 60px;
+    animation: up-and-down 3s infinite;
+}
+
+#truck {
+    font-size: 5em;
+    color: red;
+}
+
+
+#truck-container {
     width: 100%;
-    height: 200px;
-    background-image: url('/static/images/walk-sequence.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
+    max-height: 5vh;
 }
 
-#walk-container > div {
-    background-size: 800%;
+
+#con {
+    width: 100%;
+    height: 10em;
 }
-
-.walk {
-    animation: walkanim 1.0s infinite steps(7);
-}
-
-@keyframes walkanim {
-    to { background-position: 100% 0; }
-}
-
-/* @keyframes stroll {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(500%); }
-  } */
-
-
 
 .stand {
     height: 4em;
@@ -89,74 +137,94 @@ header {
 }
 
 #myVideoCon {
-    border: 2em solid;
+    border: 2em solid white;
     border-radius: 1em;
     width: 80%;
-    position: relative;
     z-index: 1;
 }
-/* #myVideoCon::after  {
-    content: 'ביופידבק';
-    position: absolute;
-    top: 0;
-    right: 0;
 
-    font-size: 2em;
-    color: #000;
-} */
-#myVideoCon::before  {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    font-size: 2em;
-    color: #000;
-    background-color: black;
+#myVideoCon::before {
     z-index: -1;
 }
 
-#myVideoCon.show::after {
+#myVideoCon::before, #myVideoCon.show::after  {
     content: '';
-    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    font-size: 2em;
     color: #000;
     background-color: black;
 }
+
+
 video {
     width: 100%;
 }
 
+@keyframes change-color {
+    from {color: red;}
+    to {color: chartreuse;}
+}
+
+#btn-hand {
+    animation: change-color 5s infinite;
+}
+
 @media screen and (max-width: 600px) {
 
+    #ani-con {
+        width: 90vw;
+    }
+
     #myVideoCon {
-        border: 1em solid;
+        border: 1em solid white;
         border-radius: 1em;
         width: 80%;
     }
+    #ani-con h3 {
+        align-self: center;
+        color: black;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 1.2em;
+        font-family: 'Architects Daughter', cursive;
+    }
+    
+    #walk-container {
+        height: 60%;
+    }
 
- 
+    .tree {
+        width: 20%;
+    }
+
+    #hand, #truck {
+        font-size: 2em;
+    }
 
   }
 
 
 .card-contact{
-    background-color: #1f99c5;
-
+    background-color: white;
+    border: 3px solid darkblue;
+    font-weight: bold;
 }
 
 .contact-home{
     margin-top: 10vh;
+
 }
 
-.container{
-    height: 60vh;
-    display: flex;
-}
+input[type=text], input[type=email], textarea[name=message] {
+    width: 100%;
+    padding: 3px;
+    border: 1px solid darkblue;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
 
 
 .row {
@@ -165,10 +233,8 @@ video {
 
 }
 
-
 .container .card {
     min-width: 50vw; 
-    max-height: 50vh;
 }
 
 p {

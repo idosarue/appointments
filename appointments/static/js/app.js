@@ -153,6 +153,10 @@ $(document).ready(function(){
 });
 
 
+$(document).ready(function(){
+    $('#con').css('width', $('#myVideoCon').css('width'))
+    $('#hand-container').css('width', $('#myVideoCon').css('width'))
+});
 
 
 $(document).ready(function(){
