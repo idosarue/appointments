@@ -10,8 +10,11 @@
   border: 2px solid lightblue;
 }
 
-.top-container {
+.top-container, #month-name, .day_num, .link-container, #next-pre-c   {
   display: flex;
+}
+
+.top-container {
   justify-content: space-between;
   align-items: baseline;
   height: 1em;
@@ -43,7 +46,6 @@
 }
 
 #month-name {
-  display: flex;
   justify-content: center;
 }
 
@@ -78,7 +80,6 @@
   border-radius: 50%;
   background-color: midnightblue;
   width: 20px;
-  display: flex;
   color: white;
   justify-content: center;
 }
@@ -97,14 +98,7 @@
   font-size: 1.3em;
 }
 
-.link-container{
-  display: flex;
+.link-container, #next-pre-c{
   justify-content: space-between;
 }
-
-#next-pre-c{
-  display: flex;
-  justify-content: space-between;
-}
-
 

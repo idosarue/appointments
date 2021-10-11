@@ -17,30 +17,32 @@ $(document).ready(function(){
 var id = null;
 var elem = document.getElementById("walk-container");
 var button = document.getElementById('click');
+var handContainer = document.getElementById('hand-container');
 button.addEventListener('click', startStop);
 var currentPosition;
-var manButton = document.getElementById('man')
+var carButton = document.getElementById('truck')
+var videoCon = document.getElementById('con')
 
 function startStop(){
-  if (button.innerText == 'walk' || button.innerText == 'marche' || button.innerText == 'לך'){
+  console.log(button.innerText)
+  if (button.innerText == 'go' || button.innerText == 'marche' || button.innerText == 'סע'){
     myMove()
-    if(button.innerText == 'walk'){
+    if(button.innerText == 'go'){
+      $('#hand').hide()
       button.innerText = 'stop'
-    }else if (button.innerText == 'marche'){
-      button.innerText = 'arrêter'
-    }else if (button.innerText == 'לך'){
+    }else if (button.innerText == 'סע'){
       button.innerText = 'עצור'
     }
-    manButton.classList.toggle('walk')
+    carButton.classList.toggle('go')
   }else{
-    manButton.classList.toggle('walk')
+    carButton.classList.toggle('go')
     clearInterval(id);
     if(button.innerText == 'stop'){
-      button.innerText = 'walk'
+      button.innerText = 'go'
     }else if (button.innerText == 'arrêter'){
       button.innerText = 'marche'
     }else if (button.innerText == 'עצור'){
-      button.innerText = 'לך'
+      button.innerText = 'סע'
     }
 
   }
@@ -53,11 +55,11 @@ function myMove() {
   var pos = 0;
   currentPosition = elem.style.left
   currentPosition = currentPosition.replace(/\D/g,'');
+  console.log(currentPosition)
   id = setInterval(frame, 10);
-  manButton.style.transform = "scaleX(1)";
-
+  carButton.style.transform = "scaleX(1)";
   function frame() {
-    if (pos > screen - 200) {
+    if (pos > videoCon.style.width.replace(/\D/g,'') - 100) {
       clearInterval(id);
       myMoveLeft()
     }else {
@@ -74,7 +76,7 @@ function myMoveLeft() {
   currentPosition = elem.style.left
   currentPosition = currentPosition.replace(/\D/g,'');
   id = setInterval(frame, 10);
-  manButton.style.transform = "scaleX(-1)";
+  carButton.style.transform = "scaleX(-1)";
   function frame() {
     if (currentPosition <= 1) {
       clearInterval(id);
@@ -115,3 +117,7 @@ function play(){
   }
 }
 
+// $(document).ready(function(){
+//   var screen = $(window).width()
+//   $('#hand-container').css('left',(videoCon.style.width.replace(/\D/g,'') - 742) + 'px');
+// });

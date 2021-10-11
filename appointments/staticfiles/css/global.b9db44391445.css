@@ -19,37 +19,28 @@ a {
     color: black;
 }
 
-
-.row {
-    margin: auto;
-}
-
-.t-container{
+.t-container, .c, .link-container a, .next-l,.nav-c {
     display: flex;
     flex-direction: column;
+}
+
+.t-container {
     justify-content: center;
     height: 80vh;
 }
+
 .t-container table{
     height: 30vh;
 }
 
 .c {
-    display: flex;
-    flex-direction: column;
     justify-content: space-between;
 }
 
 .link-container a{
-    display: flex;
-    flex-direction: column;
     margin-top: 10px;
 }
 
-
-.next-l,.nav-c{
-    display: flex;
-}
 
 .nav-c{
     display: flex;

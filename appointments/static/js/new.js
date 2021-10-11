@@ -25,12 +25,13 @@ var videoCon = document.getElementById('con')
 
 function startStop(){
   console.log(button.innerText)
-  if (button.innerText == 'go' || button.innerText == 'marche' || button.innerText == 'סע'){
+  if (button.innerText == 'go'|| button.innerText == 'סע'){
     myMove()
     if(button.innerText == 'go'){
       $('#hand').hide()
       button.innerText = 'stop'
     }else if (button.innerText == 'סע'){
+      $('#hand').hide()
       button.innerText = 'עצור'
     }
     carButton.classList.toggle('go')

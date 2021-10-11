@@ -264,11 +264,13 @@ $("#contact-form-home").submit(function (e) {
     // serialize the data for sending the form data.
     var serializedData = $(this).serialize();
     // make POST ajax call
-    console.log($(this).attr('action'))
+    console.log($(this).attr('action'),)
+
     $.ajax({
         type: 'POST',
         url: $(this).attr('action'),
         data: serializedData,
+
         success: function (response) {
             // on successfull creating object
             // 1. clear the form.
