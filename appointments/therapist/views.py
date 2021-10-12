@@ -173,7 +173,7 @@ def update_appointment_response_status(request, pk, status):
 
 class CalendarView(SuperUserRequiredMixin,FormView):
     model = Appointment
-    template_name = 'therapist/newcal.html'
+    template_name = 'therapist/calendar.html'
     form_class = CalendarForm
 
 

@@ -8,6 +8,7 @@ from therapist.forms import CreateCommentForm
 from django.template.loader import render_to_string
 from django.template.context_processors import csrf
 from itertools import chain
+from django.utils.translation import gettext_lazy as _
 
 class Calendar(HTMLCalendar):
     def __init__(self, year, month):
@@ -50,7 +51,7 @@ class Calendar(HTMLCalendar):
                 create_appoint_a = ''
             for comment in comments:
                 y.append(comment)
-            day_dic = {'day_num': day,'sorted_appoints':x ,'appointments': appointments, 'appointments_response':appointments_response, 'disabled':disabled, 'year':int(self.year), 'month':self.month, 'comments':y, 'holiday':holi}
+            day_dic = {'day_num': day,'week_day_name':Day.objects.get(week_day=v_date.weekday()),'sorted_appoints':x ,'appointments': appointments, 'appointments_response':appointments_response, 'disabled':disabled, 'year':int(self.year), 'month':self.month, 'comments':y, 'holiday':holi}
             return day_dic
 
         
@@ -78,7 +79,7 @@ class Calendar(HTMLCalendar):
         """
         Return a weekday name as a table header.
         """
-        return day_abbr[day]
+        return _(day_abbr[day])
             
 
     def formatweekheader(self):

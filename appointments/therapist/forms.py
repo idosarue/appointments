@@ -71,12 +71,10 @@ class AppointmentResponseForm(AppointmentForm):
 
 
 class EditAppointmentResponseForm(AppointmentForm):
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['start_time'].choices = WorkingTime.create_time_choice()
-    #     self.fields['start_time'].widget.attrs['id'] = 'mySelect'
-    #     self.fields['start_time'].label = _('start time')
-    #     self.fields['appointment_date'].label = _('appointment date')
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['start_time'].widget.attrs['id'] = 'mySelect2'
+
     class Meta:
         model = AppointmentResponse
         fields = ['start_time', 'appointment_date']
@@ -84,27 +82,16 @@ class EditAppointmentResponseForm(AppointmentForm):
 
 
 class EditAppointmentForm(AppointmentForm):
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['start_time'].choices = WorkingTime.create_time_choice()
-    #     self.fields['start_time'].widget.attrs['id'] = 'mySelect'
-    #     self.fields['start_time'].label = _('start time')
-    #     self.fields['appointment_date'].label = _('appointment date')
     class Meta:
         model = Appointment
         fields = ['start_time', 'appointment_date']
 
 
 class TherapistCreateAppointmentForm(AppointmentForm):
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['start_time'].choices = WorkingTime.create_time_choice()
-    #     self.fields['start_time'].widget.attrs['id'] = 'mySelect'
-    #     self.fields['start_time'].label = _('start time')
-    #     self.fields['appointment_date'].label = _('appointment date')
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['user'].queryset = Profile.objects.exclude(user__is_superuser=True)
+        self.fields['start_time'].widget.attrs['id'] = 'mySelect3'
 
     class Meta:
         model = Appointment
@@ -126,7 +113,6 @@ class DisabledDatesForm(forms.ModelForm):
         }
 
     def clean_date(self):
-        # appoint = 
         d = self.cleaned_data['date']
         if d <= date.today():
             raise forms.ValidationError(_('day has passed'))

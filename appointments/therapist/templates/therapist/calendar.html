@@ -1,0 +1,497 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+
+{% endblock %}
+
+{% block title %}
+  <link rel="icon" type="image/png" href="{% static 'images/calendar.png' %}"/>
+  <title>{% trans 'Calendar' %}</title>
+{% endblock %}
+
+
+{% block content%}
+
+
+<div class="calendar">
+    <div id="month-name">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">{% trans 'Choose a date' %}</h5>
+            <form method="GET">
+              {% csrf_token %}
+              {{form.as_p}}
+              <button class='btn btn-primary form-control' type="submit">{% trans 'Search' %}</button>
+            </form>
+          </div>
+        </div>
+        <h3>{{calendar.month_name}}</h3>
+      </div>
+      <div id='next-pre-c'>
+        {% if  calendar.month_name != 'January 2021'  %}
+        <a id='pre' href="/therapist/calendar/?year={{calendar.pre_month.year_num}}&month={{calendar.pre_month.pre_month_num}}">&laquo previous month</a>
+        {% else %}
+        <a class='btn disabled' id='pre' href="/therapist/calendar/?year={{calendar.pre_month.year_num}}&month={{calendar.pre_month.pre_month_num}}">&laquo previous month</a>
+        {% endif %}
+        {% if  calendar.month_name != 'December 2050'  %}
+        <a id='next' href="/therapist/calendar/?year={{calendar.next_month.year_num}}&month={{calendar.next_month.next_month_num}}">next month &raquo </a>
+        {% else %}
+        <a class='btn disabled' id='next' href="/therapist/calendar/?year={{calendar.pre_month.year_num}}&month={{calendar.pre_month.pre_month_num}}">next month &raquo</a>
+        {% endif %}
+      </div>
+    <div class="day-of-week"> 
+        {% for header in calendar.headers %}
+        <div class="day-name">{{header}}</div>
+        {% endfor %}
+    </div>
+  <div class="date-grid">
+    {% for week in calendar.month %}
+        {% for day in week %}
+            {% if day.disabled %}
+            <div class="table-danger grid-item" id="{{day.day_num}}-{{day.month}}-{{day.year}}" >
+            {% else %}
+            <div class="grid-item" id="{{day.day_num}}-{{day.month}}-{{day.year}}" >
+            {% endif %}
+            <button type="button" class="btn btn-primary hide2" data-toggle="modal" data-target="#commentModal">
+            </button>
+            {% if day.day_num %}   
+                <div class="top-container">
+                    <span class="day_num">{{day.day_num}}</span> <span class='holiday'>{{day.holiday}}</span>
+                    {% if day.comments %}
+                    <button  type="button" class="btn btn-link" data-toggle="modal" data-target="#commentListModal{{day.day_num}}">comments</button>
+                    {% endif %}
+                    <span class="week-day-name">{{day.week_day_name}}</span> 
+                </div>
+                {% if not day.disabled  %}
+                <button type="button" class="btn btn-primary hide" data-toggle="modal" data-target="#appointModal">
+                </button>
+                {% endif %}
+                <hr class="first-hr">
+                <div class="appoint-list-container">
+                    <ul>
+                        {% for event in day.sorted_appoints %}
+                        <div class="events"> 
+                            <li class=".li" id="{{event.id}}">
+                            <div><span>{{event.start_time}}</span> {{event.user.user.first_name}} {{event.user.user.last_name}} {{event.user.phone_number}}</div>
+                            {% if event in day.appointments %}
+                            <button id='{{event.id}}' name="{{event.start_time}}" type="button" class="btn btn-success edit-appoint-btn" data-toggle="modal" data-target="#EditappointModal">{% trans 'Edit' %}</button> 
+                            <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment' event.id %}">{% trans 'cancel' %}</a>
+                            {% else %}
+                            <button id='{{event.id}}' name="{{event.start_time}}" type="button" class="btn btn-success edit-appoint-res-btn" data-toggle="modal" data-target="#EditappointResponseModal">{% trans 'Edit' %}</button>
+                            <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment_response' event.id %}">{% trans 'cancel' %}</a>
+                            {% endif %}
+                            </li>
+                        </div>
+                        <hr>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal fade" id="commentListModal{{day.day_num}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Comments for {{day.day_num}}/{{day.month}}/{{day.year}}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body"  id="comment{{day.day_num}}-{{day.month}}-{{day.year}}">
+                          {% for comment in day.comments %}
+                            {% if comment %}
+                            <ul>
+                                <li class="t"><h4>{{comment.title}}</h4></li>
+                                <li><textarea name="" contenteditable="false" class="c" readonly id="" cols="30" rows="10">{{comment.content}}</textarea></li>
+                                <li>
+                                  <div class="link-container">
+                                    <a class="comment-confirm-delete btn btn-danger" href="{% url 'delete_comment' comment.id %}">Delete comment</a>  <button id='{{comment.id}}' type="button" class="btn btn-primary edit-comment-btn" data-toggle="modal" data-target="#EditcommentModal{{comment.id}}"> {% trans 'Edit' %} </button>
+                                  </div>
+                                </li>
+                            </ul>
+                            <hr>
+                            {% endif %}
+                          {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                {% for comment in day.comments %}
+                  <div class="modal fade" id="EditcommentModal{{comment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Edit Comment</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form id="form{{comment.id}}" class="form" action="{% url 'edit_comment' comment.id %}" method="POST"> 
+                                {% csrf_token %}
+                                {{edit_comment_form.as_p}}
+                              </div>
+                              <div id="comment-result">
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="submit" class="btn btn-primary">Save changes</button>
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </form>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            
+            {% endif %}
+        </div>
+        {% endfor %} 
+    {% endfor %}
+</div>
+
+<div class="modal fade" id="appointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add An Appointment </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="appoint-form" class='form' action="{% url 'create_appoint' %}" method="POST"> 
+                {% csrf_token %}
+                {{appoint_form.as_p}}
+                <div id="appoint-result">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add A Commment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="comment-form" class='form' action="{% url 'create_comment' %}" method="POST"> 
+                {% csrf_token %}
+                {{comment_form.as_p}}
+                <div id="comment-result">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="EditappointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Appointment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="edit-appoint-form" method="POST"> 
+                {% csrf_token %}
+                {{edit_appoint_form.as_p}}
+                <div id="edit-appoint-result">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditappointResponseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Appointment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="edit-appoint-res-form" method="POST"> 
+                {% csrf_token %}
+                {{edit_response_form.as_p}}
+                <div id="edit-appoint-res-result">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+  </div>
+
+</div>
+    <tr>
+      <th colspan="7">
+        
+      </th>
+    </tr>
+
+    {% for header in calendar.headers %}
+        <th>{{header}}</th>
+    {% endfor %}
+      
+    <tbody>
+        {% for week in calendar.month %}
+        <tr> 
+            {% for day in week %}
+                {% if day.disabled %}
+                <div class="table-danger" id="{{day.day_num}}-{{day.month}}-{{day.year}}" >
+                {% else %}
+                <div id="{{day.day_num}}-{{day.month}}-{{day.year}}" >
+                {% endif %}
+
+                <button type="button" class="btn btn-primary hide2" data-toggle="modal" data-target="#commentModal">
+                </button>
+                  {% if day.day_num %}  
+                  <div class="top-container">
+                    <span class="day_num">{{day.day_num}}</span> <span>{{day.holiday}}</span>                    
+                    {% if day.comments %}
+                    <button  type="button" class="btn btn-link" data-toggle="modal" data-target="#commentListModal{{day.day_num}}">comments</button>
+                    {% endif %}
+                  </div>
+                    {% if not day.disabled  %}
+                    <button type="button" class="btn btn-primary hide" data-toggle="modal" data-target="#appointModal">
+                    </button>
+                    {% endif %}
+                  <hr class="first-hr">
+                  <div class="appoint-list-container">
+                      <ul>
+                          {% for event in day.sorted_appoints %}
+                          <li class=".li" id="{{event.id}}">
+                            <div class="events">
+                            <div><span>{{event.start_time}}</span> {{event.user.user.first_name}} {{event.user.user.last_name}} {{event.user.phone_number}}</div>
+                            {% if event in day.appointments %}
+                            <button id='{{event.id}}' name="{{ event.start_time }}" type="button" class="btn btn-success edit-appoint-btn" data-toggle="modal" data-target="#EditappointModal">{% trans 'Edit' %}</button> 
+                            <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment' event.id %}">{% trans 'cancel' %}</a>
+                            {% else %}
+                            <button id='{{event.id}}' name="{{ event.start_time }}" type="button" class="btn btn-success edit-appoint-res-btn" data-toggle="modal" data-target="#EditappointResponseModal">{% trans 'Edit' %}</button>
+                            <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment_response' event.id %}">{% trans 'cancel' %}</a>
+                            {% endif %}
+                            </li>
+                          </div>
+                          <hr>
+                              {% endfor %}
+                        </ul>
+                  </div>
+                    <div class="modal fade" id="commentListModal{{day.day_num}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Comments for {{day.day_num}}/{{day.month}}/{{day.year}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body"  id="comment{{day.day_num}}-{{day.month}}-{{day.year}}">
+                            {% for comment in day.comments %}
+                              {% if comment %}
+                              <ul>
+                                  <li class="t"><h4>{{comment.title}}</h4></li>
+                                  <li><textarea name="" contenteditable="false" class="c" readonly id="" cols="30" rows="10">{{comment.content}}</textarea></li>
+                                  <li>
+                                    <div class="link-container">
+                                      <a class="comment-confirm-delete btn btn-danger" href="{% url 'delete_comment' comment.id %}">Delete comment</a>  <button id='{{comment.id}}' type="button" class="btn btn-primary edit-comment-btn" data-toggle="modal" data-target="#EditcommentModal{{comment.id}}"> {% trans 'Edit' %} </button>
+                                    </div>
+                                  </li>
+                              </ul>
+                              <hr>
+                              {% endif %}
+                            {% endfor %}
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  {% for comment in day.comments %}
+                    <div class="modal fade" id="EditcommentModal{{comment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Edit Comment</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form id="form{{comment.id}}" class="form" action="{% url 'edit_comment' comment.id %}" method="POST"> 
+                                  {% csrf_token %}
+                                  {{edit_comment_form.as_p}}
+                                </div>
+                                <div id="comment-result">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </form>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  {% endfor %}
+              </div>
+              {% endif %}
+          {% endfor %}
+      </tr>
+      {% endfor %}
+  </tbody>
+</table>
+
+<div class="modal fade" id="appointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add An Appointment </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="appoint-form" class='form' action="{% url 'create_appoint' %}" method="POST"> 
+                {% csrf_token %}
+                {{appoint_form.as_p}}
+                <div id="appoint-result">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add A Commment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="comment-form" class='form' action="{% url 'create_comment' %}" method="POST"> 
+                {% csrf_token %}
+                {{comment_form.as_p}}
+                <div id="comment-result">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="EditappointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Appointment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="edit-appoint-form" method="POST"> 
+                {% csrf_token %}
+                {{edit_appoint_form.as_p}}
+                <div id="edit-appoint-result">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditappointResponseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Appointment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="edit-appoint-res-form" method="POST"> 
+                {% csrf_token %}
+                {{edit_response_form.as_p}}
+                <div id="edit-appoint-res-result">
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- {% for event in day.appointments %}
+<li class=".li" id="{{event.id}}">
+<div><span>{{event.start_time}}</span> {{event.user.user.first_name}} {{event.user.user.last_name}} {{event.user.phone_number}}</div>
+<button id='{{event.id}}' name="{{ event.start_time }}" type="button" class="btn btn-success edit-appoint-btn" data-toggle="modal" data-target="#EditappointModal">Edit</button> 
+<a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment' event.id %}">Cancel</a>
+</li>
+<hr>
+{% endfor %}
+{% for event in day.appointments_response %}
+<li id="{{event.id}}">
+  <div>{{event.start_time}} {{event.user.user.first_name}} {{event.user.user.last_name}} {{event.user.phone_number}}</div>
+  <button id='{{event.id}}' name="{{ event.start_time }}" type="button" class="btn btn-success edit-appoint-res-btn" data-toggle="modal" data-target="#EditappointResponseModal">Edit</button>
+  <a class="confirm_delete btn btn-danger" href="{% url 'delete_appointment_response' event.id %}">Cancel</a>
+</li>
+<hr>
+{% endfor %} -->
