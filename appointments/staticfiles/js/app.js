@@ -8,9 +8,7 @@ function createValidDate(x){
         newDate[2] = 0 + newDate[2] 
     }
     return newDate.join('-')
-
 }
-
 
 $(document).ready(function(){
     var uls = $('.list-group')
@@ -47,15 +45,37 @@ $(document).ready(function(){
 
 
 });
+
 $(document).ready(function(){
-    var screen = $(window).width()
+    var screen = $(window).width();
+    var noDates = $('.grid-item');
+    var mobileDays = $('.week-day-name');
+    var days = $('.day-name');
     if (screen <= 800){
-        tables = $('table')
+        tables = $('table');
         for (let i = 0; i<tables.length; i++){
-            tables[i].classList.add('table-responsive')
+            tables[i].classList.add('table-responsive');
+        }
+        for (i = 0; i < noDates.length; i++) {
+            if ($(noDates[i]).attr('id') == '--'){
+                $(noDates[i]).hide();
+            }
+          }
+        for (i = 0; i < mobileDays.length; i++) {
+            $(days[i]).show();
+          }
+        for (i = 0; i < days.length; i++) {
+            $(days[i]).hide();
+          }
+    }else{
+        for (i = 0; i < mobileDays.length; i++) {
+            $(mobileDays[i]).hide();
+          } 
+
+        for (i = 0; i < days.length; i++) {
+            $(days[i]).show();
         }
     }
-
 
 });
 
@@ -88,11 +108,12 @@ $(document).ready(function(){
     for (i = 0; i < tds.length; i++) {
         $(tds[i]).css('background-color','white')
       }
+
 });
 
 $(document).ready(function(){
     var click = 0;
-    $('td').click(function(e){
+    $('.grid-item').click(function(e){
         var x = $(e.target).find(".hide");
         var y = $(e.target).find(".hide2");
         var id = $(this).attr('id')
@@ -117,17 +138,13 @@ $(document).ready(function(){
 });
 
 
-
 function createDefault(button, form, id, select){
     var appointId = button.attr('id')
     var appointDate = form.children('p').children('input[name=appointment_date]');
     var timeValue = button.attr('name') + ':00'
-    console.log(timeValue)
     for (let i =0; i<select.children.length; i++){
         if (select[i].value == timeValue){
-            console.log(i)
             select.selectedIndex = i
-
         }
     }
     $('#edit-appoint-form').attr('action',`/therapist/update_apt/${appointId}/`)
@@ -145,12 +162,13 @@ $(document).ready(function(){
         }else if ($(this).attr('class') == 'btn btn-success edit-appoint-res-btn-a'){
             createDefault($(this), $('#edit-appoint-res-form'), $(this).closest('tr').attr('id'), mySelect2)
         }else if ($(this).attr('class') == 'btn btn-success edit-appoint-btn'){
-            createDefault($(this), $('#edit-appoint-form'), $(this).closest('td').attr('id'), mySelect)
+            createDefault($(this), $('#edit-appoint-form'), $(this).closest('.grid-item').attr('id'), mySelect)
         }else if ($(this).attr('class') == 'btn btn-success edit-appoint-res-btn'){
-            createDefault($(this), $('#edit-appoint-res-form'), $(this).closest('td').attr('id'), mySelect2)
+            createDefault($(this), $('#edit-appoint-res-form'), $(this).closest('.grid-item').attr('id'), mySelect2)
         }else if ($(this).attr('class') == "btn btn-primary update-appoint-btn"){
             createDefault($(this), $('#update-appoint-form'), $(this).closest('tr').attr('id'), mySelect)
         }
+
     });
 });
 
@@ -176,9 +194,6 @@ $(document).ready(function(){
         var li1 = button.closest('ul').children()[0];
         var li2 = button.closest('ul').children()[1];
         console.log(li1);
-
-        var commentForm = button.closest('.modal').next()
-        
         console.log(button.attr('id'))
         var form = document.getElementById('form' + button.attr('id'))
         var title = form.getElementsByTagName('input')[1]

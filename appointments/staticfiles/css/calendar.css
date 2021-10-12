@@ -6,11 +6,8 @@
 
 }
 
-.calendar tr, .calendar td {
-  border: 2px solid lightblue;
-}
 
-.top-container, #month-name, .day_num, .link-container, #next-pre-c   {
+.top-container, #month-name, .day_num, .link-container, #next-pre-c{
   display: flex;
 }
 
@@ -24,9 +21,15 @@
   padding: 0;
 }
 
+#next-pre-c {
+  font-weight: bold;
+  font-size: 2em;
+  padding: 10px;
+}
+/* 
 .calendar th {
   padding: 10px;
-  min-width: 120px;
+  width: 120px;
   text-align: center;
   font-size: 18px;
   background-color: whitesmoke;
@@ -37,7 +40,7 @@
   width: 12.5em;
   height: 9.375em;
   position: relative;
-}
+} */
 
 .first-hr {
   border: 1px solid gray;
@@ -46,20 +49,19 @@
 }
 
 #month-name {
-  justify-content: center;
+  justify-content: space-around;
 }
 
 
 #month-name h3{
   align-self: center;
-  flex-grow: 4;
 }
 
 .date a {
   font-size: 1rem;
 }
 
-.events {
+ .events {
   height: 100%;
   padding: 0px 5px 0px 20px;
   background-color: lightblue;
@@ -102,3 +104,45 @@
   justify-content: space-between;
 }
 
+.day-of-week > div {
+  text-align: center;
+  border: 1px solid lightblue;
+  padding: 10px;
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.day-of-week,
+.date-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+@media only screen and (max-width: 600px) {
+  .holiday {
+    font-size: .5em;
+  }
+
+  .day-of-week,
+  .date-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  #next-pre-c {
+    font-size: 1em;
+  }
+  #month-name h3{
+    text-align: center;
+  }
+  
+
+}
+
+
+.grid-item {
+  border: 1px solid lightblue;
+  min-width: 55px;
+  min-height: 10em;
+  padding: 0 .5em 0 .5em;
+}
