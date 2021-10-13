@@ -283,8 +283,6 @@ $("#date-form").submit(function (e) {
 $("#contact-form-home").submit(function (e) {
     // preventing from page reload and default actions
     e.preventDefault();
-
-    
     var button = $('#send-btn')
     // validButton(button, true)
     // serialize the data for sending the form data.

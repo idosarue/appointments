@@ -26,6 +26,22 @@
             <div class="card-body c">
               <h5 class="card-title">{% trans 'Sign Up' %}</h5>
               <div>
+                <ul class="errorlist">
+                  {% if form.non_field_errors %}
+                    <li>{{ form.non_field_errors }}</li>
+                  {% endif %}
+                  {% for field in form %}
+                    {% if field.errors %}
+                      <li>
+                        <ul class="errorlist">
+                          {% for error in field.errors %}
+                            <li class="alert alert-danger" role="alert">{{ error }}</li>
+                          {% endfor %}
+                        </ul>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
                 <form method="POST">
                     {% csrf_token %} 
                     {{form.as_p}}

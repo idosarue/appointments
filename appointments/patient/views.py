@@ -18,13 +18,14 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import get_language, activate, gettext
 from django.http import JsonResponse
 from django.utils import timezone
+
 def home(request):
     return render(request, 'patient/home.html')
 
 class CreateContactMessageToTherapist(CreateView):
     model = ContactUsersMessagesToTherapist
     form_class = ContactFormEmailPatient
-    template_name = 'patient/home.html'
+    template_name = 'patient/contact.html'
     success_url = reverse_lazy('home')
     
     
@@ -46,10 +47,6 @@ class CreateAppointmentView(LoginRequiredMixin, CreateView):
     form_class = AppointmentForm
     template_name = 'patient/query_appointment.html'
     success_url = reverse_lazy('profile')
-
-    # def form_invalid(self, form):
-    #     return JsonResponse({"error": form.errors}, status=400)
-
 
     def form_valid(self, form):
         print('bbbbb')

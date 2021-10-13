@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-11 21:18+0300\n"
+"POT-Creation-Date: 2021-10-13 20:49+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,63 +48,73 @@ msgid "username"
 msgstr "שם משתמש"
 
 #: .\accounts\templates\accounts\change_password.html:9
-#: .\accounts\templates\accounts\edit_profile.html:20
-#: .\accounts\templates\accounts\edit_user.html:18
-#: .\accounts\templates\accounts\profile.html:21
+#: .\accounts\templates\accounts\edit_profile.html:8
+#: .\accounts\templates\accounts\edit_user.html:9
+#: .\accounts\templates\accounts\profile.html:8
+#: .\templates\partials\navbar.html:50
+msgid "Profile"
+msgstr "פרופיל"
+
+#: .\accounts\templates\accounts\change_password.html:19
+#: .\accounts\templates\accounts\edit_profile.html:29
+#: .\accounts\templates\accounts\edit_user.html:27
+#: .\accounts\templates\accounts\profile.html:30
 msgid "Profile for"
 msgstr "הפרופיל של"
 
-#: .\accounts\templates\accounts\change_password.html:10
-#: .\accounts\templates\accounts\edit_profile.html:21
-#: .\accounts\templates\accounts\edit_user.html:19
-#: .\accounts\templates\accounts\profile.html:22 .\patient\forms.py:78
+#: .\accounts\templates\accounts\change_password.html:20
+#: .\accounts\templates\accounts\edit_profile.html:30
+#: .\accounts\templates\accounts\edit_user.html:28
+#: .\accounts\templates\accounts\profile.html:31 .\patient\forms.py:78
 #: .\templates\password\password_reset.html:11
 #: .\templates\password\password_reset.html:15
-#: .\therapist\templates\therapist\apt_requests.html:98
-#: .\therapist\templates\therapist\pending_apts.html:92
+#: .\therapist\templates\therapist\apt_requests.html:105
+#: .\therapist\templates\therapist\pending_apts.html:97
 msgid "Email"
 msgstr ""
 
-#: .\accounts\templates\accounts\change_password.html:15
-#: .\accounts\templates\accounts\edit_profile.html:26
-#: .\accounts\templates\accounts\edit_user.html:24
+#: .\accounts\templates\accounts\change_password.html:25
+#: .\accounts\templates\accounts\edit_profile.html:35
+#: .\accounts\templates\accounts\edit_user.html:33
 #: .\patient\templates\patient\appointment_response.html:24
 msgid "Save"
 msgstr "שמור"
 
-#: .\accounts\templates\accounts\login.html:9
+#: .\accounts\templates\accounts\login.html:8
+#: .\accounts\templates\accounts\login.html:56
+#: .\templates\partials\navbar.html:10
+msgid "Login"
+msgstr "הכנס"
+
+#: .\accounts\templates\accounts\login.html:17
 #: .\templates\password\password_reset_complete.html:11
 msgid "Log in"
 msgstr "הכנס"
 
-#: .\accounts\templates\accounts\login.html:11
+#: .\accounts\templates\accounts\login.html:19
 msgid "Log in to see your personal info"
 msgstr "הכנס כדי לראות את המידע האישי שלך"
 
-#: .\accounts\templates\accounts\login.html:48
-#: .\templates\partials\navbar.html:77
-msgid "Login"
-msgstr "הכנס"
-
-#: .\accounts\templates\accounts\login.html:50
+#: .\accounts\templates\accounts\login.html:58
 msgid "Forgot Password?"
 msgstr "שכחת את הסיסמה?"
 
-#: .\accounts\templates\accounts\profile.html:27
+#: .\accounts\templates\accounts\profile.html:36
 msgid "Edit Personal Details"
 msgstr "עריכת פרטים אישיים"
 
-#: .\accounts\templates\accounts\profile.html:28
+#: .\accounts\templates\accounts\profile.html:37
 msgid "Edit Email and Name"
 msgstr "עריכת כתובת דואל ושם משתמש"
 
-#: .\accounts\templates\accounts\profile.html:29
+#: .\accounts\templates\accounts\profile.html:38
 msgid "Change password"
 msgstr "שנה סיסמה"
 
-#: .\accounts\templates\accounts\signup.html:19
-#: .\accounts\templates\accounts\signup.html:25
-#: .\templates\partials\navbar.html:80
+#: .\accounts\templates\accounts\signup.html:8
+#: .\accounts\templates\accounts\signup.html:27
+#: .\accounts\templates\accounts\signup.html:33
+#: .\templates\partials\navbar.html:11
 msgid "Sign Up"
 msgstr "הרשם"
 
@@ -113,7 +123,7 @@ msgid "start time"
 msgstr "זמן התחלה"
 
 #: .\appointments\context_processors.py:18 .\patient\forms.py:58
-#: .\therapist\forms.py:44 .\therapist\forms.py:207 .\therapist\forms.py:218
+#: .\therapist\forms.py:44 .\therapist\forms.py:193 .\therapist\forms.py:204
 msgid "appointment date"
 msgstr "תאריך הפגישה"
 
@@ -171,56 +181,111 @@ msgstr "בקשה מקורית"
 msgid "Patient"
 msgstr "מטופלים"
 
-#: .\patient\templates\patient\appointments.html:10
-#: .\therapist\templates\therapist\accepted_appointments.html:19
-#: .\therapist\templates\therapist\apt_requests.html:21
-#: .\therapist\templates\therapist\newcal.html:17
-#: .\therapist\templates\therapist\pending_apts.html:17
+#: .\patient\templates\patient\appointments.html:7
+#: .\templates\partials\navbar.html:73
+msgid "Your Appointments"
+msgstr "הפגישות שלך"
+
+#: .\patient\templates\patient\appointments.html:14
+#: .\therapist\templates\therapist\accepted_appointments.html:23
+#: .\therapist\templates\therapist\apt_requests.html:28
+#: .\therapist\templates\therapist\calendar.html:24
+#: .\therapist\templates\therapist\pending_apts.html:22
 msgid "Choose a date"
 msgstr "בחר תאריך"
 
-#: .\patient\templates\patient\appointments.html:14
-#: .\patient\templates\patient\query_appointment.html:20
-#: .\patient\templates\patient\query_appointment.html:58
-#: .\therapist\templates\therapist\accepted_appointments.html:23
-#: .\therapist\templates\therapist\apt_requests.html:25
-#: .\therapist\templates\therapist\newcal.html:21
-#: .\therapist\templates\therapist\pending_apts.html:21
+#: .\patient\templates\patient\appointments.html:18
+#: .\patient\templates\patient\query_appointment.html:26
+#: .\patient\templates\patient\query_appointment.html:64
+#: .\therapist\templates\therapist\accepted_appointments.html:27
+#: .\therapist\templates\therapist\apt_requests.html:32
+#: .\therapist\templates\therapist\calendar.html:28
+#: .\therapist\templates\therapist\pending_apts.html:26
 msgid "Search"
 msgstr "חפש"
 
-#: .\patient\templates\patient\home.html:34
+#: .\patient\templates\patient\contact.html:11
+#: .\patient\templates\patient\contact.html:29
+#: .\templates\partials\navbar.html:12
+msgid "Contact"
+msgstr "צור קשר"
+
+#: .\patient\templates\patient\contact.html:53
+#: .\templates\password\password_reset.html:15
+#: .\therapist\templates\therapist\apt_requests.html:105
+#: .\therapist\templates\therapist\pending_apts.html:97
+msgid "Send"
+msgstr "שלח"
+
+#: .\patient\templates\patient\home.html:12 .\templates\partials\navbar.html:24
+msgid "Home"
+msgstr "דף הבית"
+
+#: .\patient\templates\patient\home.html:38
 msgid ""
 "Furious? Depressed? Restless?<br><span>Biofeedback</span><br>is your solution"
-msgstr "זועם? מדוכא? חסר מנוחה? <br> <span> ביופידבק </span> <br> הוא הפתרון שלך"
+msgstr ""
+"זועם? מדוכא? חסר מנוחה? <br> <span> ביופידבק </span> <br> הוא הפתרון שלך"
 
-#: .\patient\templates\patient\home.html:41
+#: .\patient\templates\patient\home.html:45
 msgid "go"
 msgstr "סע"
 
-#: .\patient\templates\patient\home.html:50
+#: .\patient\templates\patient\home.html:54
 msgid "Biofeedback"
 msgstr "ביופידבק"
 
-#: .\patient\templates\patient\home.html:68
+#: .\patient\templates\patient\home.html:76
+msgid "My clinic"
+msgstr "הקליניקה שלי"
+
+#: .\patient\templates\patient\home.html:78
+msgid "At My clinic, I use biofeedback to treat problems related to:"
+msgstr "בקליניקה שלי אני משתמשת בביופידבק כדי לטפל בבעיות הקשורות ל:"
+
+#: .\patient\templates\patient\home.html:80
+msgid "headaches-migraines"
+msgstr "כאבי ראש-מיגרנות"
+
+#: .\patient\templates\patient\home.html:81
+msgid "Irritable bowel syndrome"
+msgstr "תסמונת מעי רגיז"
+
+#: .\patient\templates\patient\home.html:82
+msgid "Asthma Breathing difficulties"
+msgstr "אסטמה וקשיי נשימה"
+
+#: .\patient\templates\patient\home.html:83
+msgid "Skin diseases"
+msgstr "מחלות עור"
+
+#: .\patient\templates\patient\home.html:84
+msgid "Stress and Anxiety"
+msgstr "לחץ וחרדה"
+
+#: .\patient\templates\patient\home.html:85
+msgid "Attention Deficit Hyperactivity Disorder"
+msgstr "הפרעות קשב וריכוז"
+
+#: .\patient\templates\patient\home.html:95
 msgid "Interactive computer programs"
 msgstr "תוכנות מחשב אינטראקטיביות"
 
-#: .\patient\templates\patient\home.html:71
+#: .\patient\templates\patient\home.html:98
 msgid ""
 "The devices I use measure physiological changes in your body, such as your "
 "heart rate activity and skin changes, by using one or more sensors attached "
-"to your fingers. The sensors plug into your computer."
+"to your fingers. The sensors plug into my computer"
 msgstr ""
-".המכשירים שבהם אני משתמש מודדים שינויים פיזיולוגיים בגופך, כגון פעילות קצב "
-"הלב ושינויים בעור, על ידי שימוש בחיישן אחד או יותר המחוברים לאצבעות שלך. "
-"החיישנים מתחברים למחשב שלך"
+"המכשירים שבהם אני משתמשת מודדים שינויים פיזיולוגיים בגופך, כגון פעילות קצב "
+"הלב ושינויים בעור, על ידי שימוש בחיישן אחד או יותר המחוברים לאצבעות "
+"שלך. החיישנים מתחברים למחשב שלי"
 
-#: .\patient\templates\patient\home.html:88
+#: .\patient\templates\patient\home.html:115
 msgid "What is biofeedback?"
 msgstr "מהו ביופידבק"
 
-#: .\patient\templates\patient\home.html:91
+#: .\patient\templates\patient\home.html:118
 msgid ""
 "Biofeedback is a technique you can use to learn to control some of your "
 "body's functions, such as your heart rate. During biofeedback, you're "
@@ -229,7 +294,7 @@ msgid ""
 "relaxing certain muscles, to achieve the results you want, such as reducing "
 "pain. In essence, biofeedback gives you the ability to practice new ways to "
 "control your body, often to improve a health condition or physical "
-"performance."
+"performance"
 msgstr ""
 "ביופידבק היא טכניקה בה ניתן להשתמש כדי ללמוד לשלוט בחלק מתפקודי גופך, כגון "
 "קצב הלב שלך. במהלך ביופידבק, אתה מחובר לחיישנים חשמליים המסייעים לך לקבל "
@@ -238,107 +303,58 @@ msgstr ""
 "דבר, ביופידבק נותן לך את היכולת לתרגל דרכים חדשות לשלוט על גופך, לעתים "
 "קרובות לשיפור מצב בריאותי או ביצועים גופניים"
 
-#: .\patient\templates\patient\home.html:116
-msgid "My clinic"
-msgstr "הקליניקה שלי"
-
-#: .\patient\templates\patient\home.html:118
-msgid "At My clinic, I use biofeedback to treat problems related to:"
-msgstr "בקליניקה שלי אני משתמשת בביופידבק כדי לטפל בבעיות הקשורות ל:"
-
-#: .\patient\templates\patient\home.html:120
-msgid "headaches-migraines"
-msgstr "כאבי ראש-מיגרנות"
-
-#: .\patient\templates\patient\home.html:121
-msgid "Irritable bowel syndrome"
-msgstr "תסמונת מעי רגיז"
-
-#: .\patient\templates\patient\home.html:122
-msgid "Asthma Breathing difficulties"
-msgstr "אסטמה וקשיי נשימה"
-
-#: .\patient\templates\patient\home.html:123
-msgid "Skin diseases"
-msgstr "מחלות עור"
-
-#: .\patient\templates\patient\home.html:124
-msgid "Stress and Anxiety"
-msgstr "לחץ וחרדה"
-
-#: .\patient\templates\patient\home.html:125
-msgid "Attention Deficit Hyperactivity Disorder"
-msgstr "הפרעות קשב וריכוז"
-
-#: .\patient\templates\patient\home.html:137
-msgid "Contact"
-msgstr "צור קשר"
-
-#: .\patient\templates\patient\home.html:161
-#: .\templates\password\password_reset.html:15
-#: .\therapist\templates\therapist\apt_requests.html:98
-#: .\therapist\templates\therapist\pending_apts.html:92
-msgid "Send"
-msgstr "שלח"
-
-#: .\patient\templates\patient\query_appointment.html:22
-#: .\templates\partials\navbar.html:69
+#: .\patient\templates\patient\query_appointment.html:7
+#: .\patient\templates\patient\query_appointment.html:28
+#: .\templates\partials\navbar.html:70
 msgid "Ask For An Appointment"
 msgstr "בקש פגישה"
 
-#: .\patient\views.py:38
+#: .\patient\views.py:39
 msgid "hello"
 msgstr "שלום"
 
-#: .\patient\views.py:60 .\therapist\views.py:265
+#: .\patient\views.py:57 .\therapist\views.py:265
 msgid ""
 "no available meetings for that date or time, please choose another date or "
 "time"
 msgstr "אין פגישות זמינות עבור תאריך ושעה אלה"
 
-#: .\send_emails.py:34 .\send_emails.py:63
+#: .\send_emails.py:35 .\send_emails.py:64
 msgid "Appointment Request"
 msgstr "בקשת פגישה"
 
-#: .\templates\partials\navbar.html:12
-msgid "Home"
-msgstr "דף הבית"
-
-#: .\templates\partials\navbar.html:34
-msgid "preferences"
-msgstr "העדפות"
-
-#: .\templates\partials\navbar.html:46
+#: .\templates\partials\navbar.html:15
 msgid "Logout"
 msgstr "התנתק"
 
-#: .\templates\partials\navbar.html:49
-msgid "Profile"
-msgstr "פרופיל"
+#: .\templates\partials\navbar.html:42
+msgid "preferences"
+msgstr "העדפות"
 
-#: .\templates\partials\navbar.html:53
+#: .\templates\partials\navbar.html:54
+#: .\therapist\templates\therapist\apt_requests.html:8
 msgid "Appointment requests"
 msgstr "בקשות לפגישות"
 
-#: .\templates\partials\navbar.html:56
+#: .\templates\partials\navbar.html:57
+#: .\therapist\templates\therapist\accepted_appointments.html:7
 msgid "Accepted Appointments"
 msgstr "פגישות מאושרות"
 
-#: .\templates\partials\navbar.html:59
+#: .\templates\partials\navbar.html:60
+#: .\therapist\templates\therapist\pending_apts.html:8
 msgid "Pending Appointments"
 msgstr "פגישות בהמתנה"
 
-#: .\templates\partials\navbar.html:62
+#: .\templates\partials\navbar.html:63
+#: .\therapist\templates\therapist\all_users.html:8
 msgid "Patients"
 msgstr "מטופלים"
 
-#: .\templates\partials\navbar.html:65
+#: .\templates\partials\navbar.html:66
+#: .\therapist\templates\therapist\calendar.html:13
 msgid "Calendar"
 msgstr "לוח שנה"
-
-#: .\templates\partials\navbar.html:72
-msgid "Your Appointments"
-msgstr "הפגישות שלך"
 
 #: .\templates\password\password_reset.html:9
 #: .\templates\password\password_reset_confirm.html:15
@@ -414,142 +430,152 @@ msgstr "אינך יכול/ה להרשם אם גילך קטן מ 18"
 msgid "no available mettings for that date and time"
 msgstr "אין פגישות זמינות עבור תאריך ושעה אלה"
 
-#: .\therapist\forms.py:119
+#: .\therapist\forms.py:106
 msgid "Date"
 msgstr "תאריך"
 
-#: .\therapist\forms.py:132
+#: .\therapist\forms.py:118
 msgid "day has passed"
 msgstr "היום עבר"
 
-#: .\therapist\forms.py:134
+#: .\therapist\forms.py:120
 msgid "date already disabled"
 msgstr "תאריך כבר מבוטל"
 
-#: .\therapist\forms.py:136
+#: .\therapist\forms.py:122
 msgid "you have appointments for that day"
 msgstr "יש לך פגישות ליום זה"
 
-#: .\therapist\forms.py:145
+#: .\therapist\forms.py:131
 #: .\therapist\templates\therapist\preferences\therapist_settings.html:39
 msgid "Start time"
 msgstr "זמן התחלה"
 
-#: .\therapist\forms.py:146
+#: .\therapist\forms.py:132
 #, fuzzy
 #| msgid "End time"
 msgid "End by time"
 msgstr "זמן סיום"
 
-#: .\therapist\forms.py:153
+#: .\therapist\forms.py:139
 msgid "set the time you want to start working"
 msgstr "בחר שעה לתחילת העבודה"
 
-#: .\therapist\forms.py:154
+#: .\therapist\forms.py:140
 msgid "set the time you want to end working by"
 msgstr "בחר שעה לסיום העבודה"
 
-#: .\therapist\forms.py:173
+#: .\therapist\forms.py:159
 msgid "start time must be bigger than your end time"
 msgstr "זמן ההתחלה חייב להיות גדול מזמן הסיום"
 
-#: .\therapist\forms.py:175 .\therapist\forms.py:181
+#: .\therapist\forms.py:161 .\therapist\forms.py:167
 #, fuzzy
 msgid "hour doesn't exist"
 msgstr "השעה לא קיימת"
 
-#: .\therapist\forms.py:177
+#: .\therapist\forms.py:163
 msgid "you cannot set your end time to 0 or less"
 msgstr "אינך יכול להגדיר את שעת הסיום שלך ל- 0 או פחות"
 
-#: .\therapist\forms.py:179
+#: .\therapist\forms.py:165
 msgid "you cannot set your start time to 0 or less"
 msgstr "אינך יכול להגדיר את שעת ההתחלה שלך ל- 0 או פחות"
 
-#: .\therapist\forms.py:184
+#: .\therapist\forms.py:170
 msgid "something terrible happend"
 msgstr "משהו נורא קרה"
 
-#: .\therapist\forms.py:187
+#: .\therapist\forms.py:173
 #, python-brace-format
 msgid "you have appoitments set before {start_time}"
 msgstr "יש לך פגישות לפני {start_time}"
 
-#: .\therapist\forms.py:189
+#: .\therapist\forms.py:175
 #, python-brace-format
 msgid "you have appoitments set after {end_time}"
 msgstr "יש לך פגישות אחרי {end_time}"
 
-#: .\therapist\forms.py:191
+#: .\therapist\forms.py:177
 msgid "you have appoitments pending for later time"
 msgstr "יש לך פגישות אחרי {start_time}"
 
-#: .\therapist\forms.py:193
+#: .\therapist\forms.py:179
 msgid "end time must be bigger than your start time"
 msgstr "זמן הסיום חייב להיות גדול משעת ההתחלה שלך"
 
-#: .\therapist\forms.py:206 .\therapist\forms.py:217
+#: .\therapist\forms.py:192 .\therapist\forms.py:203
 msgid "User"
 msgstr "משתמש"
 
-#: .\therapist\forms.py:266
+#: .\therapist\forms.py:252
 msgid "invalid email address"
 msgstr "כתובת דואל לא חוקית"
 
-#: .\therapist\templates\therapist\accepted_appointments.html:68
-#: .\therapist\templates\therapist\accepted_appointments.html:71
+#: .\therapist\templates\therapist\accepted_appointments.html:72
+#: .\therapist\templates\therapist\accepted_appointments.html:75
+#: .\therapist\templates\therapist\calendar.html:81
+#: .\therapist\templates\therapist\calendar.html:84
+#: .\therapist\templates\therapist\calendar.html:110
+#: .\therapist\templates\therapist\calendar.html:304
+#: .\therapist\templates\therapist\calendar.html:307
+#: .\therapist\templates\therapist\calendar.html:333
 #: .\therapist\templates\therapist\preferences\therapist_settings.html:42
 msgid "Edit"
 msgstr "ערוך"
 
-#: .\therapist\templates\therapist\accepted_appointments.html:69
-#: .\therapist\templates\therapist\accepted_appointments.html:72
-#: .\therapist\templates\therapist\apt_requests.html:88
-#: .\therapist\templates\therapist\pending_apts.html:81
+#: .\therapist\templates\therapist\accepted_appointments.html:73
+#: .\therapist\templates\therapist\accepted_appointments.html:76
+#: .\therapist\templates\therapist\apt_requests.html:95
+#: .\therapist\templates\therapist\calendar.html:82
+#: .\therapist\templates\therapist\calendar.html:85
+#: .\therapist\templates\therapist\calendar.html:305
+#: .\therapist\templates\therapist\calendar.html:308
+#: .\therapist\templates\therapist\pending_apts.html:86
 msgid "cancel"
 msgstr "בטל"
 
-#: .\therapist\templates\therapist\accepted_appointments.html:84
+#: .\therapist\templates\therapist\accepted_appointments.html:88
 msgid "Send email"
 msgstr "שלח הודעה"
 
-#: .\therapist\templates\therapist\accepted_appointments.html:96
-#: .\therapist\templates\therapist\apt_requests.html:110
+#: .\therapist\templates\therapist\accepted_appointments.html:100
+#: .\therapist\templates\therapist\apt_requests.html:117
 msgid "Submit"
 msgstr "שמור"
 
-#: .\therapist\templates\therapist\accepted_appointments.html:97
-#: .\therapist\templates\therapist\accepted_appointments.html:123
-#: .\therapist\templates\therapist\accepted_appointments.html:148
-#: .\therapist\templates\therapist\apt_requests.html:111
-#: .\therapist\templates\therapist\apt_requests.html:136
-#: .\therapist\templates\therapist\pending_apts.html:106
+#: .\therapist\templates\therapist\accepted_appointments.html:101
+#: .\therapist\templates\therapist\accepted_appointments.html:127
+#: .\therapist\templates\therapist\accepted_appointments.html:152
+#: .\therapist\templates\therapist\apt_requests.html:118
+#: .\therapist\templates\therapist\apt_requests.html:143
+#: .\therapist\templates\therapist\pending_apts.html:111
 #: .\therapist\templates\therapist\preferences\therapist_settings.html:80
 #: .\therapist\templates\therapist\preferences\therapist_settings.html:106
 msgid "Close"
 msgstr "סגור"
 
-#: .\therapist\templates\therapist\accepted_appointments.html:110
-#: .\therapist\templates\therapist\accepted_appointments.html:135
-#: .\therapist\templates\therapist\apt_requests.html:123
+#: .\therapist\templates\therapist\accepted_appointments.html:114
+#: .\therapist\templates\therapist\accepted_appointments.html:139
+#: .\therapist\templates\therapist\apt_requests.html:130
 msgid "Edit Appointment"
 msgstr "ערוך פגישה"
 
-#: .\therapist\templates\therapist\accepted_appointments.html:122
-#: .\therapist\templates\therapist\accepted_appointments.html:147
-#: .\therapist\templates\therapist\apt_requests.html:135
-#: .\therapist\templates\therapist\pending_apts.html:105
+#: .\therapist\templates\therapist\accepted_appointments.html:126
+#: .\therapist\templates\therapist\accepted_appointments.html:151
+#: .\therapist\templates\therapist\apt_requests.html:142
+#: .\therapist\templates\therapist\pending_apts.html:110
 #: .\therapist\templates\therapist\preferences\therapist_settings.html:79
 #: .\therapist\templates\therapist\preferences\therapist_settings.html:105
 msgid "Save changes"
 msgstr "שמור שינויים"
 
-#: .\therapist\templates\therapist\apt_requests.html:86
+#: .\therapist\templates\therapist\apt_requests.html:93
 #: .\therapist\templates\therapist\emails\email.html:18
 msgid "Accept"
 msgstr "אשר"
 
-#: .\therapist\templates\therapist\apt_requests.html:87
+#: .\therapist\templates\therapist\apt_requests.html:94
 msgid "Update"
 msgstr "עדכן"
 
@@ -586,11 +612,11 @@ msgstr "ביקש פגישה ב"
 msgid "Got to appointment requests"
 msgstr "בקשות לפגישות"
 
-#: .\therapist\templates\therapist\pending_apts.html:51
+#: .\therapist\templates\therapist\pending_apts.html:56
 msgid "status"
 msgstr "סטאטוס"
 
-#: .\therapist\templates\therapist\pending_apts.html:79
+#: .\therapist\templates\therapist\pending_apts.html:84
 msgid "Pending"
 msgstr "בהמתנה"
 
