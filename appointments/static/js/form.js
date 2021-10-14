@@ -24,10 +24,15 @@ if (lang.text == '"he"'){
     emailSent = 'email sent'
     updateEmailSent = 'update email sent'
     gratitudeEmail = 'thank you for sending an email, we will get back to you as soon as possible'
-
-    
 }
 
+
+$(document).ready(function(){
+    var formLi = $('form li')
+    for (let i = 0; i < formLi.length; i++){
+        formLi[i].classList.add('alert', 'alert-success')
+    }
+});
 
 $("#appoint-form").submit(function (e) {
     // preventing from page reload and default actions

@@ -221,24 +221,25 @@ video {
 
 .card-contact{
     background-color: white;
-    border: 3px solid darkblue;
+    /* border: 3px solid darkblue; */
     font-weight: bold;
-
+    box-shadow: 1px 1px 12px;
 }
 
 .contact-home{
     margin-top: 10vh;
-    text-align: center!important;
+    text-align: center;
 }
 
-input[type=text], input[type=email], textarea[name=message] {
+input[type], textarea[name=message] {
     width: 100%;
     padding: 3px;
     border: 1px solid darkblue;
-    border-radius: 4px;
-    box-sizing: border-box;
   }
 
+.input-group {
+    margin-bottom: 3px;
+}
 
 
 .row {
@@ -248,7 +249,7 @@ input[type=text], input[type=email], textarea[name=message] {
 }
 
 .container .card {
-    min-width: 50vw; 
+    min-width: 30vw; 
 }
 
 p {
@@ -304,3 +305,4 @@ footer {
     margin-top: 5vh;
     background: darkblue;
 }
+

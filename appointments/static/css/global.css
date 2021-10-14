@@ -65,3 +65,12 @@ a {
     }
 
 }
+
+li {
+    list-style: none;
+}
+
+
+.login {
+    margin-top: 10vh;
+}

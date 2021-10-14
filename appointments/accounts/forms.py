@@ -6,6 +6,9 @@ from appointments.settings import DATE_INPUT_FORMATS
 from datetime import date, datetime, timedelta
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.password_validation import password_validators_help_texts
+from django.utils.html import format_html, format_html_join
+
 
 
 def calculateAge(birth_date):
@@ -13,16 +16,23 @@ def calculateAge(birth_date):
     age = ((today - birth_date).days)//365
     return age >= 18
 
+
+
+
 class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email')
-    
+        
     def clean_email(self):
        email = self.cleaned_data['email']
        if User.objects.filter(email=email).exists():
             raise forms.ValidationError(_("Email Already exists"))
        return email
+
+    def password_validators_help_text_html(password_validators=None):
+        help_texts = password_validators_help_texts(password_validators)
+        print(help_texts)
 
 class ProfileForm(forms.ModelForm):
     class Meta:

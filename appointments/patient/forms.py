@@ -64,12 +64,16 @@ class UserAppointmentFilter(django_filters.FilterSet):
 
 
 class ContactFormEmailPatient(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = ContactUsersMessagesToTherapist
         fields = '__all__'
 
         widgets = {
-            'message' : forms.Textarea()
+            'message' : forms.Textarea(),
+
         }
 
         labels = {
