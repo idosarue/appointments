@@ -17,8 +17,8 @@ from django.utils.translation import gettext
 
 
 
-# therapist_email = 'aliciabiofeedbacks@gmail.com'
-therapist_email = 'testdjangosarsu@gmail.com'
+therapist_email = 'aliciabiofeedbacks@gmail.com'
+# therapist_email = 'testdjangosarsu@gmail.com'
 therapist_email_reciever = 'djangoreciever@gmail.com'
 
 sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
