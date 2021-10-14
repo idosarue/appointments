@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 20:49+0300\n"
+"POT-Creation-Date: 2021-10-14 12:13+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,31 +19,31 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
 "1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
-#: .\accounts\forms.py:24 .\accounts\forms.py:67
+#: .\accounts\forms.py:30 .\accounts\forms.py:77
 msgid "Email Already exists"
 msgstr "הכתובת כבר קיימת במערכת"
 
-#: .\accounts\forms.py:38 .\accounts\forms.py:81
+#: .\accounts\forms.py:48 .\accounts\forms.py:91
 msgid "date of birth"
 msgstr "תאריך לידה"
 
-#: .\accounts\forms.py:39 .\accounts\forms.py:82
+#: .\accounts\forms.py:49 .\accounts\forms.py:92
 msgid "Phone Number"
 msgstr "מספר טלפון"
 
-#: .\accounts\forms.py:46 .\accounts\forms.py:89
+#: .\accounts\forms.py:56 .\accounts\forms.py:99
 msgid "you cannot sign up if you are younger than 18"
 msgstr "אינך יכול/ה להרשם אם גילך קטן מ 18"
 
-#: .\accounts\forms.py:48 .\accounts\forms.py:91
+#: .\accounts\forms.py:58 .\accounts\forms.py:101
 msgid "please fill out this field"
-msgstr ""
+msgstr "מלא/י את שדה זה"
 
-#: .\accounts\forms.py:54 .\accounts\forms.py:98
+#: .\accounts\forms.py:64 .\accounts\forms.py:108
 msgid "phone exists"
 msgstr "הטלפון כבר קיים במערכת אנא הכנס/י מספר טלפון אחר"
 
-#: .\accounts\forms.py:108
+#: .\accounts\forms.py:118
 msgid "username"
 msgstr "שם משתמש"
 
@@ -65,7 +65,7 @@ msgstr "הפרופיל של"
 #: .\accounts\templates\accounts\change_password.html:20
 #: .\accounts\templates\accounts\edit_profile.html:30
 #: .\accounts\templates\accounts\edit_user.html:28
-#: .\accounts\templates\accounts\profile.html:31 .\patient\forms.py:78
+#: .\accounts\templates\accounts\profile.html:31 .\patient\forms.py:82
 #: .\templates\password\password_reset.html:11
 #: .\templates\password\password_reset.html:15
 #: .\therapist\templates\therapist\apt_requests.html:105
@@ -81,21 +81,21 @@ msgid "Save"
 msgstr "שמור"
 
 #: .\accounts\templates\accounts\login.html:8
-#: .\accounts\templates\accounts\login.html:56
+#: .\accounts\templates\accounts\login.html:55
 #: .\templates\partials\navbar.html:10
 msgid "Login"
 msgstr "הכנס"
 
-#: .\accounts\templates\accounts\login.html:17
+#: .\accounts\templates\accounts\login.html:16
 #: .\templates\password\password_reset_complete.html:11
 msgid "Log in"
 msgstr "הכנס"
 
-#: .\accounts\templates\accounts\login.html:19
+#: .\accounts\templates\accounts\login.html:18
 msgid "Log in to see your personal info"
 msgstr "הכנס כדי לראות את המידע האישי שלך"
 
-#: .\accounts\templates\accounts\login.html:58
+#: .\accounts\templates\accounts\login.html:57
 msgid "Forgot Password?"
 msgstr "שכחת את הסיסמה?"
 
@@ -111,9 +111,9 @@ msgstr "עריכת כתובת דואל ושם משתמש"
 msgid "Change password"
 msgstr "שנה סיסמה"
 
-#: .\accounts\templates\accounts\signup.html:8
-#: .\accounts\templates\accounts\signup.html:27
-#: .\accounts\templates\accounts\signup.html:33
+#: .\accounts\templates\accounts\signup.html:10
+#: .\accounts\templates\accounts\signup.html:29
+#: .\accounts\templates\accounts\signup.html:61
 #: .\templates\partials\navbar.html:11
 msgid "Sign Up"
 msgstr "הרשם"
@@ -163,11 +163,11 @@ msgstr "אנגלית"
 msgid "Hebrew"
 msgstr "עברית"
 
-#: .\patient\forms.py:76
+#: .\patient\forms.py:80
 msgid "Subject"
 msgstr "נושא"
 
-#: .\patient\forms.py:77
+#: .\patient\forms.py:81
 msgid "Message"
 msgstr "הודעה"
 
@@ -278,8 +278,8 @@ msgid ""
 "to your fingers. The sensors plug into my computer"
 msgstr ""
 "המכשירים שבהם אני משתמשת מודדים שינויים פיזיולוגיים בגופך, כגון פעילות קצב "
-"הלב ושינויים בעור, על ידי שימוש בחיישן אחד או יותר המחוברים לאצבעות "
-"שלך. החיישנים מתחברים למחשב שלי"
+"הלב ושינויים בעור, על ידי שימוש בחיישן אחד או יותר המחוברים לאצבעות שלך. "
+"החיישנים מתחברים למחשב שלי"
 
 #: .\patient\templates\patient\home.html:115
 msgid "What is biofeedback?"
@@ -447,7 +447,7 @@ msgid "you have appointments for that day"
 msgstr "יש לך פגישות ליום זה"
 
 #: .\therapist\forms.py:131
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:39
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:38
 msgid "Start time"
 msgstr "זמן התחלה"
 
@@ -520,7 +520,7 @@ msgstr "כתובת דואל לא חוקית"
 #: .\therapist\templates\therapist\calendar.html:304
 #: .\therapist\templates\therapist\calendar.html:307
 #: .\therapist\templates\therapist\calendar.html:333
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:42
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:41
 msgid "Edit"
 msgstr "ערוך"
 
@@ -550,8 +550,8 @@ msgstr "שמור"
 #: .\therapist\templates\therapist\apt_requests.html:118
 #: .\therapist\templates\therapist\apt_requests.html:143
 #: .\therapist\templates\therapist\pending_apts.html:111
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:80
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:106
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:79
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:105
 msgid "Close"
 msgstr "סגור"
 
@@ -565,10 +565,40 @@ msgstr "ערוך פגישה"
 #: .\therapist\templates\therapist\accepted_appointments.html:151
 #: .\therapist\templates\therapist\apt_requests.html:142
 #: .\therapist\templates\therapist\pending_apts.html:110
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:79
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:105
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:78
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:104
 msgid "Save changes"
 msgstr "שמור שינויים"
+
+#: .\therapist\templates\therapist\all_users.html:25
+#: .\therapist\templates\therapist\apt_requests.html:40
+msgid "First"
+msgstr "ראשון"
+
+#: .\therapist\templates\therapist\all_users.html:26
+#: .\therapist\templates\therapist\apt_requests.html:41
+msgid "Previous"
+msgstr "קודם"
+
+#: .\therapist\templates\therapist\all_users.html:28
+#: .\therapist\templates\therapist\apt_requests.html:43
+msgid "Page"
+msgstr "דף"
+
+#: .\therapist\templates\therapist\all_users.html:28
+#: .\therapist\templates\therapist\apt_requests.html:43
+msgid "of"
+msgstr "מתוך"
+
+#: .\therapist\templates\therapist\all_users.html:30
+#: .\therapist\templates\therapist\apt_requests.html:45
+msgid "Next"
+msgstr "הבא"
+
+#: .\therapist\templates\therapist\all_users.html:31
+#: .\therapist\templates\therapist\apt_requests.html:46
+msgid "Last"
+msgstr "אחרון"
 
 #: .\therapist\templates\therapist\apt_requests.html:93
 #: .\therapist\templates\therapist\emails\email.html:18
@@ -628,31 +658,31 @@ msgstr "העדפות"
 msgid "Working Days"
 msgstr "ימי עבודה"
 
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:29
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:49
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:28
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:48
 msgid "Enable"
 msgstr "אפשר"
 
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:31
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:30
 msgid "Disable"
 msgstr "בטל"
 
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:37
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:42
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:66
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:36
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:41
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:65
 msgid "Working time"
 msgstr "זמן עבודה"
 
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:40
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:39
 msgid "End time"
 msgstr "זמן סיום"
 
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:45
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:44
 msgid "Disabled Dates"
 msgstr "תאריכים מבוטלים"
 
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:53
-#: .\therapist\templates\therapist\preferences\therapist_settings.html:92
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:52
+#: .\therapist\templates\therapist\preferences\therapist_settings.html:91
 msgid "Disable Date"
 msgstr "בטל תאריך"
 
