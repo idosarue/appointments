@@ -1,45 +1,124 @@
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
 
 body, html {
     max-width: 100vw;
     text-align: center;
 }
 
-header, #ani-con, #header-container, #walk-container {
+header, #ani-con, #header-container, #walk-container, #overlay {
     display: flex;
 }
 
-header, #header-container, #header-con, #walk-container {
+header, #header-container, #header-con, #walk-container, #overlay {
     align-items: center;
 }
 
-header, #header-container, #walk-container, #header-con {
+header, #header-container, #walk-container, #header-con, #overlay {
     flex-direction: column;
 }
 
 header, #hand-container>div, #truck-container, #con, 
-#myVideoCon {
+#top, #myVideoCon {
     position: relative;
 }
 
 header {
-    background-color: #00FFFF;
+    background: rgba(0, 0, 0, 0.095);
 }
 
-#overlay, #walk-container, #hand-container, #hand, #myVideoCon::before, #myVideoCon.show::after {
+#overlay, #walk-container, #hand-container, #hand, #top::before, #myVideoCon::before, #myVideoCon.show::after {
     position: absolute;
-
+    
 }
 
 #overlay {
     top: 0;
     right: 0;
+    bottom: 0;
+    left: 0;
+    color: snow;
+    width: 80%;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    font-size: 5em;
+    text-align: left;
+    height: 10em;
+    font-family: 'Roboto Condensed', sans-serif;
+    text-shadow: 2px 2px 7px black;
+}
+
+#overlay h1 {
+    font-size: 1em;
+}
+
+#overlay span {
+    text-decoration: underline darkblue;
+}
+
+.sign-up-a {
+    font-size: 60%;
+    position: relative;
+}
+
+#top {
+    background-image: url(/static/images/iceland.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    min-width: 100%;
+    height: 100vh;
+}
+
+#myVideoCon::before {
+    z-index: -1;
+}
+
+#top::after {
+    content: '';
+    background: rgba(0, 0, 0, 0.095);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+}
+
+main {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    text-align: center;
+}
+
+main div {
+    margin: 10px;
+    margin-top: 20px;
+}
+
+.card {
+    font-size: 1.5em;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.list-group {
+    text-align: left;
+    font-weight: 400;
+}
+.list-group  li{
+    font-weight: bolder;
 }
 
 #walk-container, #ani-con {
     justify-content: space-between;
-
+    
 }
 
 #ani-con {
@@ -60,6 +139,19 @@ header {
     text-decoration: underline;
 }
 
+#tv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    grid-column:span 2;
+    background: cyan;
+}
+
+#tv > * {
+    margin: 0;
+}
+
 .tree {
     width: 20%;
 }
@@ -70,12 +162,10 @@ header {
 }
 
 #walk-container {
-    margin-top: 0;
     width: 10em;
     left: 0;
     bottom: 0;
-    
-    height: 100%;
+    margin: 0;
 }
 
 
@@ -121,21 +211,6 @@ header {
     height: 10em;
 }
 
-.stand {
-    height: 4em;
-    background-color: white;
-    width: 20%;
-}
-
-.stand-bottom {
-    height: 1em;
-    background-color: white;
-    width: 40%;
-}
-.stand, .stand-bottom, #myVideoCon {
-    box-shadow: 5px 10px 50px #888888;
-}
-
 #myVideoCon {
     border: 2em solid white;
     border-radius: 1em;
@@ -157,7 +232,21 @@ header {
     color: #000;
     background-color: black;
 }
+.stand {
+    height: 4em;
+    background-color: white;
+    width: 20%;
+}
 
+.stand-bottom {
+    height: 1em;
+    background-color: white;
+    width: 40%;
+    text-align: center;
+}
+.stand, .stand-bottom, #myVideoCon {
+    box-shadow: 5px 10px 50px #888888;
+}
 
 video {
     width: 100%;
@@ -179,6 +268,10 @@ video {
         100%{top: 0;}
     }
 
+    main {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
     #ani-con {
         width: 90vw;
     }
@@ -187,11 +280,7 @@ video {
         left: 20px;
     }
 
-    #myVideoCon {
-        border: 1em solid white;
-        border-radius: 1em;
-        width: 80%;
-    }
+
     #ani-con h3 {
         align-self: center;
         color: black;
@@ -214,6 +303,10 @@ video {
     }
     #hand {
         font-size: 1em;
+    }
+
+    #overlay {
+        font-size: 3em;
     }
 
   }
@@ -265,7 +358,16 @@ p {
 @media only screen and (max-width: 600px) {
     .card-text {
         font-size: 3vw;
-        min-height: 18vh;
+        /* min-height: 18vh; */
+    }
+
+    .card {
+        font-size: 1em;
+    }
+
+    #myVideoCon {
+        border: 1em solid white;
+        border-radius: 1em;
 
     }
 }
@@ -291,13 +393,6 @@ p {
 }
 
 
-.list-group {
-    text-align: left;
-    font-weight: 400;
-}
-.list-group  li{
-    font-weight: bolder;
-}
 
 footer {
     width: 100%;

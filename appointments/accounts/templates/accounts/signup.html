@@ -38,12 +38,14 @@
                     </p>
                     {% if field.errors %}
                     <ul class="errorlist">
-                      {% for error in field.errors %}
+                      {% for error in field.non_field_errors %}
                         <li class="alert alert-danger" role="alert">{{ error }}</li>
                       {% endfor %}
                     </ul>
                     {% endif %}
                     {% endfor %}
+                    <label for="box">{% trans 'show password' %}</label>
+                    <input name="box" type="checkbox" id="box"> 
                     {% for field in profile_form %}
                     <p>
                       {{field.label}}
@@ -58,6 +60,7 @@
                     </ul>
                     {% endif %}
                     {% endfor %}
+
                     <button class='btn btn-success form-control' type="submit">{% trans 'Sign Up' %}</button>
                 </form>
               </div>

@@ -30,9 +30,7 @@ class SignupForm(UserCreationForm):
             raise forms.ValidationError(_("Email Already exists"))
        return email
 
-    def password_validators_help_text_html(password_validators=None):
-        help_texts = password_validators_help_texts(password_validators)
-        print(help_texts)
+
 
 class ProfileForm(forms.ModelForm):
     class Meta:

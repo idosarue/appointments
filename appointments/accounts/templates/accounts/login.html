@@ -20,20 +20,8 @@
                 {% csrf_token %}
                 <ul class="errorlist">
                     {% if form.non_field_errors %}
-                      <li>{{ form.non_field_errors }}</li>
+                      <li class="alert alert-danger">{{ form.non_field_errors }}</li>
                     {% endif %}
-                    {% for field in form %}
-                      {% if field.errors %}
-                        <li>
-                          {{ field.label }}
-                          <ul class="errorlist">
-                            {% for error in field.errors %}
-                              <li>{{ error }}</li>
-                            {% endfor %}
-                          </ul>
-                        </li>
-                      {% endif %}
-                    {% endfor %}
                   </ul>
                 <div class="form-group">
                 <div class="input-group">
@@ -49,13 +37,16 @@
                         <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                      </div>
                     {{form.password}}
-                </div> <!-- input-group.// -->
+                        
+                  </div> <!-- input-group.// -->
                 </div> <!-- form-group// -->
+                <label for="box">{% trans 'show password' %}</label>
+                <input name="box" type="checkbox" id="box"> 
                 <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">{% trans 'Login' %}</button>
+                  <button type="submit" class="btn btn-primary btn-block">{% trans 'Login' %}</button>
                 </div> <!-- form-group// -->
                 <p class="text-center"><a href="{% url 'password_reset' %}">{% trans 'Forgot Password?' %}</a></p>
-                </form>
+              </form>
             </article>
             </div> <!-- card.// -->
             
@@ -65,5 +56,6 @@
             </div> 
     </div>
 </div>
+
 {% endblock %}
     

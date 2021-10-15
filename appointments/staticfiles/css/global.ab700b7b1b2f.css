@@ -63,5 +63,19 @@ a {
     .login {
         width: 30rem;
     }
+}
 
+@media only screen and (max-width: 600px) {
+    .nav-c {
+        width: 100%;
+    }
+}
+
+li {
+    list-style: none;
+}
+
+
+.login {
+    margin-top: 10vh;
 }

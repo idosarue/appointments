@@ -18,8 +18,10 @@ $(document).ready(function(){
         for (let i =0; i<uls.length; i++){
             $(uls[i]).css('text-align', 'right')            
         }
+        $('#overlay').css('text-align', 'right')
+
         for (let i =0; i<cards.length; i++){
-            if (!cards[i].classList.contains('card-contact')){
+            if (!cards[i].classList.contains('card-contact') && !cards[i].classList.contains('tv')){
                 console.log(cards[i].classList)
                 $(cards[i]).css('text-align', 'right')            
             }
@@ -95,8 +97,10 @@ $(document).ready(function(){
         if (inputs[i].type == 'submit'){
             inputs[i].setAttribute('class','form-control btn btn-primary')
         }else{
-            inputs[i].setAttribute('class','form-control')
-            inputs[i].setAttribute('autocomplete','off')
+            if (inputs[i].type != 'checkbox'){
+                inputs[i].setAttribute('class','form-control')
+                inputs[i].setAttribute('autocomplete','off')
+            }
         }
       }
     for (i = 0; i < selects.length; i++) {

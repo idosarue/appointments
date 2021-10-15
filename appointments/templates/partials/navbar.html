@@ -7,8 +7,7 @@
   <div class="d-flex flex-row order-2 order-lg-3">
     <ul class="navbar-nav flex-row">
         {% if not user.is_authenticated %}
-        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">{% trans 'Login' %}</a></li>
-        <li class="nav-item"><a class="nav-link px-2" href="{% url 'signup' %}">{% trans 'Sign Up' %}</a></li>
+        <li class="nav-item px-2"><a class="nav-link" href="{% url 'login' %}">{% trans 'Login' %}</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">{% trans 'Contact' %}</a></li>
         {% else %}
         <li class="nav-item">

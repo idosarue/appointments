@@ -27,12 +27,12 @@ if (lang.text == '"he"'){
 }
 
 
-$(document).ready(function(){
-    var formLi = $('form li')
-    for (let i = 0; i < formLi.length; i++){
-        formLi[i].classList.add('alert', 'alert-success')
-    }
-});
+// $(document).ready(function(){
+//     var formLi = $('form li')
+//     for (let i = 0; i < formLi.length; i++){
+//         formLi[i].classList.add('alert', 'alert-success')
+//     }
+// });
 
 $("#appoint-form").submit(function (e) {
     // preventing from page reload and default actions
@@ -306,20 +306,12 @@ $("#contact-form-home").submit(function (e) {
             
             $(this).trigger('reset');
             alert(gratitudeEmail)
-            // 2. focus to nickname input 
-            // display the newly friend to table.
-            // alert('sent email')
             location.reload(true)
         },
         error: function (response) {
             // alert the error if any error occured
             validButton(button, false)
-            
             alert('error')
-            // console.log(response)
-            // var x = Object.values(response)
-            // $('#date-form-result').html(`<div class="alert alert-danger" role="alert"> ${x} </div>`);
-
         }
     })
 
@@ -328,5 +320,24 @@ $("#contact-form-home").submit(function (e) {
 $('a[name="accept"]').on('click',function(){
     $(this).hide()
 });
+
+$('#box').click(function(){
+    if(this.checked){
+    $("#id_password").attr("type", "text");
+    $("#id_password1").attr("type", "text");
+    $("#id_password2").attr("type", "text");
+    $("#id_old_password").attr("type", "text");
+    $("#id_new_password1").attr("type", "text");
+    $("#id_new_password2").attr("type", "text");
+    }else{
+        $("#id_password").attr("type", "password");
+        $("#id_password1").attr("type", "password");
+        $("#id_password2").attr("type", "password");
+        $("#id_old_password").attr("type", "password");
+        $("#id_new_password1").attr("type", "password");
+        $("#id_new_password2").attr("type", "password");
+    }
+});
+
 
 

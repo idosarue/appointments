@@ -29,9 +29,19 @@
               <h2 class="card-title">{{user.email}}</h2>
               <form method="POST">
                 {% csrf_token %}
+                {% if field.errors %}
+                <li>
+                  {{ field.label }}
+                  <ul class="errorlist">
+                    {% for error in field.errors %}
+                      <li class="alert alert-danger" role="alert">{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                </li>
                 {{user_form.as_p}} 
                 <button class='btn btn-success form-control' type="submit">{% trans 'Save' %}</button>
-                </form>
+              </form>
+
             </div>
           </div>
     </div>

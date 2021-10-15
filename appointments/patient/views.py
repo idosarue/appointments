@@ -20,7 +20,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 
 def home(request):
-    return render(request, 'patient/home.html')
+    return render(request, 'patient/new_home.html')
 
 class CreateContactMessageToTherapist(CreateView):
     model = ContactUsersMessagesToTherapist
