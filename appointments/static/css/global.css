@@ -69,6 +69,10 @@ a {
     .nav-c {
         width: 100%;
     }
+
+    .login {
+        min-width: 80vw;
+    }
 }
 
 li {
