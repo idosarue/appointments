@@ -15,6 +15,7 @@ $(document).ready(function(){
     var cards = $('.card')
     var lang = document.getElementById('lang')
     if (lang.text == '"he"'){
+        $('h1').css("font-weight", "bolder")
         for (let i =0; i<uls.length; i++){
             $(uls[i]).css('text-align', 'right')            
         }

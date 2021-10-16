@@ -37,12 +37,12 @@
 </header>
 
 <main>
-    <div  class="card img-card">
+    <div data-aos='fade-up' class="card">
         <div class="card-body">
-            <img class="card-img" src="{% static 'images/mental.jpg' %}">
+            <img class="" src="{% static 'images/mental.jpg' %}">
         </div>
     </div>
-    <div  class="card">
+    <div data-aos='fade-up' class="card">
         <div class="card-body">
             <h2 class="card-title">{% trans 'My clinic' %}</h2>
             <hr>
@@ -57,7 +57,7 @@
             </ul>
         </div>
     </div>
-    <div  class="card">
+    <div data-aos='fade-down' class="card">
         <div class="card-body" >
             <h3 class="card-title">{% trans 'Interactive computer programs' %}</h3>
             <hr>
@@ -66,15 +66,15 @@
             </p>
         </div>
     </div>
-    <div class="card">
+    <div data-aos='fade-up' class="card">
         <div class="card-body">
             <img class="card-img" id="animation" src="{% static 'images/biofeedback-1-570x350.jpg' %}">
         </div>
     </div>
-    <div  class="card tv" id="tv">
+
+    <div data-aos='fade-up' class="card tv" id="tv">
         <div id="con">
             <div id="walk-container">
-              
               <button class="btn btn-primary" id="click">{% trans 'go' %}</button>
                 <div id='truck' class="fas fa-truck"></div>
               </div>
@@ -91,21 +91,23 @@
           <div class="stand-bottom"></div>
     </div>
 
-    <div class="card">
+
+    <div data-aos='fade-down' class="card">
         <div class="card-body">
             <img class="card-img" src="{% static 'images/brain-5369195.jpg' %}">
         </div>
     </div>
 
-    <div class="card">
+    <div data-aos='fade-up' class="card">
         <div class="card-body" >
-            <h3 class="card-title">{% trans 'What is biofeedback?' %}</h3>
-            <hr>
-            <p class="card-text">
-                {% trans "Biofeedback is a technique you can use to learn to control some of your body's functions, such as your heart rate. During biofeedback, you're connected to electrical sensors that help you receive information about your body. This feedback helps you make subtle changes in your body, such as relaxing certain muscles, to achieve the results you want, such as reducing pain. In essence, biofeedback gives you the ability to practice new ways to control your body, often to improve a health condition or physical performance" %}.
-            </p>
+          <h3 class="card-title">{% trans 'What is biofeedback?' %}</h3>
+          <hr>
+          <p class="card-text">
+            {% trans "Biofeedback is a technique you can use to learn to control some of your body's functions, such as your heart rate. During biofeedback, you're connected to electrical sensors that help you receive information about your body. This feedback helps you make subtle changes in your body, such as relaxing certain muscles, to achieve the results you want, such as reducing pain. In essence, biofeedback gives you the ability to practice new ways to control your body, often to improve a health condition or physical performance" %}.
+          </p>
         </div>
-    </div>
+      </div>
+
 </main>
 
 
@@ -115,91 +117,67 @@
 <div class="row card-home">
     <div class="col-sm-6">
         <div class="card">
-            <div class="card-body">
-                <img class="card-img" src="{% static 'images/mental.jpg' %}">
-            </div>
+          <div class="card-body">
+            <img class="card-img" src="{% static 'images/mental.jpg' %}">
+          </div>
         </div>
-    </div>
+      </div>
     <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">{% trans 'My clinic' %}</h3>
-                <hr>
-                {% trans 'At My clinic, I use biofeedback to treat problems related to:' %}
-                <ul class="list-group">
-                    <li class="list-group-item">{% trans 'headaches-migraines' %}</li>
-                    <li class="list-group-item">{% trans 'Irritable bowel syndrome' %}</li>
-                    <li class="list-group-item">{% trans 'Asthma Breathing difficulties' %}</li>
-                    <li class="list-group-item">{% trans 'Skin diseases' %}</li>
-                    <li class="list-group-item">{% trans 'Stress and Anxiety' %}</li>
-                    <li class="list-group-item">{% trans 'Attention Deficit Hyperactivity Disorder' %}</li>
-                </ul>
-            </div>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">{% trans 'My clinic' %}</h3>
+          <hr>
+            {% trans 'At My clinic, I use biofeedback to treat problems related to:' %}
+            <ul class="list-group">
+              <li class="list-group-item">{% trans 'headaches-migraines' %}</li>
+              <li class="list-group-item">{% trans 'Irritable bowel syndrome' %}</li>
+              <li class="list-group-item">{% trans 'Asthma Breathing difficulties' %}</li>
+              <li class="list-group-item">{% trans 'Skin diseases' %}</li>
+              <li class="list-group-item">{% trans 'Stress and Anxiety' %}</li>
+              <li class="list-group-item">{% trans 'Attention Deficit Hyperactivity Disorder' %}</li>
+            </ul>
         </div>
+      </div>
     </div>
 </div>
 <div class="row" id='card-size-indicator'>
     <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body" >
-                <h3 class="card-title">{% trans 'Interactive computer programs' %}</h3>
-                <hr>
-                <p class="card-text">
-                    {% trans 'The devices I use measure physiological changes in your body, such as your heart rate activity and skin changes, by using one or more sensors attached to your fingers. The sensors plug into my computer' %}.
-                </p>
-            </div>
+      <div class="card">
+        <div class="card-body" >
+          <h3 class="card-title">{% trans 'Interactive computer programs' %}</h3>
+          <hr>
+          <p class="card-text">
+            {% trans 'The devices I use measure physiological changes in your body, such as your heart rate activity and skin changes, by using one or more sensors attached to your fingers. The sensors plug into my computer' %}.
+          </p>
         </div>
+      </div>
     </div>
     <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-                <img class="card-img" id="animation" src="{% static 'images/biofeedback-1-570x350.jpg' %}">
-            </div>
+      <div class="card">
+        <div class="card-body">
+          <img class="card-img" id="animation" src="{% static 'images/biofeedback-1-570x350.jpg' %}">
         </div>
+      </div>
     </div>
 </div>
 <div class="row" id='card-size-indicator'>
     <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body" >
-                <h3 class="card-title">{% trans 'What is biofeedback?' %}</h3>
-                <hr>
-                <p class="card-text">
-                    {% trans "Biofeedback is a technique you can use to learn to control some of your body's functions, such as your heart rate. During biofeedback, you're connected to electrical sensors that help you receive information about your body. This feedback helps you make subtle changes in your body, such as relaxing certain muscles, to achieve the results you want, such as reducing pain. In essence, biofeedback gives you the ability to practice new ways to control your body, often to improve a health condition or physical performance" %}.
-                </p>
-            </div>
+      <div class="card">
+        <div class="card-body" >
+          <h3 class="card-title">{% trans 'What is biofeedback?' %}</h3>
+          <hr>
+          <p class="card-text">
+            {% trans "Biofeedback is a technique you can use to learn to control some of your body's functions, such as your heart rate. During biofeedback, you're connected to electrical sensors that help you receive information about your body. This feedback helps you make subtle changes in your body, such as relaxing certain muscles, to achieve the results you want, such as reducing pain. In essence, biofeedback gives you the ability to practice new ways to control your body, often to improve a health condition or physical performance" %}.
+          </p>
         </div>
+      </div>
     </div>
     <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-                <img class="card-img" src="{% static 'images/brain-5369195.jpg' %}">
-            </div>
+      <div class="card">
+        <div class="card-body">
+          <img class="card-img" src="{% static 'images/brain-5369195.jpg' %}">
         </div>
+      </div>
     </div>
 </div>
-<div id="hand-container">
-    <div>
-        <div id="hand" class="fas fa-hand-point-down"></div>
-    </div>
-</div>
-<div id="ani-con">
-    <img class="tree" src="{% static 'images/tree.png' %}" alt="">
-    <div id="header-container">
-        <img class="cloud" src="{% static 'images/cloud.png' %}" alt="">
-        <h3>{% trans 'Furious? Depressed? Restless?<br><span>Biofeedback</span><br>is your solution' %}</h3>
-    </div>
-    <img class="tree" src="{% static 'images/tree.png' %}" alt="">
-</div>
-<div id="con">
-    <div id="walk-container">
-        
-        <button class="btn btn-primary" id="click">{% trans 'go' %}</button>
-        <div id='truck' class="fas fa-truck"></div>
-    </div>
-</div>
-
-<div class="stand">
-    <i id="btn-hand" class="fas fa-hand-point-down" style='font-size:36px; display: block;'></i>      <button id='stopButton' class="btn btn-danger">   </button>
-</div>
-<div class="stand-bottom"></div>
+</main>
