@@ -178,11 +178,6 @@ $(document).ready(function(){
 });
 
 
-$(document).ready(function(){
-    $('#con').css('width', $('#myVideoCon').css('width'))
-    $('#hand-container').css('width', $('#myVideoCon').css('width'))
-});
-
 
 $(document).ready(function(){
     $('.send').click(function(e){
@@ -205,7 +200,7 @@ $(document).ready(function(){
         var content = form.getElementsByTagName('textarea')[0]
         title.defaultValue = li1.textContent
         content.defaultValue = li2.textContent
-
     });
 });
+
 

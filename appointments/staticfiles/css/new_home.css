@@ -4,6 +4,7 @@
 body, html {
     max-width: 100vw;
     text-align: center;
+    position: relative;
 }
 
 header, #ani-con, #header-container, #walk-container, #overlay {
@@ -32,44 +33,58 @@ header {
     
 }
 
-#overlay {
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    color: snow;
-    width: 80%;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-    font-size: 5em;
-    text-align: left;
-    font-family: 'Roboto Condensed', sans-serif;
-    text-shadow: 2px 2px 7px black;
-}
-
-#overlay h1 {
-    font-size: .7em;
-}
-
-
-#overlay span {
-    text-decoration: underline darkblue;
-}
-
-.sign-up-a {
-    font-size: 60%;
-    position: relative;
-}
-
 #top {
-    background-image: url(/static/images/iceland.jpg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     min-width: 100%;
     height: 100vh;
 }
+
+#top video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+
+#overlay {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    color: snow;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    font-size: 5em;
+    text-align: left;
+    font-family: 'Roboto Condensed', sans-serif;
+    text-shadow: 2px 2px 12px black;
+    border-bottom: 20px solid black;
+}
+
+h1 {
+    font-size: .7em;
+}
+
+
+.biofeedback {
+    text-decoration: underline darkblue;
+
+}
+
+
+.sign-up-a {
+    font-size: .5em;
+    position: relative;
+}
+
 
 #myVideoCon::before {
     z-index: -1;
@@ -258,6 +273,17 @@ video {
         100%{top: 0;}
     }
 
+    #overlay span {
+        display: block;
+    }
+    
+    h1  {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        font-size: 1em;
+    }
+
     .card-text {
         font-size: 3vw;
     }
@@ -361,10 +387,6 @@ p {
     }
 }
 
-@media only screen and (max-width: 600px) {
-
-
-}
 
 @media only screen and (min-width: 700px) {
     .card-text {
