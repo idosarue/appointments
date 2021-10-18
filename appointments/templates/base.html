@@ -39,7 +39,7 @@
     {{day|json_script:'hello'}}
     {{LANGUAGE_CODE|json_script:'lang'}}
     <script src="{% static 'js/app.js' %}"></script>
-    <script src="{% static 'js/new.js' %}"></script>
+    <script src="{% static 'js/confirmation.js' %}"></script>
     <script src="{% static 'js/form.js' %}"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
@@ -47,6 +47,10 @@
         duration: 1200,
       });
     </script>
+
+    {% block script %}
+
+    {% endblock %}
 </body>
 </html>
 

@@ -1,0 +1,148 @@
+.calendar {
+  width: 100%;
+  margin: 0;
+  font-size: 13px;
+  direction: ltr;
+
+}
+
+
+.top-container, #month-name, .day_num, .link-container, #next-pre-c{
+  display: flex;
+}
+
+.top-container {
+  justify-content: space-between;
+  align-items: baseline;
+  height: 1em;
+}
+
+.top-container button {
+  padding: 0;
+}
+
+#next-pre-c {
+  font-weight: bold;
+  font-size: 2em;
+  padding: 10px;
+}
+/* 
+.calendar th {
+  padding: 10px;
+  width: 120px;
+  text-align: center;
+  font-size: 18px;
+  background-color: whitesmoke;
+}
+
+
+.calendar td {
+  width: 12.5em;
+  height: 9.375em;
+  position: relative;
+} */
+
+.first-hr {
+  border: 1px solid gray;
+  border-radius: 2px;
+
+}
+
+#month-name {
+  justify-content: space-around;
+}
+
+
+#month-name h3{
+  align-self: center;
+}
+
+.date a {
+  font-size: 1rem;
+}
+
+ .events {
+  height: 100%;
+  padding: 0px 5px 0px 20px;
+  background-color: lightblue;
+  border-radius: 3px;
+}
+
+
+
+.comment-list{
+  top: 0;
+  right: 0;
+}
+
+.day_num {
+  top: 5px;
+  left: 0;
+  font-size: 15px;
+  border-radius: 50%;
+  background-color: midnightblue;
+  width: 20px;
+  color: white;
+  justify-content: center;
+}
+
+.appoint-list-container{
+  margin-top: 1.5em;
+}
+
+.comment:hover{
+  color: #000;
+}
+
+
+.calendar li {
+  list-style: none;
+  font-size: 1.3em;
+}
+
+.link-container, #next-pre-c{
+  justify-content: space-between;
+}
+
+.day-of-week > div {
+  text-align: center;
+  border: 1px solid lightblue;
+  padding: 10px;
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.day-of-week,
+.date-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+@media only screen and (max-width: 600px) {
+  .holiday {
+    font-size: .5em;
+  }
+
+  .day-of-week,
+  .date-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  #next-pre-c {
+    font-size: 1em;
+  }
+  #month-name h3{
+    text-align: center;
+  }
+  
+
+}
+
+
+.grid-item {
+  border: 1px solid lightblue;
+  min-width: 55px;
+  min-height: 10em;
+  padding: 0 .5em 0 .5em;
+}
